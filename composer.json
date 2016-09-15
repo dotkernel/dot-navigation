@@ -1,0 +1,42 @@
+{
+  "name": "dotkernel/dot-navigation",
+  "type": "library",
+  "description": "Navigation library for easy menu parsing",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "n3vrax",
+      "email": "tibi@apidemia.com"
+    }
+  ],
+  "require": {
+
+    "php": "^5.6 || ^7.0",
+    "psr/http-message": "^1.0",
+    "container-interop/container-interop": "^1.1",
+    "zendframework/zend-expressive-helpers": "^2.0",
+    "zendframework/zend-expressive-template": "^1.0",
+    "zendframework/zend-servicemanager": "^3.1",
+    "zendframework/zend-escaper": "^2.5",
+    "zendframework/zend-stdlib": "^3.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8",
+    "squizlabs/php_codesniffer": "^2.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Dot\\Navigation\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DotTest\\Navigation\\": "test/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.6-dev"
+    }
+  }
+}
