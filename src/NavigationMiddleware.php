@@ -1,29 +1,35 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vrax
- * Date: 6/7/2016
- * Time: 9:15 PM
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
+ * Date: 6/5/2016
+ * Time: 5:20 PM
  */
 
 namespace Dot\Navigation;
 
+use Dot\Navigation\Service\Navigation;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Router\RouteResult;
 
+/**
+ * Class NavigationMiddleware
+ * @package Dot\Navigation
+ */
 class NavigationMiddleware
 {
     /**
-     * @var NavigationService
+     * @var Navigation
      */
     protected $navigation;
 
     /**
      * NavigationMiddleware constructor.
-     * @param NavigationService $navigation
+     * @param Navigation $navigation
      */
-    public function __construct(NavigationService $navigation)
+    public function __construct(Navigation $navigation)
     {
         $this->navigation = $navigation;
     }

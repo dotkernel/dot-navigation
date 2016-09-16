@@ -1,16 +1,21 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vrax
- * Date: 6/7/2016
- * Time: 6:24 PM
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
+ * Date: 6/5/2016
+ * Time: 5:20 PM
  */
 
 namespace Dot\Navigation\Options;
 
 use Zend\Stdlib\AbstractOptions;
 
-class NavigationMenuOptions extends AbstractOptions
+/**
+ * Class MenuOptions
+ * @package Dot\Navigation\Options
+ */
+class MenuOptions extends AbstractOptions
 {
     /** @var int  */
     protected $minDepth = -1;

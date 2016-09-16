@@ -1,47 +1,44 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vra
- * Date: 6/7/2016
- * Time: 3:18 PM
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
+ * Date: 6/5/2016
+ * Time: 5:20 PM
  */
 
-namespace Dot\Navigation\Helper;
+namespace Dot\Navigation\View;
 
 use Dot\Navigation\Exception\RuntimeException;
-use Dot\Navigation\NavigationContainer;
-use Dot\Navigation\NavigationService;
+use Dot\Navigation\Container;
+use Dot\Navigation\Service\Navigation;
 use Zend\Escaper\Escaper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
-abstract class AbstractNavigationHelper
+/**
+ * Class AbstractNavigationHelper
+ * @package Dot\Navigation\Helper
+ */
+abstract class AbstractNavigationRenderer
 {
-    /**
-     * @var NavigationService
-     */
+    /** @var Navigation  */
     protected $navigation;
 
-    /**
-     * @var string
-     */
+    /** @var  string */
     protected $partial;
 
-    /**
-     * @var NavigationContainer
-     */
+    /** @var  Container */
     protected $container;
 
-    /**
-     * @var TemplateRendererInterface
-     */
+    /** @var TemplateRendererInterface  */
     protected $template;
 
     /**
      * AbstractNavigationHelper constructor.
-     * @param NavigationService $navigation
+     * @param Navigation $navigation
      * @param TemplateRendererInterface $template
      */
-    public function __construct(NavigationService $navigation, TemplateRendererInterface $template)
+    public function __construct(Navigation $navigation, TemplateRendererInterface $template)
     {
         $this->navigation = $navigation;
         $this->template = $template;
@@ -49,7 +46,7 @@ abstract class AbstractNavigationHelper
 
     /**
      * @param $container
-     * @return NavigationContainer
+     * @return Container
      */
     protected function getContainer($container)
     {
@@ -59,9 +56,9 @@ abstract class AbstractNavigationHelper
         {
             return $this->navigation->getContainer($container);
         }
-        elseif(!$container instanceof NavigationContainer)
+        elseif(!$container instanceof Container)
         {
-            throw new RuntimeException('Container must be a string or instance of ' . NavigationContainer::class);
+            throw new RuntimeException('Container must be a string or instance of ' . Container::class);
         }
 
         return $container;

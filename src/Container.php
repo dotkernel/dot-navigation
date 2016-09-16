@@ -1,16 +1,21 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vrax
- * Date: 6/3/2016
- * Time: 8:00 PM
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
+ * Date: 6/5/2016
+ * Time: 5:20 PM
  */
 
 namespace Dot\Navigation;
 
 use RecursiveIterator;
 
-class NavigationContainer implements \RecursiveIterator
+/**
+ * Class Container
+ * @package Dot\Navigation
+ */
+class Container implements \RecursiveIterator
 {
     /**
      * Index of current active child
@@ -33,37 +38,57 @@ class NavigationContainer implements \RecursiveIterator
         $this->addPages($pages);
     }
 
-
+    /**
+     * @return mixed
+     */
     public function current()
     {
         return $this->children[$this->index];
     }
 
+    /**
+     * Increment current position to the next element
+     */
     public function next()
     {
         $this->index++;
     }
 
+    /**
+     * @return int
+     */
     public function key()
     {
         return $this->index;
     }
 
+    /**
+     * @return bool
+     */
     public function valid()
     {
         return isset($this->children[$this->index]);
     }
 
+    /**
+     * Reset position to the first element
+     */
     public function rewind()
     {
         $this->index = 0;
     }
 
+    /**
+     * @return bool
+     */
     public function hasChildren()
     {
         return count($this->children) > 0;
     }
 
+    /**
+     * @return mixed
+     */
     public function getChildren()
     {
         return $this->children[$this->index];

@@ -1,31 +1,34 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vra
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
  * Date: 6/5/2016
- * Time: 4:19 PM
+ * Time: 5:20 PM
  */
 
 namespace Dot\Navigation\Options;
 
+use Dot\Navigation\Exception\InvalidArgumentException;
 use Zend\Stdlib\AbstractOptions;
 
+/**
+ * Class NavigationOptions
+ * @package Dot\Navigation\Options
+ */
 class NavigationOptions extends AbstractOptions
 {
-    /**
-     * @var array
-     */
+    /** @var  array */
     protected $containers;
 
-    /**
-     * @var array
-     */
+    /** @var  array */
     protected $providersMap;
 
-    /**
-     * @var bool
-     */
+    /** @var bool  */
     protected $activeRecursion = true;
+
+    /** @var  MenuOptions */
+    protected $menuOptions;
 
     /**
      * @var bool
@@ -79,6 +82,34 @@ class NavigationOptions extends AbstractOptions
     {
         $this->activeRecursion = $activeRecursion;
     }
+
+    /**
+     * @return MenuOptions
+     */
+    public function getMenuOptions()
+    {
+        return $this->menuOptions;
+    }
+
+    /**
+     * @param MenuOptions|array $menuOptions
+     * @return NavigationOptions
+     */
+    public function setMenuOptions($menuOptions)
+    {
+        if($menuOptions instanceof MenuOptions) {
+            $this->menuOptions = $menuOptions;
+        }
+        elseif(is_array($menuOptions)) {
+            $this->menuOptions = new MenuOptions($menuOptions);
+        }
+        else {
+            throw new InvalidArgumentException('Menu options must be an array or instance of' . MenuOptions::class);
+        }
+
+        return $this;
+    }
+
 
 
 }

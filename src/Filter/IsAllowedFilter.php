@@ -1,31 +1,48 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vrax
- * Date: 6/7/2016
- * Time: 6:34 PM
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
+ * Date: 6/5/2016
+ * Time: 5:20 PM
  */
 
 namespace Dot\Navigation\Filter;
 
-use Dot\Navigation\NavigationService;
 
+use Dot\Navigation\Service\Navigation;
+
+/**
+ * Class IsAllowedFilter
+ * @package Dot\Navigation\Filter
+ */
 class IsAllowedFilter extends \RecursiveFilterIterator
 {
-    /** @var  NavigationService */
+    /** @var  Navigation */
     protected $navigation;
 
-    public function __construct(\RecursiveIterator $iterator, NavigationService $navigation)
+    /**
+     * IsAllowedFilter constructor.
+     * @param \RecursiveIterator $iterator
+     * @param Navigation $navigation
+     */
+    public function __construct(\RecursiveIterator $iterator, Navigation $navigation)
     {
         $this->navigation = $navigation;
         parent::__construct($iterator);
     }
 
+    /**
+     * @return bool
+     */
     public function accept()
     {
         return $this->navigation->isAllowed($this->current());
     }
 
+    /**
+     * @return IsAllowedFilter
+     */
     public function getChildren()
     {
         /** @var \RecursiveIterator $innerIterator */

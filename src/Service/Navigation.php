@@ -1,25 +1,32 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vra
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
  * Date: 6/5/2016
- * Time: 10:44 PM
+ * Time: 5:20 PM
  */
 
-namespace Dot\Navigation;
+namespace Dot\Navigation\Service;
 
+use Dot\Authorization\AuthorizationInterface;
+use Dot\Navigation\Container;
 use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\Options\NavigationOptions;
+use Dot\Navigation\Page;
 use Dot\Navigation\Provider\ProviderInterface;
 use Dot\Navigation\Provider\ProviderPluginManager;
-use N3vrax\DkAuthorization\AuthorizationInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Router\RouteResult;
 
-class NavigationService
+/**
+ * Class Navigation
+ * @package Dot\Navigation\Service
+ */
+class Navigation
 {
     /**
-     * @var NavigationContainer[]
+     * @var Container[]
      */
     protected $containers = [];
 
@@ -72,9 +79,9 @@ class NavigationService
      */
     public function __construct(
         ProviderPluginManager $providerPluginManager,
-        AuthorizationInterface $authorization,
         UrlHelper $urlHelper,
-        NavigationOptions $moduleOptions)
+        NavigationOptions $moduleOptions,
+        AuthorizationInterface $authorization = null)
     {
         $this->urlHelper = $urlHelper;
         $this->authorization = $authorization;
@@ -121,7 +128,7 @@ class NavigationService
 
     /**
      * @param $name
-     * @return NavigationContainer
+     * @return Container
      */
     public function getContainer($name)
     {
@@ -141,10 +148,10 @@ class NavigationService
         $containerProvider = $this->providerPluginManager->get($map[$name], $containerConfig);
 
         $container = $containerProvider->getContainer();
-        if(!$container instanceof NavigationContainer) {
+        if(!$container instanceof Container) {
             throw new RuntimeException(sprintf(
                 "Navigation container for name %s is not an instance of %s",
-                $name, NavigationContainer::class));
+                $name, Container::class));
         }
 
         $this->containers[$name] = $container;
@@ -153,6 +160,11 @@ class NavigationService
 
     public function isAllowed(Page $page)
     {
+        //authorization module is optional, this function will always return true if missing
+        if(!$this->authorization) {
+            return true;
+        }
+
         $options = $page->getOptions();
         
         if(isset($options['permission']))

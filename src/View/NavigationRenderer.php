@@ -1,45 +1,46 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vra
- * Date: 6/7/2016
- * Time: 3:12 PM
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
+ * Date: 6/5/2016
+ * Time: 5:20 PM
  */
 
-namespace Dot\Navigation\Helper;
+namespace Dot\Navigation\View;
 
 use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\Filter\IsAllowedFilter;
-use Dot\Navigation\NavigationContainer;
-use Dot\Navigation\NavigationService;
-use Dot\Navigation\Options\NavigationMenuOptions;
+use Dot\Navigation\Container;
+use Dot\Navigation\Options\MenuOptions;
 use Dot\Navigation\Page;
+use Dot\Navigation\Service\Navigation;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
-class NavigationMenu extends AbstractNavigationHelper
+class NavigationRenderer extends AbstractNavigationRenderer
 {
     /**
-     * @var NavigationMenuOptions
+     * @var MenuOptions
      */
     protected $options;
 
     /**
      * NavigationMenu constructor.
-     * @param NavigationService $navigation
+     * @param Navigation $navigation
      * @param TemplateRendererInterface $template
-     * @param NavigationMenuOptions $options
+     * @param MenuOptions $options
      */
     public function __construct(
-        NavigationService $navigation,
+        Navigation $navigation,
         TemplateRendererInterface $template,
-        NavigationMenuOptions $options)
+        MenuOptions $options)
     {
         $this->options = $options;
         parent::__construct($navigation, $template);
     }
 
     /**
-     * @param string|NavigationContainer|null $container
+     * @param string|Container|null $container
      * @return string
      */
     public function renderMenu($container = null)
@@ -97,7 +98,7 @@ class NavigationMenu extends AbstractNavigationHelper
     }
 
     /**
-     * @param null|string|NavigationContainer $container
+     * @param null|string|Container $container
      * @param null|string $partial
      * @param array $extra
      * @return string
@@ -120,7 +121,7 @@ class NavigationMenu extends AbstractNavigationHelper
 
     /**
      * Default render
-     * @param null|string|NavigationContainer $container
+     * @param null|string|Container $container
      * @return string
      */
     public function render($container = null)

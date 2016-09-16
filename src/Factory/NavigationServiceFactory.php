@@ -1,32 +1,44 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vra
- * Date: 6/7/2016
- * Time: 2:06 PM
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
+ * Date: 6/5/2016
+ * Time: 5:20 PM
  */
 
 namespace Dot\Navigation\Factory;
 
-use Dot\Navigation\NavigationService;
+use Dot\Authorization\AuthorizationInterface;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Provider\ProviderPluginManager;
+use Dot\Navigation\Service\Navigation;
 use Interop\Container\ContainerInterface;
-use N3vrax\DkAuthorization\AuthorizationInterface;
 use Zend\Expressive\Helper\UrlHelper;
 
+/**
+ * Class NavigationServiceFactory
+ * @package Dot\Navigation\Factory
+ */
 class NavigationServiceFactory
 {
+    /**
+     * @param ContainerInterface $container
+     * @return Navigation
+     */
     public function __invoke(ContainerInterface $container)
     {
         $urlHelper = $container->get(UrlHelper::class);
-        $authorization = $container->get(AuthorizationInterface::class);
+        $authorization = $container->has(AuthorizationInterface::class)
+            ? $container->get(AuthorizationInterface::class)
+            : null;
+        
         $providerPluginManager = $container->get(ProviderPluginManager::class);
 
         /** @var NavigationOptions $options */
         $options = $container->get(NavigationOptions::class);
 
-        $service = new NavigationService($providerPluginManager, $authorization, $urlHelper, $options);
+        $service = new Navigation($providerPluginManager, $urlHelper, $options, $authorization);
         $service->setIsActiveRecursion($options->getActiveRecursion());
 
         return $service;

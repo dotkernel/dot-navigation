@@ -1,14 +1,19 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vrax
- * Date: 6/3/2016
- * Time: 8:05 PM
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
+ * Date: 6/5/2016
+ * Time: 5:20 PM
  */
 
 namespace Dot\Navigation;
 
-class Page extends NavigationContainer
+/**
+ * Class Page
+ * @package Dot\Navigation
+ */
+class Page extends Container
 {
     /**
      * @var array

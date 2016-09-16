@@ -1,71 +1,51 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vra
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
  * Date: 6/5/2016
- * Time: 5:01 PM
+ * Time: 5:20 PM
  */
 
 namespace Dot\Navigation;
 
 use Dot\Navigation\Factory\NavigationOptionsFactory;
-use Dot\Navigation\Factory\NavigationMenuFactory;
-use Dot\Navigation\Factory\NavigationMenuOptionsFactory;
+use Dot\Navigation\Factory\NavigationRendererFactory;
 use Dot\Navigation\Factory\NavigationMiddlewareFactory;
 use Dot\Navigation\Factory\NavigationServiceFactory;
 use Dot\Navigation\Factory\ProviderPluginManagerFactory;
-use Dot\Navigation\Helper\NavigationMenu;
 use Dot\Navigation\Options\NavigationOptions;
-use Dot\Navigation\Options\NavigationMenuOptions;
 use Dot\Navigation\Provider\ProviderPluginManager;
-use Dot\Navigation\Twig\NavigationExtension;
-use Dot\Navigation\Twig\NavigationExtensionFactory;
-use Zend\ServiceManager\Proxy\LazyServiceFactory;
+use Dot\Navigation\Service\Navigation;
+use Dot\Navigation\View\NavigationRenderer;
 
+/**
+ * Class ConfigProvider
+ * @package Dot\Navigation
+ */
 class ConfigProvider
 {
+    /**
+     * @return array
+     */
     public function __invoke()
     {
         return [
 
-            'dependencies' => [
-                'factories' => [
-                    NavigationOptions::class => NavigationOptionsFactory::class,
+            'dependencies' => $this->getDependencyConfig(),
 
-                    NavigationMenuOptions::class => NavigationMenuOptionsFactory::class,
+            'dot_navigation' => [
 
-                    ProviderPluginManager::class => ProviderPluginManagerFactory::class,
+                'menu_options' => [
 
-                    NavigationService::class => NavigationServiceFactory::class,
+                    'min_depth' => -1,
+                    'max_depth' => -1,
 
-                    NavigationMenu::class => NavigationMenuFactory::class,
-
-                    NavigationExtension::class => NavigationExtensionFactory::class,
-
-                    NavigationMiddleware::class => NavigationMiddlewareFactory::class,
+                    'active_class' => 'active',
+                    'ul_class' => 'nav',
                 ],
-
-                'delegators' => [
-                    NavigationMenu::class => [
-                        LazyServiceFactory::class,
-                    ]
-                ],
-
-                'lazy_services' => [
-                    'class_map' => [
-                        NavigationMenu::class => NavigationMenu::class,
-                    ]
-                ]
-            ],
-
-            'dk_navigation' => [
 
                 'active_recursion' => true,
-
-                'min_depth' => -1,
-                'max_depth' => -1,
-                'active_class' => 'active',
-                'ul_class' => 'nav',
 
                 'containers' => [
 
@@ -79,12 +59,26 @@ class ConfigProvider
 
                 ]
             ],
+        ];
+    }
 
-            'twig' => [
-                'extensions' => [
-                    NavigationExtension::class,
-                ]
-            ]
+    /**
+     * @return array
+     */
+    public function getDependencyConfig()
+    {
+        return [
+            'factories' => [
+                NavigationOptions::class => NavigationOptionsFactory::class,
+
+                ProviderPluginManager::class => ProviderPluginManagerFactory::class,
+
+                Navigation::class => NavigationServiceFactory::class,
+
+                NavigationRenderer::class => NavigationRendererFactory::class,
+
+                NavigationMiddleware::class => NavigationMiddlewareFactory::class,
+            ],
         ];
     }
 }

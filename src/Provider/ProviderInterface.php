@@ -1,19 +1,24 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vrax
- * Date: 6/3/2016
- * Time: 8:08 PM
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
+ * Date: 6/5/2016
+ * Time: 5:20 PM
  */
 
 namespace Dot\Navigation\Provider;
 
-use Dot\Navigation\NavigationContainer;
+use Dot\Navigation\Container;
 
+/**
+ * Interface ProviderInterface
+ * @package Dot\Navigation\Provider
+ */
 interface ProviderInterface
 {
     /**
-     * @return NavigationContainer
+     * @return Container
      */
     public function getContainer();
 }
