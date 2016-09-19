@@ -1,0 +1,53 @@
+<?php
+
+return [
+    'dot_navigation' => [
+
+        //enable menu item active if any child is active
+        'active_recursion' => true,
+
+        'menu_options' => [
+            //depths between the menu hierarchy is iterated
+            'min_depth' => -1,
+            'max_depth' => -1,
+
+            //css classes to use for menu rendering
+            'active_class' => 'active',
+            'ul_class' => 'nav',
+        ],
+
+        //map a provider name to a provider type
+        'providers_map' => [
+            'default' => \Dot\Navigation\Provider\ArrayProvider::class,
+        ],
+
+        //map a provider name to its config
+        'containers' => [
+            'default' => [
+                [
+                    'options' => [
+                        'label' => 'Menu #1',
+                        'route' => 'home',
+                    ],
+                    'attributes' => [
+                        'name' => 'Menu #1',
+                    ]
+                ],
+                [
+                    'options' => [
+                        'label' => 'Menu #2',
+                        'route' => 'home',
+                    ],
+                    'attributes' => [
+                        'name' => 'Menu #1',
+                    ]
+                ]
+            ]
+        ],
+
+        //register custom providers here
+        'provider_manager' => [
+
+        ]
+    ],
+];
