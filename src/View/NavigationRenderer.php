@@ -11,7 +11,7 @@ namespace Dot\Navigation\View;
 
 use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\Filter\IsAllowedFilter;
-use Dot\Navigation\Container;
+use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Options\MenuOptions;
 use Dot\Navigation\Page;
 use Dot\Navigation\Service\Navigation;
@@ -40,7 +40,7 @@ class NavigationRenderer extends AbstractNavigationRenderer
     }
 
     /**
-     * @param string|Container|null $container
+     * @param string|NavigationContainer|null $container
      * @return string
      */
     public function renderMenu($container = null)
@@ -98,7 +98,7 @@ class NavigationRenderer extends AbstractNavigationRenderer
     }
 
     /**
-     * @param null|string|Container $container
+     * @param null|string|NavigationContainer $container
      * @param null|string $partial
      * @param array $extra
      * @return string
@@ -121,7 +121,7 @@ class NavigationRenderer extends AbstractNavigationRenderer
 
     /**
      * Default render
-     * @param null|string|Container $container
+     * @param null|string|NavigationContainer $container
      * @return string
      */
     public function render($container = null)

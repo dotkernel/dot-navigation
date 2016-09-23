@@ -15,7 +15,7 @@ use RecursiveIterator;
  * Class Container
  * @package Dot\Navigation
  */
-class Container implements \RecursiveIterator
+class NavigationContainer implements \RecursiveIterator
 {
     /**
      * Index of current active child

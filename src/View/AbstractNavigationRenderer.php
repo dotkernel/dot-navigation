@@ -10,7 +10,7 @@
 namespace Dot\Navigation\View;
 
 use Dot\Navigation\Exception\RuntimeException;
-use Dot\Navigation\Container;
+use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Service\Navigation;
 use Zend\Escaper\Escaper;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -27,7 +27,7 @@ abstract class AbstractNavigationRenderer
     /** @var  string */
     protected $partial;
 
-    /** @var  Container */
+    /** @var  NavigationContainer */
     protected $container;
 
     /** @var TemplateRendererInterface  */
@@ -46,7 +46,7 @@ abstract class AbstractNavigationRenderer
 
     /**
      * @param $container
-     * @return Container
+     * @return NavigationContainer
      */
     protected function getContainer($container)
     {
@@ -56,9 +56,9 @@ abstract class AbstractNavigationRenderer
         {
             return $this->navigation->getContainer($container);
         }
-        elseif(!$container instanceof Container)
+        elseif(!$container instanceof NavigationContainer)
         {
-            throw new RuntimeException('Container must be a string or instance of ' . Container::class);
+            throw new RuntimeException('Container must be a string or instance of ' . NavigationContainer::class);
         }
 
         return $container;

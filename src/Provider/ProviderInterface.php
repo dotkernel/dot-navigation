@@ -9,7 +9,7 @@
 
 namespace Dot\Navigation\Provider;
 
-use Dot\Navigation\Container;
+use Dot\Navigation\NavigationContainer;
 
 /**
  * Interface ProviderInterface
@@ -18,7 +18,7 @@ use Dot\Navigation\Container;
 interface ProviderInterface
 {
     /**
-     * @return Container
+     * @return NavigationContainer
      */
     public function getContainer();
 }

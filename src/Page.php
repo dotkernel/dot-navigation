@@ -13,7 +13,7 @@ namespace Dot\Navigation;
  * Class Page
  * @package Dot\Navigation
  */
-class Page extends Container
+class Page extends NavigationContainer
 {
     /**
      * @var array

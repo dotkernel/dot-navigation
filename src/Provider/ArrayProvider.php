@@ -9,7 +9,7 @@
 
 namespace Dot\Navigation\Provider;
 
-use Dot\Navigation\Container;
+use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Page;
 
 /**
@@ -19,7 +19,7 @@ use Dot\Navigation\Page;
 class ArrayProvider implements ProviderInterface
 {
     /**
-     * @var Container
+     * @var NavigationContainer
      */
     protected $container;
 
@@ -38,15 +38,15 @@ class ArrayProvider implements ProviderInterface
     }
 
     /**
-     * @return Container
+     * @return NavigationContainer
      */
     public function getContainer()
     {
-        if($this->container instanceof Container) {
+        if($this->container instanceof NavigationContainer) {
             return $this->container;
         }
 
-        $this->container = new Container();
+        $this->container = new NavigationContainer();
         foreach ($this->config as $page)
         {
             $page = $this->getPage($page);

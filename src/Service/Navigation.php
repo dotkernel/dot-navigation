@@ -10,7 +10,7 @@
 namespace Dot\Navigation\Service;
 
 use Dot\Authorization\AuthorizationInterface;
-use Dot\Navigation\Container;
+use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Page;
@@ -26,7 +26,7 @@ use Zend\Expressive\Router\RouteResult;
 class Navigation
 {
     /**
-     * @var Container[]
+     * @var NavigationContainer[]
      */
     protected $containers = [];
 
@@ -128,7 +128,7 @@ class Navigation
 
     /**
      * @param $name
-     * @return Container
+     * @return NavigationContainer
      */
     public function getContainer($name)
     {
@@ -148,10 +148,10 @@ class Navigation
         $containerProvider = $this->providerPluginManager->get($map[$name], $containerConfig);
 
         $container = $containerProvider->getContainer();
-        if(!$container instanceof Container) {
+        if(!$container instanceof NavigationContainer) {
             throw new RuntimeException(sprintf(
                 "Navigation container for name %s is not an instance of %s",
-                $name, Container::class));
+                $name, NavigationContainer::class));
         }
 
         $this->containers[$name] = $container;
