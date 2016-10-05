@@ -9,7 +9,7 @@
 
 namespace Dot\Navigation;
 
-use Dot\Navigation\Service\Navigation;
+use Dot\Navigation\Service\NavigationInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Router\RouteResult;
@@ -21,15 +21,15 @@ use Zend\Expressive\Router\RouteResult;
 class NavigationMiddleware
 {
     /**
-     * @var Navigation
+     * @var NavigationInterface
      */
     protected $navigation;
 
     /**
      * NavigationMiddleware constructor.
-     * @param Navigation $navigation
+     * @param NavigationInterface $navigation
      */
-    public function __construct(Navigation $navigation)
+    public function __construct(NavigationInterface $navigation)
     {
         $this->navigation = $navigation;
     }

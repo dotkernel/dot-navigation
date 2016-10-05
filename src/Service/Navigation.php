@@ -23,7 +23,7 @@ use Zend\Expressive\Router\RouteResult;
  * Class Navigation
  * @package Dot\Navigation\Service
  */
-class Navigation
+class Navigation implements NavigationInterface
 {
     /**
      * @var NavigationContainer[]
@@ -90,11 +90,13 @@ class Navigation
     }
 
     /**
-     * @param RouteResult $routeResult
+     * @param RouteResult|null $routeResult
+     * @return $this
      */
     public function setRouteResult(RouteResult $routeResult = null)
     {
         $this->routeResult = $routeResult;
+        return $this;
     }
 
     /**

@@ -10,7 +10,7 @@
 namespace Dot\Navigation\Factory;
 
 use Dot\Navigation\NavigationMiddleware;
-use Dot\Navigation\Service\Navigation;
+use Dot\Navigation\Service\NavigationInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -25,7 +25,7 @@ class NavigationMiddlewareFactory
      */
     public function __invoke(ContainerInterface $container)
     {
-        $navigation = $container->get(Navigation::class);
+        $navigation = $container->get(NavigationInterface::class);
         return new NavigationMiddleware($navigation);
     }
 }

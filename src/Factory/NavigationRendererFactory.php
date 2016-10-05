@@ -10,7 +10,7 @@
 namespace Dot\Navigation\Factory;
 
 use Dot\Navigation\Options\MenuOptions;
-use Dot\Navigation\Service\Navigation;
+use Dot\Navigation\Service\NavigationInterface;
 use Dot\Navigation\View\NavigationRenderer;
 use Interop\Container\ContainerInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -28,7 +28,7 @@ class NavigationRendererFactory
     public function __invoke(ContainerInterface $container)
     {
         $options = $container->get(MenuOptions::class);
-        $navigation = $container->get(Navigation::class);
+        $navigation = $container->get(NavigationInterface::class);
         $template = $container->get(TemplateRendererInterface::class);
 
         return new NavigationRenderer($navigation, $template, $options);

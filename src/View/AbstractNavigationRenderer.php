@@ -11,7 +11,7 @@ namespace Dot\Navigation\View;
 
 use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\NavigationContainer;
-use Dot\Navigation\Service\Navigation;
+use Dot\Navigation\Service\NavigationInterface;
 use Zend\Escaper\Escaper;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
@@ -21,7 +21,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  */
 abstract class AbstractNavigationRenderer
 {
-    /** @var Navigation  */
+    /** @var NavigationInterface  */
     protected $navigation;
 
     /** @var  string */
@@ -35,10 +35,10 @@ abstract class AbstractNavigationRenderer
 
     /**
      * AbstractNavigationHelper constructor.
-     * @param Navigation $navigation
+     * @param NavigationInterface $navigation
      * @param TemplateRendererInterface $template
      */
-    public function __construct(Navigation $navigation, TemplateRendererInterface $template)
+    public function __construct(NavigationInterface $navigation, TemplateRendererInterface $template)
     {
         $this->navigation = $navigation;
         $this->template = $template;

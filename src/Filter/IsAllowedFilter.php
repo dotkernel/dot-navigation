@@ -10,7 +10,7 @@
 namespace Dot\Navigation\Filter;
 
 
-use Dot\Navigation\Service\Navigation;
+use Dot\Navigation\Service\NavigationInterface;
 
 /**
  * Class IsAllowedFilter
@@ -18,15 +18,15 @@ use Dot\Navigation\Service\Navigation;
  */
 class IsAllowedFilter extends \RecursiveFilterIterator
 {
-    /** @var  Navigation */
+    /** @var  NavigationInterface */
     protected $navigation;
 
     /**
      * IsAllowedFilter constructor.
      * @param \RecursiveIterator $iterator
-     * @param Navigation $navigation
+     * @param NavigationInterface $navigation
      */
-    public function __construct(\RecursiveIterator $iterator, Navigation $navigation)
+    public function __construct(\RecursiveIterator $iterator, NavigationInterface $navigation)
     {
         $this->navigation = $navigation;
         parent::__construct($iterator);
