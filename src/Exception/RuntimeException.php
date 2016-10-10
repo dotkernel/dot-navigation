@@ -15,5 +15,5 @@ namespace Dot\Navigation\Exception;
  */
 class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
-    
+
 }

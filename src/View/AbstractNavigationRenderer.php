@@ -21,7 +21,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  */
 abstract class AbstractNavigationRenderer
 {
-    /** @var NavigationInterface  */
+    /** @var NavigationInterface */
     protected $navigation;
 
     /** @var  string */
@@ -30,7 +30,7 @@ abstract class AbstractNavigationRenderer
     /** @var  NavigationContainer */
     protected $container;
 
-    /** @var TemplateRendererInterface  */
+    /** @var TemplateRendererInterface */
     protected $template;
 
     /**
@@ -52,12 +52,9 @@ abstract class AbstractNavigationRenderer
     {
         $container = $container ? $container : $this->container;
 
-        if(is_string($container))
-        {
+        if (is_string($container)) {
             return $this->navigation->getContainer($container);
-        }
-        elseif(!$container instanceof NavigationContainer)
-        {
+        } elseif (!$container instanceof NavigationContainer) {
             throw new RuntimeException('Container must be a string or instance of ' . NavigationContainer::class);
         }
 
@@ -73,7 +70,7 @@ abstract class AbstractNavigationRenderer
      */
     protected function cleanAttributes(array $input, array $valid)
     {
-        foreach($input as $key => $value) {
+        foreach ($input as $key => $value) {
             if (preg_match('/^data-(.+)/', $key) || in_array($key, $valid)) {
                 continue;
             }
@@ -87,8 +84,7 @@ abstract class AbstractNavigationRenderer
         $xhtml = '';
         $escaper = new Escaper();
 
-        foreach ($attributes as $key => $val)
-        {
+        foreach ($attributes as $key => $val) {
             $key = $escaper->escapeHtml($key);
 
             if (('on' == substr($key, 0, 2)) || ('constraints' == $key)) {

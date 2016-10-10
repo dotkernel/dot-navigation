@@ -17,19 +17,19 @@ use Zend\Stdlib\AbstractOptions;
  */
 class MenuOptions extends AbstractOptions
 {
-    /** @var int  */
+    /** @var int */
     protected $minDepth = -1;
 
-    /** @var int  */
+    /** @var int */
     protected $maxDepth = -1;
 
-    /** @var string  */
+    /** @var string */
     protected $activeClass = 'active';
 
-    /** @var string  */
+    /** @var string */
     protected $ulClass = 'nav';
 
-    /** @var bool  */
+    /** @var bool */
     protected $__strictMode__ = false;
 
     /**

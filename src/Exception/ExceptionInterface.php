@@ -15,5 +15,5 @@ namespace Dot\Navigation\Exception;
  */
 interface ExceptionInterface
 {
-    
+
 }

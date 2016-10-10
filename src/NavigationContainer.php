@@ -99,8 +99,7 @@ class NavigationContainer implements \RecursiveIterator
      */
     public function addPages(array $pages)
     {
-        foreach ($pages as $page)
-        {
+        foreach ($pages as $page) {
             $this->addPage($page);
         }
     }
@@ -127,7 +126,7 @@ class NavigationContainer implements \RecursiveIterator
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         /** @var Page $page */
         foreach ($iterator as $page) {
-            if($page->getAttribute($attribute) == $value) {
+            if ($page->getAttribute($attribute) == $value) {
                 return $page;
             }
         }
@@ -144,7 +143,7 @@ class NavigationContainer implements \RecursiveIterator
      */
     public function findByAttribute($attribute, $value)
     {
-        $result   = [];
+        $result = [];
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
 
         /** @var Page $page */
@@ -174,6 +173,7 @@ class NavigationContainer implements \RecursiveIterator
         }
         return null;
     }
+
     /**
      * Finds all children by option.
      *
@@ -183,7 +183,7 @@ class NavigationContainer implements \RecursiveIterator
      */
     public function findByOption($option, $value)
     {
-        $result   = [];
+        $result = [];
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         /** @var Page $page */
         foreach ($iterator as $page) {

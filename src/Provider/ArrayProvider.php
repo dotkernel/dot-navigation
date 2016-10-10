@@ -42,13 +42,12 @@ class ArrayProvider implements ProviderInterface
      */
     public function getContainer()
     {
-        if($this->container instanceof NavigationContainer) {
+        if ($this->container instanceof NavigationContainer) {
             return $this->container;
         }
 
         $this->container = new NavigationContainer();
-        foreach ($this->config as $page)
-        {
+        foreach ($this->config as $page) {
             $page = $this->getPage($page);
             $this->container->addPage($page);
         }
@@ -64,17 +63,16 @@ class ArrayProvider implements ProviderInterface
     {
         $page = new Page();
 
-        if(isset($spec['attributes'])) {
+        if (isset($spec['attributes'])) {
             $page->setAttributes($spec['attributes']);
         }
 
-        if(isset($spec['options'])) {
+        if (isset($spec['options'])) {
             $page->setOptions($spec['options']);
         }
 
-        if(isset($spec['pages'])) {
-            foreach ($spec['pages'] as $childSpec)
-            {
+        if (isset($spec['pages'])) {
+            foreach ($spec['pages'] as $childSpec) {
                 $page->addPage($this->getPage($childSpec));
             }
         }

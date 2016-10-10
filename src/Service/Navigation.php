@@ -10,8 +10,8 @@
 namespace Dot\Navigation\Service;
 
 use Dot\Authorization\AuthorizationInterface;
-use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Exception\RuntimeException;
+use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Page;
 use Dot\Navigation\Provider\ProviderInterface;
@@ -81,8 +81,8 @@ class Navigation implements NavigationInterface
         ProviderPluginManager $providerPluginManager,
         UrlHelper $urlHelper,
         NavigationOptions $moduleOptions,
-        AuthorizationInterface $authorization = null)
-    {
+        AuthorizationInterface $authorization = null
+    ) {
         $this->urlHelper = $urlHelper;
         $this->authorization = $authorization;
         $this->providerPluginManager = $providerPluginManager;
@@ -115,7 +115,7 @@ class Navigation implements NavigationInterface
     {
         if ($isActiveRecursion != $this->isActiveRecursion) {
             $this->isActiveRecursion = $isActiveRecursion;
-            $this->isActiveCache     = array();
+            $this->isActiveCache = array();
         }
         return $this;
     }
@@ -134,14 +134,14 @@ class Navigation implements NavigationInterface
      */
     public function getContainer($name)
     {
-        if(isset($this->containers[$name])) {
+        if (isset($this->containers[$name])) {
             return $this->containers[$name];
         }
 
         $map = $this->moduleOptions->getProvidersMap();
         $containersConfig = $this->moduleOptions->getContainers();
 
-        if(!isset($map[$name])) {
+        if (!isset($map[$name])) {
             throw new RuntimeException("No navigation container with name $name is registered");
         }
 
@@ -150,7 +150,7 @@ class Navigation implements NavigationInterface
         $containerProvider = $this->providerPluginManager->get($map[$name], $containerConfig);
 
         $container = $containerProvider->getContainer();
-        if(!$container instanceof NavigationContainer) {
+        if (!$container instanceof NavigationContainer) {
             throw new RuntimeException(sprintf(
                 "Navigation container for name %s is not an instance of %s",
                 $name, NavigationContainer::class));
@@ -163,15 +163,14 @@ class Navigation implements NavigationInterface
     public function isAllowed(Page $page)
     {
         //authorization module is optional, this function will always return true if missing
-        if(!$this->authorization) {
+        if (!$this->authorization) {
             return true;
         }
 
         $options = $page->getOptions();
-        
-        if(isset($options['permission']))
-        {
-            if(isset($options['roles'])) {
+
+        if (isset($options['permission'])) {
+            if (isset($options['roles'])) {
                 return $this->authorization->isGranted($options['permission'], $options['roles']);
             }
             return $this->authorization->isGranted($options['permission']);
@@ -183,13 +182,12 @@ class Navigation implements NavigationInterface
     public function isActive(Page $page)
     {
         $hash = spl_object_hash($page);
-        if(isset($this->isActiveCache[$hash])) {
+        if (isset($this->isActiveCache[$hash])) {
             return $this->isActiveCache[$hash];
         }
 
         $active = false;
-        if($this->routeResult && $this->routeResult->isSuccess())
-        {
+        if ($this->routeResult && $this->routeResult->isSuccess()) {
             $routeName = $this->routeResult->getMatchedRouteName();
             if ($page->getOption('route') == $routeName) {
                 $reqParams = array_merge($this->routeResult->getMatchedParams(), $_GET);
@@ -201,9 +199,7 @@ class Navigation implements NavigationInterface
                 $ignoreParams = $page->getOption('ignore_params') ? $page->getOption('ignore_params') : [];
 
                 $active = $this->areParamsEqual($pageParams, $reqParams, $ignoreParams);
-            }
-            elseif ($this->isActiveRecursion)
-            {
+            } elseif ($this->isActiveRecursion) {
                 $iterator = new \RecursiveIteratorIterator($page, \RecursiveIteratorIterator::CHILD_FIRST);
 
                 /** @var Page $page */
@@ -231,35 +227,29 @@ class Navigation implements NavigationInterface
     public function getHref(Page $page)
     {
         $hash = spl_object_hash($page);
-        if(isset($this->hrefCache[$hash])) {
+        if (isset($this->hrefCache[$hash])) {
             return $this->hrefCache[$hash];
         }
 
         $href = null;
-        if($page->getOption('uri'))
-        {
+        if ($page->getOption('uri')) {
             $href = $page->getOption('uri');
-        }
-        elseif($page->getOption('route'))
-        {
+        } elseif ($page->getOption('route')) {
             $params = $page->getOption('params') ? $page->getOption('params') : [];
             $href = $this->urlHelper->generate($page->getOption('route'), $params);
         }
 
-        if($href)
-        {
-            if($page->getOption('query_params')) {
+        if ($href) {
+            if ($page->getOption('query_params')) {
                 $href .= '?' . http_build_query($page->getOption('query_params'));
             }
 
-            if($page->getOption('fragment')) {
+            if ($page->getOption('fragment')) {
                 $href .= '#' . trim($page->getOption('fragment'), '#');
             }
 
             $this->hrefCache[$hash] = $href;
-        }
-        else
-        {
+        } else {
             throw new RuntimeException('Unable to assemble href for navigation page ' . $page->getName());
         }
 

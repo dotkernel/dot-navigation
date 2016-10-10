@@ -9,9 +9,9 @@
 
 namespace Dot\Navigation;
 
+use Dot\Navigation\Factory\NavigationMiddlewareFactory;
 use Dot\Navigation\Factory\NavigationOptionsFactory;
 use Dot\Navigation\Factory\NavigationRendererFactory;
-use Dot\Navigation\Factory\NavigationMiddlewareFactory;
 use Dot\Navigation\Factory\NavigationServiceFactory;
 use Dot\Navigation\Factory\ProviderPluginManagerFactory;
 use Dot\Navigation\Options\NavigationOptions;

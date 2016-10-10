@@ -33,8 +33,8 @@ class NavigationRenderer extends AbstractNavigationRenderer
     public function __construct(
         Navigation $navigation,
         TemplateRendererInterface $template,
-        MenuOptions $options)
-    {
+        MenuOptions $options
+    ) {
         $this->options = $options;
         parent::__construct($navigation, $template);
     }
@@ -51,33 +51,26 @@ class NavigationRenderer extends AbstractNavigationRenderer
         $iterator->setMaxDepth($this->options->getMaxDepth());
 
         $prevDepth = -1;
-        foreach ($iterator as $page)
-        {
+        foreach ($iterator as $page) {
             $depth = $iterator->getDepth();
 
-            if($depth == $this->options->getMinDepth()) {
+            if ($depth == $this->options->getMinDepth()) {
                 $prevDepth = $depth;
                 continue;
             }
 
-            if($depth > $prevDepth)
-            {
+            if ($depth > $prevDepth) {
                 $html .= sprintf('<ul%s>',
                     $prevDepth == $this->options->getMinDepth()
                         ? ' class="' . $this->options->getUlClass() . '"'
                         : '');
-            }
-            elseif($prevDepth > $depth)
-            {
-                for($i = $prevDepth; $i > $depth; $i--)
-                {
+            } elseif ($prevDepth > $depth) {
+                for ($i = $prevDepth; $i > $depth; $i--) {
                     $html .= '</li>';
                     $html .= '</ul>';
                 }
                 $html .= '</li>';
-            }
-            else
-            {
+            } else {
                 $html .= '</li>';
             }
 
@@ -87,9 +80,8 @@ class NavigationRenderer extends AbstractNavigationRenderer
             $prevDepth = $depth;
         }
 
-        if($html) {
-            for($i = $prevDepth+1; $i > 0; $i--)
-            {
+        if ($html) {
+            for ($i = $prevDepth + 1; $i > 0; $i--) {
                 $html .= '</li></ul>';
             }
         }
@@ -107,11 +99,11 @@ class NavigationRenderer extends AbstractNavigationRenderer
     {
         $container = $this->getContainer($container);
 
-        if(null === $partial) {
+        if (null === $partial) {
             $partial = $this->getPartial();
         }
 
-        if(empty($partial)) {
+        if (empty($partial)) {
             throw new RuntimeException('Unable to render menu: no partial template provided');
         }
 
@@ -127,7 +119,7 @@ class NavigationRenderer extends AbstractNavigationRenderer
     public function render($container = null)
     {
         $container = $this->getContainer($container);
-        if($this->getPartial()) {
+        if ($this->getPartial()) {
             return $this->renderPartial($container);
         }
 
@@ -140,27 +132,24 @@ class NavigationRenderer extends AbstractNavigationRenderer
      */
     public function htmlify(Page $page)
     {
-        if($page->getOption('label')) {
+        if ($page->getOption('label')) {
             $label = $page->getOption('label');
-        }
-        else {
+        } else {
             $label = $page->getName();
         }
 
         $href = null;
         try {
             $href = $this->navigation->getHref($page);
-        }
-        catch(RuntimeException $e) {
+        } catch (RuntimeException $e) {
             ; //intentionally left blank
         }
 
         $attributes = $page->getAttributes();
-        if($href) {
+        if ($href) {
             $element = 'a';
             $attributes['href'] = $href;
-        }
-        else {
+        } else {
             $element = 'span';
         }
 

@@ -24,7 +24,7 @@ class NavigationOptions extends AbstractOptions
     /** @var  array */
     protected $providersMap;
 
-    /** @var bool  */
+    /** @var bool */
     protected $activeRecursion = true;
 
     /** @var  MenuOptions */
@@ -97,19 +97,16 @@ class NavigationOptions extends AbstractOptions
      */
     public function setMenuOptions($menuOptions)
     {
-        if($menuOptions instanceof MenuOptions) {
+        if ($menuOptions instanceof MenuOptions) {
             $this->menuOptions = $menuOptions;
-        }
-        elseif(is_array($menuOptions)) {
+        } elseif (is_array($menuOptions)) {
             $this->menuOptions = new MenuOptions($menuOptions);
-        }
-        else {
+        } else {
             throw new InvalidArgumentException('Menu options must be an array or instance of' . MenuOptions::class);
         }
 
         return $this;
     }
-
 
 
 }

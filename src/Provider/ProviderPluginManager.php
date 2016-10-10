@@ -21,7 +21,7 @@ class ProviderPluginManager extends AbstractPluginManager
     /** @var  string */
     protected $instanceOf = ProviderInterface::class;
 
-    /** @var array  */
+    /** @var array */
     protected $factories = [
         ArrayProvider::class => InvokableFactory::class,
     ];
