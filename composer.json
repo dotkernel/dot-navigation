@@ -36,12 +36,6 @@
       "DotTest\\Navigation\\": "test/"
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/dotkernel/dot-authorization.git"
-    }
-  ],
   "extra": {
     "branch-alias": {
       "dev-master": "0.6-dev"
