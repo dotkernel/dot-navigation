@@ -9,7 +9,7 @@
 
 namespace Dot\Navigation\Factory;
 
-use Dot\Navigation\Options\MenuOptions;
+use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Service\NavigationInterface;
 use Dot\Navigation\View\NavigationRenderer;
 use Interop\Container\ContainerInterface;
@@ -27,7 +27,7 @@ class NavigationRendererFactory
      */
     public function __invoke(ContainerInterface $container)
     {
-        $options = $container->get(MenuOptions::class);
+        $options = $container->get(NavigationOptions::class);
         $navigation = $container->get(NavigationInterface::class);
         $template = $container->get(TemplateRendererInterface::class);
 

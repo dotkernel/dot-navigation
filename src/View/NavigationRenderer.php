@@ -12,7 +12,7 @@ namespace Dot\Navigation\View;
 use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\Filter\IsAllowedFilter;
 use Dot\Navigation\NavigationContainer;
-use Dot\Navigation\Options\MenuOptions;
+use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Page;
 use Dot\Navigation\Service\Navigation;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -20,7 +20,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 class NavigationRenderer extends AbstractNavigationRenderer
 {
     /**
-     * @var MenuOptions
+     * @var NavigationOptions
      */
     protected $options;
 
@@ -28,12 +28,12 @@ class NavigationRenderer extends AbstractNavigationRenderer
      * NavigationMenu constructor.
      * @param Navigation $navigation
      * @param TemplateRendererInterface $template
-     * @param MenuOptions $options
+     * @param NavigationOptions $options
      */
     public function __construct(
         Navigation $navigation,
         TemplateRendererInterface $template,
-        MenuOptions $options
+        NavigationOptions $options
     ) {
         $this->options = $options;
         parent::__construct($navigation, $template);
@@ -48,21 +48,21 @@ class NavigationRenderer extends AbstractNavigationRenderer
         $html = '';
         $filter = new IsAllowedFilter($this->getContainer($container), $this->navigation);
         $iterator = new \RecursiveIteratorIterator($filter, \RecursiveIteratorIterator::SELF_FIRST);
-        $iterator->setMaxDepth($this->options->getMaxDepth());
+        $iterator->setMaxDepth($this->options->getMenuOptions()->getMaxDepth());
 
         $prevDepth = -1;
         foreach ($iterator as $page) {
             $depth = $iterator->getDepth();
 
-            if ($depth == $this->options->getMinDepth()) {
+            if ($depth == $this->options->getMenuOptions()->getMinDepth()) {
                 $prevDepth = $depth;
                 continue;
             }
 
             if ($depth > $prevDepth) {
                 $html .= sprintf('<ul%s>',
-                    $prevDepth == $this->options->getMinDepth()
-                        ? ' class="' . $this->options->getUlClass() . '"'
+                    $prevDepth == $this->options->getMenuOptions()->getMinDepth()
+                        ? ' class="' . $this->options->getMenuOptions()->getUlClass() . '"'
                         : '');
             } elseif ($prevDepth > $depth) {
                 for ($i = $prevDepth; $i > $depth; $i--) {
@@ -74,7 +74,10 @@ class NavigationRenderer extends AbstractNavigationRenderer
                 $html .= '</li>';
             }
 
-            $liClass = $this->navigation->isActive($page) ? ' class="' . $this->options->getActiveClass() . '"' : '';
+            $liClass = $this->navigation->isActive($page)
+                ? ' class="' . $this->options->getMenuOptions()->getActiveClass() . '"'
+                : '';
+
             $html .= sprintf('<li%s>%s', $liClass, $this->htmlify($page));
 
             $prevDepth = $depth;
