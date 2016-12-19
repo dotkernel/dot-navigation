@@ -9,7 +9,6 @@
 
 namespace Dot\Navigation;
 
-use RecursiveIterator;
 
 /**
  * Class Container

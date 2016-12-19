@@ -17,7 +17,7 @@ use Dot\Navigation\Factory\ProviderPluginManagerFactory;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Provider\ProviderPluginManager;
 use Dot\Navigation\Service\NavigationInterface;
-use Dot\Navigation\View\NavigationRenderer;
+use Dot\Navigation\View\RendererInterface;
 
 /**
  * Class ConfigProvider
@@ -75,7 +75,7 @@ class ConfigProvider
 
                 NavigationInterface::class => NavigationServiceFactory::class,
 
-                NavigationRenderer::class => NavigationRendererFactory::class,
+                RendererInterface::class => NavigationRendererFactory::class,
 
                 NavigationMiddleware::class => NavigationMiddlewareFactory::class,
             ],

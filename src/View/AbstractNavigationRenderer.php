@@ -19,7 +19,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  * Class AbstractNavigationHelper
  * @package Dot\Navigation\Helper
  */
-abstract class AbstractNavigationRenderer
+abstract class AbstractNavigationRenderer implements RendererInterface
 {
     /** @var NavigationInterface */
     protected $navigation;

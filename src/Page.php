@@ -56,7 +56,7 @@ class Page extends NavigationContainer
 
     /**
      * @param Page $page
-     * @return $this
+     * @return NavigationContainer
      */
     public function addPage(Page $page)
     {
