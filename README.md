@@ -99,3 +99,11 @@ If you are using twig, there is already a twig extension provided in package dot
 When using the partial method, the template will receive as parameters the container, the navigation service and any extra parameters set by the developer.
 
 Navigation containers are referred, when parsed, by their name, as defined in the configuration file.
+
+## Required page options and attributes
+
+The following are options that each page should define in the configuration
+* `label` - the text of the menu item
+* `route` or `uri` - defines the route or link the menu item will have
+* `params`, `query_params`, `fragment` - are all options to use with the route option, to generate the complete route, if required. These are optional.
+* `permission` - can be used optionally, if authorization service is present, in order to omit menu items that are not authorized to visit.
