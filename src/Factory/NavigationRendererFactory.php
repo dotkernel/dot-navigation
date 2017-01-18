@@ -32,6 +32,5 @@ class NavigationRendererFactory
         $template = $container->get(TemplateRendererInterface::class);
 
         return new NavigationRenderer($navigation, $template, $options);
-
     }
 }

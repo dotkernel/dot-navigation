@@ -107,6 +107,4 @@ class NavigationOptions extends AbstractOptions
 
         return $this;
     }
-
-
 }

@@ -7,6 +7,7 @@
  */
 
 namespace Dot\Navigation\View;
+
 use Dot\Navigation\Page;
 
 /**

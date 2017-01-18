@@ -17,6 +17,10 @@ use Dot\Navigation\Page;
 use Dot\Navigation\Service\Navigation;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
+/**
+ * Class NavigationRenderer
+ * @package Dot\Navigation\View
+ */
 class NavigationRenderer extends AbstractNavigationRenderer
 {
     /**
@@ -40,6 +44,48 @@ class NavigationRenderer extends AbstractNavigationRenderer
     }
 
     /**
+     * Default render
+     * @param null|string|NavigationContainer $container
+     * @return string
+     */
+    public function render($container = null)
+    {
+        $container = $this->getContainer($container);
+        if ($this->getPartial()) {
+            return $this->renderPartial($container);
+        }
+
+        return $this->renderMenu($container);
+    }
+
+    /**
+     * @param null|string|NavigationContainer $container
+     * @param null|string $partial
+     * @param array $extra
+     * @return string
+     */
+    public function renderPartial($container = null, $partial = null, array $extra = [])
+    {
+        $container = $this->getContainer($container);
+
+        if (null === $partial) {
+            $partial = $this->getPartial();
+        }
+
+        if (empty($partial)) {
+            throw new RuntimeException('Unable to render menu: no partial template provided');
+        }
+
+        return $this->template->render(
+            $partial,
+            array_merge(
+                ['container' => $container, 'navigation' => $this->navigation],
+                $extra
+            )
+        );
+    }
+
+    /**
      * @param string|NavigationContainer|null $container
      * @return string
      */
@@ -60,10 +106,12 @@ class NavigationRenderer extends AbstractNavigationRenderer
             }
 
             if ($depth > $prevDepth) {
-                $html .= sprintf('<ul%s>',
+                $html .= sprintf(
+                    '<ul%s>',
                     $prevDepth == $this->options->getMenuOptions()->getMinDepth()
                         ? ' class="' . $this->options->getMenuOptions()->getUlClass() . '"'
-                        : '');
+                        : ''
+                );
             } elseif ($prevDepth > $depth) {
                 for ($i = $prevDepth; $i > $depth; $i--) {
                     $html .= '</li>';
@@ -90,43 +138,6 @@ class NavigationRenderer extends AbstractNavigationRenderer
         }
 
         return $html;
-    }
-
-    /**
-     * @param null|string|NavigationContainer $container
-     * @param null|string $partial
-     * @param array $extra
-     * @return string
-     */
-    public function renderPartial($container = null, $partial = null, array $extra = [])
-    {
-        $container = $this->getContainer($container);
-
-        if (null === $partial) {
-            $partial = $this->getPartial();
-        }
-
-        if (empty($partial)) {
-            throw new RuntimeException('Unable to render menu: no partial template provided');
-        }
-
-        return $this->template->render($partial,
-            array_merge(['container' => $container, 'navigation' => $this->navigation], $extra));
-    }
-
-    /**
-     * Default render
-     * @param null|string|NavigationContainer $container
-     * @return string
-     */
-    public function render($container = null)
-    {
-        $container = $this->getContainer($container);
-        if ($this->getPartial()) {
-            return $this->renderPartial($container);
-        }
-
-        return $this->renderMenu($container);
     }
 
     /**
