@@ -189,29 +189,24 @@ class Navigation implements NavigationInterface
         if (isset($this->isActiveCache[$hash])) {
             return $this->isActiveCache[$hash];
         }
-
         $active = false;
         if ($this->routeResult && $this->routeResult->isSuccess()) {
             $routeName = $this->routeResult->getMatchedRouteName();
-            if ($page->getOption('route_name') == $routeName) {
+            if ($page->getOption('route') == $routeName) {
                 $reqParams = array_merge($this->routeResult->getMatchedParams(), $_GET);
                 $pageParams = array_merge(
-                    $page->getOption('route_params') ? $page->getOption('route_params') : [],
+                    $page->getOption('params') ? $page->getOption('params') : [],
                     $page->getOption('query_params') ? $page->getOption('query_params') : []
                 );
-
                 $ignoreParams = $page->getOption('ignore_params') ? $page->getOption('ignore_params') : [];
-
                 $active = $this->areParamsEqual($pageParams, $reqParams, $ignoreParams);
             } elseif ($this->isActiveRecursion) {
                 $iterator = new \RecursiveIteratorIterator($page, \RecursiveIteratorIterator::CHILD_FIRST);
-
                 /** @var Page $page */
                 foreach ($iterator as $leaf) {
                     if (!$leaf instanceof Page) {
                         continue;
                     }
-
                     if ($this->isActive($leaf)) {
                         $active = true;
                         break;
@@ -219,7 +214,6 @@ class Navigation implements NavigationInterface
                 }
             }
         }
-
         $this->isActiveCache[$hash] = $active;
         return $active;
     }
@@ -251,31 +245,24 @@ class Navigation implements NavigationInterface
         if (isset($this->hrefCache[$hash])) {
             return $this->hrefCache[$hash];
         }
-
         $href = null;
         if ($page->getOption('uri')) {
             $href = $page->getOption('uri');
-        } elseif ($page->getOption('route_name')) {
-            $routeParams = $page->getOption('route_params') ? $page->getOption('route_params') : [];
-            $queryParams = $page->getOption('query_params') ? $page->getOption('query_params') : [];
-            $fragmentId = $page->getOption('fragment_identifier') ? $page->getOption('fragment_identifier') : null;
-            $options = $page->getOption('route_options') ? $page->getOption('route_options') : [];
-
-            $href = $this->urlHelper->generate(
-                $page->getOption('route_name'),
-                $routeParams,
-                $queryParams,
-                $fragmentId,
-                $options
-            );
+        } elseif ($page->getOption('route')) {
+            $params = $page->getOption('params') ? $page->getOption('params') : [];
+            $href = $this->urlHelper->generate($page->getOption('route'), $params);
         }
-
         if ($href) {
+            if ($page->getOption('query_params')) {
+                $href .= '?' . http_build_query($page->getOption('query_params'));
+            }
+            if ($page->getOption('fragment')) {
+                $href .= '#' . trim($page->getOption('fragment'), '#');
+            }
             $this->hrefCache[$hash] = $href;
         } else {
             throw new RuntimeException('Unable to assemble href for navigation page ' . $page->getName());
         }
-
         return $href;
     }
 }
