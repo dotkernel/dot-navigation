@@ -9,7 +9,6 @@
 
 namespace Dot\Navigation\Filter;
 
-
 use Dot\Navigation\Service\NavigationInterface;
 
 /**
@@ -49,5 +48,4 @@ class IsAllowedFilter extends \RecursiveFilterIterator
         $innerIterator = $this->getInnerIterator();
         return new self($innerIterator->getChildren(), $this->navigation);
     }
-
 }

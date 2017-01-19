@@ -31,14 +31,6 @@ class Page extends NavigationContainer
     protected $parent;
 
     /**
-     * @param Page $parent
-     */
-    public function setParent(Page $parent)
-    {
-        $this->parent = $parent;
-    }
-
-    /**
      * @return bool
      */
     public function hasParent()
@@ -52,6 +44,14 @@ class Page extends NavigationContainer
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * @param Page $parent
+     */
+    public function setParent(Page $parent)
+    {
+        $this->parent = $parent;
     }
 
     /**
@@ -76,12 +76,11 @@ class Page extends NavigationContainer
     }
 
     /**
-     * @param $option
-     * @return mixed|null
+     * @return array
      */
-    public function getOption($option)
+    public function getOptions()
     {
-        return isset($this->options[$option]) ? $this->options[$option] : null;
+        return $this->options;
     }
 
     /**
@@ -92,14 +91,6 @@ class Page extends NavigationContainer
     {
         $this->options = $options;
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
     }
 
     /**
@@ -123,6 +114,14 @@ class Page extends NavigationContainer
     }
 
     /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
      * @param array $attributes
      * @return $this
      */
@@ -133,18 +132,19 @@ class Page extends NavigationContainer
     }
 
     /**
-     * @return array
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    /**
      * @return mixed|null
      */
     public function getName()
     {
         return $this->getOption('name');
+    }
+
+    /**
+     * @param $option
+     * @return mixed|null
+     */
+    public function getOption($option)
+    {
+        return isset($this->options[$option]) ? $this->options[$option] : null;
     }
 }

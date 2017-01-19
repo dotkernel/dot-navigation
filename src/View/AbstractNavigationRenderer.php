@@ -44,41 +44,6 @@ abstract class AbstractNavigationRenderer implements RendererInterface
         $this->template = $template;
     }
 
-    /**
-     * @param $container
-     * @return NavigationContainer
-     */
-    protected function getContainer($container)
-    {
-        $container = $container ? $container : $this->container;
-
-        if (is_string($container)) {
-            return $this->navigation->getContainer($container);
-        } elseif (!$container instanceof NavigationContainer) {
-            throw new RuntimeException('Container must be a string or instance of ' . NavigationContainer::class);
-        }
-
-        return $container;
-    }
-
-    /**
-     * Cleans array of attributes based on valid input.
-     *
-     * @param array $input
-     * @param array $valid
-     * @return array
-     */
-    protected function cleanAttributes(array $input, array $valid)
-    {
-        foreach ($input as $key => $value) {
-            if (preg_match('/^data-(.+)/', $key) || in_array($key, $valid)) {
-                continue;
-            }
-            unset($input[$key]);
-        }
-        return $input;
-    }
-
     public function htmlAttributes(array $attributes)
     {
         $xhtml = '';
@@ -133,6 +98,14 @@ abstract class AbstractNavigationRenderer implements RendererInterface
     }
 
     /**
+     * @return string|null
+     */
+    public function getPartial()
+    {
+        return $this->partial;
+    }
+
+    /**
      * @param string $partial
      * @return $this
      */
@@ -143,10 +116,37 @@ abstract class AbstractNavigationRenderer implements RendererInterface
     }
 
     /**
-     * @return string|null
+     * @param $container
+     * @return NavigationContainer
      */
-    public function getPartial()
+    protected function getContainer($container)
     {
-        return $this->partial;
+        $container = $container ? $container : $this->container;
+
+        if (is_string($container)) {
+            return $this->navigation->getContainer($container);
+        } elseif (!$container instanceof NavigationContainer) {
+            throw new RuntimeException('Container must be a string or instance of ' . NavigationContainer::class);
+        }
+
+        return $container;
+    }
+
+    /**
+     * Cleans array of attributes based on valid input.
+     *
+     * @param array $input
+     * @param array $valid
+     * @return array
+     */
+    protected function cleanAttributes(array $input, array $valid)
+    {
+        foreach ($input as $key => $value) {
+            if (preg_match('/^data-(.+)/', $key) || in_array($key, $valid)) {
+                continue;
+            }
+            unset($input[$key]);
+        }
+        return $input;
     }
 }

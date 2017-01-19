@@ -8,7 +8,6 @@
 
 namespace Dot\Navigation\Service;
 
-
 use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Page;
 use Zend\Expressive\Router\RouteResult;

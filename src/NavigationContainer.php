@@ -9,7 +9,6 @@
 
 namespace Dot\Navigation;
 
-
 /**
  * Class Container
  * @package Dot\Navigation
@@ -35,6 +34,26 @@ class NavigationContainer implements \RecursiveIterator
     public function __construct(array $pages = [])
     {
         $this->addPages($pages);
+    }
+
+    /**
+     * @param array $pages
+     */
+    public function addPages(array $pages)
+    {
+        foreach ($pages as $page) {
+            $this->addPage($page);
+        }
+    }
+
+    /**
+     * @param Page $page
+     * @return $this
+     */
+    public function addPage(Page $page)
+    {
+        $this->children[] = $page;
+        return $this;
     }
 
     /**
@@ -91,26 +110,6 @@ class NavigationContainer implements \RecursiveIterator
     public function getChildren()
     {
         return $this->children[$this->index];
-    }
-
-    /**
-     * @param array $pages
-     */
-    public function addPages(array $pages)
-    {
-        foreach ($pages as $page) {
-            $this->addPage($page);
-        }
-    }
-
-    /**
-     * @param Page $page
-     * @return $this
-     */
-    public function addPage(Page $page)
-    {
-        $this->children[] = $page;
-        return $this;
     }
 
     /**
@@ -192,5 +191,4 @@ class NavigationContainer implements \RecursiveIterator
         }
         return $result;
     }
-
 }

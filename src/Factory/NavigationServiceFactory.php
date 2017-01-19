@@ -32,7 +32,7 @@ class NavigationServiceFactory
         $authorization = $container->has(AuthorizationInterface::class)
             ? $container->get(AuthorizationInterface::class)
             : null;
-        
+
         $providerPluginManager = $container->get(ProviderPluginManager::class);
 
         /** @var NavigationOptions $options */

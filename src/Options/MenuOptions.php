@@ -95,6 +95,4 @@ class MenuOptions extends AbstractOptions
     {
         $this->ulClass = $ulClass;
     }
-
-
 }
