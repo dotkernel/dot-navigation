@@ -35,7 +35,7 @@ class Page extends NavigationContainer
     /**
      * @return bool
      */
-    public function hasParent()
+    public function hasParent(): bool
     {
         return null !== $this->parent;
     }
@@ -43,7 +43,7 @@ class Page extends NavigationContainer
     /**
      * @return Page|null
      */
-    public function getParent()
+    public function getParent(): ?Page
     {
         return $this->parent;
     }
@@ -58,95 +58,98 @@ class Page extends NavigationContainer
 
     /**
      * @param Page $page
-     * @return NavigationContainer
      */
     public function addPage(Page $page)
     {
         $page->setParent($this);
-        return parent::addPage($page);
+        parent::addPage($page);
     }
 
     /**
-     * @param $option
-     * @param $value
-     * @return $this
+     * @param string $option
+     * @param mixed $value
      */
-    public function setOption($option, $value)
+    public function setOption(string $option, mixed $value)
     {
         $this->options[$option] = $value;
-        return $this;
     }
 
     /**
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
 
     /**
      * @param array $options
-     * @return $this
      */
     public function setOptions(array $options)
     {
         $this->options = $options;
-        return $this;
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @return $this
+     * @param string $attribute
+     * @param mixed $value
      */
-    public function setAttribute($attribute, $value)
+    public function setAttribute(string $attribute, mixed $value)
     {
         $this->attributes[$attribute] = $value;
-        return $this;
     }
 
     /**
-     * @param $attribute
-     * @return mixed|null
+     * @param string $attribute
+     * @return mixed
      */
-    public function getAttribute($attribute)
+    public function getAttribute(string $attribute): ?mixed
     {
-        return isset($this->attributes[$attribute]) ? $this->attributes[$attribute] : null;
+        return $this->attributes[$attribute] ?? null;
     }
 
     /**
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
 
     /**
      * @param array $attributes
-     * @return $this
      */
     public function setAttributes(array $attributes)
     {
         $this->attributes = $attributes;
-        return $this;
     }
 
     /**
-     * @return mixed|null
+     * @return string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->getOption('name');
     }
 
     /**
-     * @param $option
-     * @return mixed|null
+     * @param string $option
+     * @return mixed
      */
-    public function getOption($option)
+    public function getOption(string $option): ?mixed
     {
-        return isset($this->options[$option]) ? $this->options[$option] : null;
+        return $this->options[$option] ?? null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel(): string
+    {
+        $label = $this->getOption('label');
+        if (!is_string($label) || empty($label)) {
+            $label = 'Not defined';
+        }
+        return $label;
     }
 }

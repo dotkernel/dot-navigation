@@ -29,7 +29,7 @@ interface RendererInterface
      * @param string $container
      * @return string
      */
-    public function renderPartial(string $partial, string $container, array $params = []): string;
+    public function renderPartial(string $container, string $partial, array $params = []): string;
 
     /**
      * @param array $attributes

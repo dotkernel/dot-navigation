@@ -16,8 +16,8 @@ use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Page;
+use Dot\Navigation\Provider\Factory;
 use Dot\Navigation\Provider\ProviderInterface;
-use Dot\Navigation\Provider\ProviderPluginManager;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Router\RouteResult;
 
@@ -33,9 +33,9 @@ class Navigation implements NavigationInterface
     protected $containers = [];
 
     /**
-     * @var ProviderPluginManager
+     * @var Factory
      */
-    protected $providerPluginManager;
+    protected $providerFactory;
 
     /**
      * @var UrlHelper
@@ -74,82 +74,76 @@ class Navigation implements NavigationInterface
 
     /**
      * NavigationService constructor.
-     * @param ProviderPluginManager $providerPluginManager
+     * @param Factory $providerFactory
      * @param AuthorizationInterface $authorization
      * @param UrlHelper $urlHelper
      * @param NavigationOptions $moduleOptions
      */
     public function __construct(
-        ProviderPluginManager $providerPluginManager,
+        Factory $providerFactory,
         UrlHelper $urlHelper,
         NavigationOptions $moduleOptions,
         AuthorizationInterface $authorization = null
     ) {
         $this->urlHelper = $urlHelper;
         $this->authorization = $authorization;
-        $this->providerPluginManager = $providerPluginManager;
+        $this->providerFactory = $providerFactory;
         $this->moduleOptions = $moduleOptions;
     }
 
     /**
      * @return RouteResult
      */
-    public function getRouteResult()
+    public function getRouteResult(): RouteResult
     {
         return $this->routeResult;
     }
 
     /**
-     * @param RouteResult|null $routeResult
-     * @return $this
+     * @param RouteResult $routeResult
      */
-    public function setRouteResult(RouteResult $routeResult = null)
+    public function setRouteResult(RouteResult $routeResult)
     {
         $this->routeResult = $routeResult;
-        return $this;
     }
 
     /**
      * @return bool
      */
-    public function getIsActiveRecursion()
+    public function getIsActiveRecursion(): bool
     {
         return $this->isActiveRecursion;
     }
 
     /**
      * @param $isActiveRecursion
-     * @return $this
      */
-    public function setIsActiveRecursion($isActiveRecursion)
+    public function setIsActiveRecursion(bool $isActiveRecursion)
     {
         if ($isActiveRecursion != $this->isActiveRecursion) {
             $this->isActiveRecursion = $isActiveRecursion;
             $this->isActiveCache = array();
         }
-        return $this;
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return NavigationContainer
      */
-    public function getContainer($name)
+    public function getContainer(string $name): NavigationContainer
     {
         if (isset($this->containers[$name])) {
             return $this->containers[$name];
         }
 
-        $map = $this->moduleOptions->getProvidersMap();
         $containersConfig = $this->moduleOptions->getContainers();
-
-        if (!isset($map[$name])) {
-            throw new RuntimeException("No navigation container with name $name is registered");
+        $containerConfig = $containersConfig[$name] ?? [];
+        if (empty($containerConfig)) {
+            throw new RuntimeException(sprintf('Container `%s` is not defined', $name));
         }
 
-        $containerConfig = isset($containersConfig[$name]) ? $containersConfig[$name] : [];
         /** @var ProviderInterface $containerProvider */
-        $containerProvider = $this->providerPluginManager->get($map[$name], $containerConfig);
+        $containerProvider = $this->providerFactory->create($containerConfig);
 
         $container = $containerProvider->getContainer();
         if (!$container instanceof NavigationContainer) {
@@ -166,7 +160,11 @@ class Navigation implements NavigationInterface
         return $this->containers[$name];
     }
 
-    public function isAllowed(Page $page)
+    /**
+     * @param Page $page
+     * @return bool
+     */
+    public function isAllowed(Page $page): bool
     {
         //authorization module is optional, this function will always return true if missing
         if (!$this->authorization) {
@@ -185,7 +183,11 @@ class Navigation implements NavigationInterface
         return true;
     }
 
-    public function isActive(Page $page)
+    /**
+     * @param Page $page
+     * @return bool
+     */
+    public function isActive(Page $page): bool
     {
         $hash = spl_object_hash($page);
         if (isset($this->isActiveCache[$hash])) {
@@ -194,7 +196,7 @@ class Navigation implements NavigationInterface
         $active = false;
         if ($this->routeResult && $this->routeResult->isSuccess()) {
             $routeName = $this->routeResult->getMatchedRouteName();
-            if ($page->getOption('route') == $routeName) {
+            if ($page->getOption('route') === $routeName) {
                 $reqParams = array_merge($this->routeResult->getMatchedParams(), $_GET);
                 $pageParams = array_merge(
                     $page->getOption('params') ? $page->getOption('params') : [],
@@ -226,7 +228,7 @@ class Navigation implements NavigationInterface
      * @param array $ignoreParams
      * @return bool
      */
-    protected function areParamsEqual(array $pageParams, array $requestParams, array $ignoreParams)
+    protected function areParamsEqual(array $pageParams, array $requestParams, array $ignoreParams): bool
     {
         foreach ($ignoreParams as $unsetKey) {
             if (isset($requestParams[$unsetKey])) {
@@ -241,7 +243,7 @@ class Navigation implements NavigationInterface
      * @param Page $page
      * @return string
      */
-    public function getHref(Page $page)
+    public function getHref(Page $page): string
     {
         $hash = spl_object_hash($page);
         if (isset($this->hrefCache[$hash])) {

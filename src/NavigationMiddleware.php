@@ -40,13 +40,15 @@ class NavigationMiddleware
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @param callable|null $next
+     * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
-    {
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        callable $next = null
+    ): ResponseInterface {
         $routeResult = $request->getAttribute(RouteResult::class, null);
-
         $this->navigation->setRouteResult($routeResult);
-
         return $next($request, $response);
     }
 }

@@ -23,37 +23,35 @@ interface NavigationInterface
 {
     /**
      * @param RouteResult $routeResult
-     * @return mixed
      */
     public function setRouteResult(RouteResult $routeResult);
 
     /**
      * @param $isActiveRecursion
-     * @return mixed
      */
-    public function setIsActiveRecursion($isActiveRecursion);
+    public function setIsActiveRecursion(bool $isActiveRecursion);
 
     /**
      * @param $name
      * @return NavigationContainer
      */
-    public function getContainer($name);
+    public function getContainer(string $name): NavigationContainer;
 
     /**
      * @param Page $page
      * @return bool
      */
-    public function isAllowed(Page $page);
+    public function isAllowed(Page $page): bool;
 
     /**
      * @param Page $page
      * @return bool
      */
-    public function isActive(Page $page);
+    public function isActive(Page $page): bool;
 
     /**
      * @param Page $page
      * @return string
      */
-    public function getHref(Page $page);
+    public function getHref(Page $page): string;
 }

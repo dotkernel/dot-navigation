@@ -45,6 +45,10 @@ abstract class AbstractNavigationRenderer implements RendererInterface
         $this->template = $template;
     }
 
+    /**
+     * @param array $attributes
+     * @return string
+     */
     public function htmlAttributes(array $attributes): string
     {
         $xhtml = '';

@@ -27,4 +27,12 @@ class ProviderPluginManager extends AbstractPluginManager
     protected $factories = [
         ArrayProvider::class => InvokableFactory::class,
     ];
+
+    protected $aliases = [
+        'arrayprovider' => ArrayProvider::class,
+        'arrayProvider' => ArrayProvider::class,
+        'ArrayProvider' => ArrayProvider::class,
+        'array' => ArrayProvider::class,
+        'Array' => ArrayProvider::class,
+    ];
 }

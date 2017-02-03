@@ -13,6 +13,7 @@ namespace Dot\Navigation\Factory;
 
 use Dot\Authorization\AuthorizationInterface;
 use Dot\Navigation\Options\NavigationOptions;
+use Dot\Navigation\Provider\Factory;
 use Dot\Navigation\Provider\ProviderPluginManager;
 use Dot\Navigation\Service\Navigation;
 use Interop\Container\ContainerInterface;
@@ -26,21 +27,23 @@ class NavigationServiceFactory
 {
     /**
      * @param ContainerInterface $container
+     * @param $requestedName
      * @return Navigation
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container, $requestedName): Navigation
     {
         $urlHelper = $container->get(UrlHelper::class);
         $authorization = $container->has(AuthorizationInterface::class)
             ? $container->get(AuthorizationInterface::class)
             : null;
 
-        $providerPluginManager = $container->get(ProviderPluginManager::class);
+        $providerFactory = new Factory($container, $container->get(ProviderPluginManager::class));
 
         /** @var NavigationOptions $options */
         $options = $container->get(NavigationOptions::class);
 
-        $service = new Navigation($providerPluginManager, $urlHelper, $options, $authorization);
+        /** @var Navigation $service */
+        $service = new $requestedName($providerFactory, $urlHelper, $options, $authorization);
         $service->setIsActiveRecursion($options->getActiveRecursion());
 
         return $service;

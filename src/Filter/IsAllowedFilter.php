@@ -36,7 +36,7 @@ class IsAllowedFilter extends \RecursiveFilterIterator
     /**
      * @return bool
      */
-    public function accept()
+    public function accept(): bool
     {
         return $this->navigation->isAllowed($this->current());
     }
@@ -44,7 +44,7 @@ class IsAllowedFilter extends \RecursiveFilterIterator
     /**
      * @return IsAllowedFilter
      */
-    public function getChildren()
+    public function getChildren(): IsAllowedFilter
     {
         /** @var \RecursiveIterator $innerIterator */
         $innerIterator = $this->getInnerIterator();

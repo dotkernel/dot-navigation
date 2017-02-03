@@ -22,5 +22,5 @@ interface ProviderInterface
     /**
      * @return NavigationContainer
      */
-    public function getContainer();
+    public function getContainer(): NavigationContainer;
 }
