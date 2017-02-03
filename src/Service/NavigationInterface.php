@@ -1,10 +1,13 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vrax
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
  * Date: 10/5/2016
  * Time: 8:17 PM
  */
+
+declare(strict_types = 1);
 
 namespace Dot\Navigation\Service;
 

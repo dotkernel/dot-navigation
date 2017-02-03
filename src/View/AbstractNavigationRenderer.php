@@ -7,9 +7,10 @@
  * Time: 5:20 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation\View;
 
-use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Service\NavigationInterface;
 use Zend\Escaper\Escaper;
@@ -27,8 +28,8 @@ abstract class AbstractNavigationRenderer implements RendererInterface
     /** @var  string */
     protected $partial;
 
-    /** @var  NavigationContainer */
-    protected $container;
+    /** @var  NavigationContainer[] */
+    protected $containers = [];
 
     /** @var TemplateRendererInterface */
     protected $template;
@@ -44,7 +45,7 @@ abstract class AbstractNavigationRenderer implements RendererInterface
         $this->template = $template;
     }
 
-    public function htmlAttributes(array $attributes)
+    public function htmlAttributes(array $attributes): string
     {
         $xhtml = '';
         $escaper = new Escaper();
@@ -84,7 +85,7 @@ abstract class AbstractNavigationRenderer implements RendererInterface
      * @param  string $value
      * @return string
      */
-    protected function normalizeId($value)
+    protected function normalizeId(string $value): string
     {
         if (strstr($value, '[')) {
             if ('[]' == substr($value, -2)) {
@@ -100,36 +101,34 @@ abstract class AbstractNavigationRenderer implements RendererInterface
     /**
      * @return string|null
      */
-    public function getPartial()
+    public function getPartial(): ?string
     {
         return $this->partial;
     }
 
     /**
      * @param string $partial
-     * @return $this
      */
-    public function setPartial($partial)
+    public function setPartial(string $partial)
     {
         $this->partial = $partial;
-        return $this;
     }
 
     /**
-     * @param $container
+     * @param string $container
      * @return NavigationContainer
      */
-    protected function getContainer($container)
+    protected function getContainer(string $container): NavigationContainer
     {
-        $container = $container ? $container : $this->container;
-
-        if (is_string($container)) {
-            return $this->navigation->getContainer($container);
-        } elseif (!$container instanceof NavigationContainer) {
-            throw new RuntimeException('Container must be a string or instance of ' . NavigationContainer::class);
+        if (isset($this->containers[$container])) {
+            return $this->containers[$container];
         }
 
-        return $container;
+        if (is_string($container)) {
+            $this->containers[$container] = $this->navigation->getContainer($container);
+        }
+
+        return $this->containers[$container];
     }
 
     /**
@@ -139,7 +138,7 @@ abstract class AbstractNavigationRenderer implements RendererInterface
      * @param array $valid
      * @return array
      */
-    protected function cleanAttributes(array $input, array $valid)
+    protected function cleanAttributes(array $input, array $valid): array
     {
         foreach ($input as $key => $value) {
             if (preg_match('/^data-(.+)/', $key) || in_array($key, $valid)) {

@@ -7,6 +7,8 @@
  * Time: 5:20 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation\Service;
 
 use Dot\Authorization\AuthorizationInterface;

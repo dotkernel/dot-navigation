@@ -7,10 +7,11 @@
  * Time: 5:20 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation\View;
 
 use Dot\Navigation\Exception\RuntimeException;
-use Dot\Navigation\Filter\IsAllowedFilter;
 use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Page;
@@ -44,129 +45,31 @@ class NavigationRenderer extends AbstractNavigationRenderer
     }
 
     /**
-     * Default render
-     * @param null|string|NavigationContainer $container
+     * @param string $partial
+     * @param string $container
+     * @param array $params
      * @return string
      */
-    public function render($container = null)
+    public function renderPartial(string $partial, string $container, array $params = []): string
     {
         $container = $this->getContainer($container);
-        if ($this->getPartial()) {
-            return $this->renderPartial($container);
-        }
-
-        return $this->renderMenu($container);
-    }
-
-    /**
-     * @param null|string|NavigationContainer $container
-     * @param null|string $partial
-     * @param array $extra
-     * @return string
-     */
-    public function renderPartial($container = null, $partial = null, array $extra = [])
-    {
-        $container = $this->getContainer($container);
-
-        if (null === $partial) {
-            $partial = $this->getPartial();
-        }
-
-        if (empty($partial)) {
-            throw new RuntimeException('Unable to render menu: no partial template provided');
-        }
 
         return $this->template->render(
             $partial,
             array_merge(
                 ['container' => $container, 'navigation' => $this->navigation],
-                $extra
+                $params
             )
         );
     }
 
     /**
-     * @param string|NavigationContainer|null $container
+     * @param string $container
      * @return string
      */
-    public function renderMenu($container = null)
+    public function render(string $container): string
     {
-        $html = '';
-        $filter = new IsAllowedFilter($this->getContainer($container), $this->navigation);
-        $iterator = new \RecursiveIteratorIterator($filter, \RecursiveIteratorIterator::SELF_FIRST);
-        $iterator->setMaxDepth($this->options->getMenuOptions()->getMaxDepth());
-
-        $prevDepth = -1;
-        foreach ($iterator as $page) {
-            $depth = $iterator->getDepth();
-
-            if ($depth == $this->options->getMenuOptions()->getMinDepth()) {
-                $prevDepth = $depth;
-                continue;
-            }
-
-            if ($depth > $prevDepth) {
-                $html .= sprintf(
-                    '<ul%s>',
-                    $prevDepth == $this->options->getMenuOptions()->getMinDepth()
-                        ? ' class="' . $this->options->getMenuOptions()->getUlClass() . '"'
-                        : ''
-                );
-            } elseif ($prevDepth > $depth) {
-                for ($i = $prevDepth; $i > $depth; $i--) {
-                    $html .= '</li>';
-                    $html .= '</ul>';
-                }
-                $html .= '</li>';
-            } else {
-                $html .= '</li>';
-            }
-
-            $liClass = $this->navigation->isActive($page)
-                ? ' class="' . $this->options->getMenuOptions()->getActiveClass() . '"'
-                : '';
-
-            $html .= sprintf('<li%s>%s', $liClass, $this->htmlify($page));
-
-            $prevDepth = $depth;
-        }
-
-        if ($html) {
-            for ($i = $prevDepth + 1; $i > 0; $i--) {
-                $html .= '</li></ul>';
-            }
-        }
-
-        return $html;
-    }
-
-    /**
-     * @param Page $page
-     * @return mixed
-     */
-    public function htmlify(Page $page)
-    {
-        if ($page->getOption('label')) {
-            $label = $page->getOption('label');
-        } else {
-            $label = $page->getName();
-        }
-
-        $href = null;
-        try {
-            $href = $this->navigation->getHref($page);
-        } catch (RuntimeException $e) {
-            ; //intentionally left blank
-        }
-
-        $attributes = $page->getAttributes();
-        if ($href) {
-            $element = 'a';
-            $attributes['href'] = $href;
-        } else {
-            $element = 'span';
-        }
-
-        return sprintf('<%s%s>%s</%s>', $element, $this->htmlAttributes($attributes), $label, $element);
+        // TODO: render a default HTML menu structure
+        return '';
     }
 }
