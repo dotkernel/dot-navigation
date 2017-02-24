@@ -49,9 +49,9 @@ class Page extends NavigationContainer
     }
 
     /**
-     * @param Page $parent
+     * @param NavigationContainer $parent
      */
-    public function setParent(Page $parent)
+    public function setParent(NavigationContainer $parent)
     {
         $this->parent = $parent;
     }

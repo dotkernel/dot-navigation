@@ -57,9 +57,9 @@ class NavigationContainer implements \RecursiveIterator
     }
 
     /**
-     * @return Page
+     * @return NavigationContainer
      */
-    public function current(): Page
+    public function current(): NavigationContainer
     {
         return $this->children[$this->index];
     }
@@ -105,11 +105,11 @@ class NavigationContainer implements \RecursiveIterator
     }
 
     /**
-     * @return array
+     * @return NavigationContainer
      */
-    public function getChildren(): array
+    public function getChildren(): NavigationContainer
     {
-        return $this->children;
+        return $this->children[$this->index];
     }
 
     /**
