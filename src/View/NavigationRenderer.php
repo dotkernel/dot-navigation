@@ -11,6 +11,7 @@ declare(strict_types = 1);
 
 namespace Dot\Navigation\View;
 
+use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Service\Navigation;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -43,11 +44,11 @@ class NavigationRenderer extends AbstractNavigationRenderer
 
     /**
      * @param string $partial
-     * @param string $container
+     * @param string|NavigationContainer $container
      * @param array $params
      * @return string
      */
-    public function renderPartial(string $container, string $partial, array $params = []): string
+    public function renderPartial($container, string $partial, array $params = []): string
     {
         $container = $this->getContainer($container);
 
@@ -61,10 +62,10 @@ class NavigationRenderer extends AbstractNavigationRenderer
     }
 
     /**
-     * @param string $container
+     * @param string|NavigationContainer $container
      * @return string
      */
-    public function render(string $container): string
+    public function render($container): string
     {
         // TODO: render a default HTML menu structure
         return '';

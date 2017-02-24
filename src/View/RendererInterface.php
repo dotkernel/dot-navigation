@@ -11,6 +11,8 @@ declare(strict_types = 1);
 
 namespace Dot\Navigation\View;
 
+use Dot\Navigation\NavigationContainer;
+
 /**
  * Interface RendererInterface
  * @package Dot\Navigation\View
@@ -18,18 +20,18 @@ namespace Dot\Navigation\View;
 interface RendererInterface
 {
     /**
-     * @param string $container
+     * @param string|NavigationContainer $container
      * @return string
      */
-    public function render(string $container): string;
+    public function render($container): string;
 
     /**
      * @param $partial
      * @param array $params
-     * @param string $container
+     * @param string|NavigationContainer $container
      * @return string
      */
-    public function renderPartial(string $container, string $partial, array $params = []): string;
+    public function renderPartial($container, string $partial, array $params = []): string;
 
     /**
      * @param array $attributes
