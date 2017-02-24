@@ -48,7 +48,8 @@ class Factory
             throw new RuntimeException('Undefined navigation provider type');
         }
 
-        return $this->getProviderPluginManager()->get($type, $specs['options'] ?? []);
+        $options = $specs['options'] ?? null;
+        return $this->getProviderPluginManager()->get($type, $options);
     }
 
     /**

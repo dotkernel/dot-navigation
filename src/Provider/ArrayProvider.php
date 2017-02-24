@@ -34,8 +34,9 @@ class ArrayProvider implements ProviderInterface
      * ArrayProvider constructor.
      * @param array $options
      */
-    public function __construct(array $options = [])
+    public function __construct(array $options = null)
     {
+        $options = $options ?? [];
         if (isset($options['items']) && is_array($options['items'])) {
             $this->setItems($options['items']);
         }
