@@ -119,7 +119,7 @@ class NavigationContainer implements \RecursiveIterator
      * @param mixed $value
      * @return Page|null
      */
-    public function findOneByAttribute(string $attribute, mixed $value): ?Page
+    public function findOneByAttribute(string $attribute, $value): ?Page
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         /** @var Page $page */
@@ -138,7 +138,7 @@ class NavigationContainer implements \RecursiveIterator
      * @param mixed $value
      * @return array
      */
-    public function findByAttribute(string $attribute, mixed $value): array
+    public function findByAttribute(string $attribute, $value): array
     {
         $result = [];
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
@@ -159,7 +159,7 @@ class NavigationContainer implements \RecursiveIterator
      * @param mixed $value
      * @return Page|null
      */
-    public function findOneByOption(string $option, mixed $value): ?Page
+    public function findOneByOption(string $option, $value): ?Page
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         /** @var Page $page */
@@ -178,7 +178,7 @@ class NavigationContainer implements \RecursiveIterator
      * @param mixed $value
      * @return array
      */
-    public function findByOption(string $option, mixed $value): array
+    public function findByOption(string $option, $value): array
     {
         $result = [];
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);

@@ -69,7 +69,7 @@ class Page extends NavigationContainer
      * @param string $option
      * @param mixed $value
      */
-    public function setOption(string $option, mixed $value)
+    public function setOption(string $option, $value)
     {
         $this->options[$option] = $value;
     }
@@ -94,7 +94,7 @@ class Page extends NavigationContainer
      * @param string $attribute
      * @param mixed $value
      */
-    public function setAttribute(string $attribute, mixed $value)
+    public function setAttribute(string $attribute, $value)
     {
         $this->attributes[$attribute] = $value;
     }
@@ -103,7 +103,7 @@ class Page extends NavigationContainer
      * @param string $attribute
      * @return mixed
      */
-    public function getAttribute(string $attribute): ?mixed
+    public function getAttribute(string $attribute)
     {
         return $this->attributes[$attribute] ?? null;
     }
@@ -136,7 +136,7 @@ class Page extends NavigationContainer
      * @param string $option
      * @return mixed
      */
-    public function getOption(string $option): ?mixed
+    public function getOption(string $option)
     {
         return $this->options[$option] ?? null;
     }
