@@ -109,7 +109,7 @@ class NavigationContainer implements \RecursiveIterator
      */
     public function getChildren(): array
     {
-        return $this->children[$this->index];
+        return $this->children;
     }
 
     /**
