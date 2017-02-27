@@ -48,7 +48,10 @@ class NavigationMiddleware
         callable $next = null
     ): ResponseInterface {
         $routeResult = $request->getAttribute(RouteResult::class, null);
-        $this->navigation->setRouteResult($routeResult);
+        if ($routeResult) {
+            $this->navigation->setRouteResult($routeResult);
+        }
+        
         return $next($request, $response);
     }
 }
