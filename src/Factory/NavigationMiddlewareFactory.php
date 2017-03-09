@@ -7,6 +7,8 @@
  * Time: 5:20 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation\Factory;
 
 use Dot\Navigation\NavigationMiddleware;
@@ -21,11 +23,12 @@ class NavigationMiddlewareFactory
 {
     /**
      * @param ContainerInterface $container
+     * @param $requestedName
      * @return NavigationMiddleware
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container, $requestedName): NavigationMiddleware
     {
         $navigation = $container->get(NavigationInterface::class);
-        return new NavigationMiddleware($navigation);
+        return new $requestedName($navigation);
     }
 }

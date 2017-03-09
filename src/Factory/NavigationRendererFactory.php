@@ -7,6 +7,8 @@
  * Time: 5:20 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation\Factory;
 
 use Dot\Navigation\Options\NavigationOptions;
@@ -23,14 +25,15 @@ class NavigationRendererFactory
 {
     /**
      * @param ContainerInterface $container
+     * @param $requestedName
      * @return NavigationRenderer
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container, $requestedName): NavigationRenderer
     {
         $options = $container->get(NavigationOptions::class);
         $navigation = $container->get(NavigationInterface::class);
         $template = $container->get(TemplateRendererInterface::class);
 
-        return new NavigationRenderer($navigation, $template, $options);
+        return new $requestedName($navigation, $template, $options);
     }
 }

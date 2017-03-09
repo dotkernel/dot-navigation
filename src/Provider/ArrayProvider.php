@@ -7,6 +7,8 @@
  * Time: 5:20 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation\Provider;
 
 use Dot\Navigation\NavigationContainer;
@@ -26,29 +28,32 @@ class ArrayProvider implements ProviderInterface
     /**
      * @var array
      */
-    protected $config = [];
+    protected $items = [];
 
     /**
      * ArrayProvider constructor.
-     * @param array $config
+     * @param array $options
      */
-    public function __construct(array $config = [])
+    public function __construct(array $options = null)
     {
-        $this->config = $config;
+        $options = $options ?? [];
+        if (isset($options['items']) && is_array($options['items'])) {
+            $this->setItems($options['items']);
+        }
     }
 
     /**
      * @return NavigationContainer
      */
-    public function getContainer()
+    public function getContainer(): NavigationContainer
     {
         if ($this->container instanceof NavigationContainer) {
             return $this->container;
         }
 
         $this->container = new NavigationContainer();
-        foreach ($this->config as $page) {
-            $page = $this->getPage($page);
+        foreach ($this->items as $pageSpecs) {
+            $page = $this->getPage($pageSpecs);
             $this->container->addPage($page);
         }
 
@@ -59,7 +64,7 @@ class ArrayProvider implements ProviderInterface
      * @param array $spec
      * @return Page
      */
-    protected function getPage(array $spec)
+    protected function getPage(array $spec): Page
     {
         $page = new Page();
 
@@ -78,5 +83,21 @@ class ArrayProvider implements ProviderInterface
         }
 
         return $page;
+    }
+
+    /**
+     * @return array
+     */
+    public function getItems(): array
+    {
+        return $this->items;
+    }
+
+    /**
+     * @param array $items
+     */
+    public function setItems(array $items)
+    {
+        $this->items = $items;
     }
 }

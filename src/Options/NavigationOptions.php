@@ -7,9 +7,10 @@
  * Time: 5:20 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation\Options;
 
-use Dot\Navigation\Exception\InvalidArgumentException;
 use Zend\Stdlib\AbstractOptions;
 
 /**
@@ -21,19 +22,18 @@ class NavigationOptions extends AbstractOptions
     /** @var  array */
     protected $containers;
 
-    /** @var  array */
-    protected $providersMap;
-
     /** @var bool */
     protected $activeRecursion = true;
 
-    /** @var  MenuOptions */
-    protected $menuOptions;
-
     /**
-     * @var bool
+     * NavigationOptions constructor.
+     * @param array $options
      */
-    protected $__strictMode__ = false;
+    public function __construct($options = null)
+    {
+        $this->__strictMode__ = false;
+        parent::__construct($options);
+    }
 
     /**
      * @return mixed
@@ -52,22 +52,6 @@ class NavigationOptions extends AbstractOptions
     }
 
     /**
-     * @return mixed
-     */
-    public function getProvidersMap()
-    {
-        return $this->providersMap;
-    }
-
-    /**
-     * @param mixed $providersMap
-     */
-    public function setProvidersMap($providersMap)
-    {
-        $this->providersMap = $providersMap;
-    }
-
-    /**
      * @return boolean
      */
     public function getActiveRecursion()
@@ -81,30 +65,5 @@ class NavigationOptions extends AbstractOptions
     public function setActiveRecursion($activeRecursion)
     {
         $this->activeRecursion = $activeRecursion;
-    }
-
-    /**
-     * @return MenuOptions
-     */
-    public function getMenuOptions()
-    {
-        return $this->menuOptions;
-    }
-
-    /**
-     * @param MenuOptions|array $menuOptions
-     * @return NavigationOptions
-     */
-    public function setMenuOptions($menuOptions)
-    {
-        if ($menuOptions instanceof MenuOptions) {
-            $this->menuOptions = $menuOptions;
-        } elseif (is_array($menuOptions)) {
-            $this->menuOptions = new MenuOptions($menuOptions);
-        } else {
-            throw new InvalidArgumentException('Menu options must be an array or instance of' . MenuOptions::class);
-        }
-
-        return $this;
     }
 }

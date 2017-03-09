@@ -7,6 +7,8 @@
  * Time: 5:20 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation;
 
 use Dot\Navigation\Factory\NavigationMiddlewareFactory;
@@ -16,7 +18,9 @@ use Dot\Navigation\Factory\NavigationServiceFactory;
 use Dot\Navigation\Factory\ProviderPluginManagerFactory;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Provider\ProviderPluginManager;
+use Dot\Navigation\Service\Navigation;
 use Dot\Navigation\Service\NavigationInterface;
+use Dot\Navigation\View\NavigationRenderer;
 use Dot\Navigation\View\RendererInterface;
 
 /**
@@ -28,36 +32,18 @@ class ConfigProvider
     /**
      * @return array
      */
-    public function __invoke()
+    public function __invoke(): array
     {
         return [
-
             'dependencies' => $this->getDependencyConfig(),
 
             'dot_navigation' => [
 
-                'menu_options' => [
-
-                    'min_depth' => -1,
-                    'max_depth' => -1,
-
-                    'active_class' => 'active',
-                    'ul_class' => 'nav',
-                ],
-
                 'active_recursion' => true,
 
-                'containers' => [
+                'containers' => [],
 
-                ],
-
-                'providers_map' => [
-
-                ],
-
-                'provider_manager' => [
-
-                ]
+                'provider_manager' => []
             ],
         ];
     }
@@ -65,20 +51,20 @@ class ConfigProvider
     /**
      * @return array
      */
-    public function getDependencyConfig()
+    public function getDependencyConfig(): array
     {
         return [
             'factories' => [
                 NavigationOptions::class => NavigationOptionsFactory::class,
-
                 ProviderPluginManager::class => ProviderPluginManagerFactory::class,
-
-                NavigationInterface::class => NavigationServiceFactory::class,
-
-                RendererInterface::class => NavigationRendererFactory::class,
-
+                Navigation::class => NavigationServiceFactory::class,
+                NavigationRenderer::class => NavigationRendererFactory::class,
                 NavigationMiddleware::class => NavigationMiddlewareFactory::class,
             ],
+            'aliases' => [
+                NavigationInterface::class => Navigation::class,
+                RendererInterface::class => NavigationRenderer::class,
+            ]
         ];
     }
 }

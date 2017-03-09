@@ -7,6 +7,8 @@
  * Time: 5:20 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation\Filter;
 
 use Dot\Navigation\Service\NavigationInterface;
@@ -34,7 +36,7 @@ class IsAllowedFilter extends \RecursiveFilterIterator
     /**
      * @return bool
      */
-    public function accept()
+    public function accept(): bool
     {
         return $this->navigation->isAllowed($this->current());
     }
@@ -42,7 +44,7 @@ class IsAllowedFilter extends \RecursiveFilterIterator
     /**
      * @return IsAllowedFilter
      */
-    public function getChildren()
+    public function getChildren(): IsAllowedFilter
     {
         /** @var \RecursiveIterator $innerIterator */
         $innerIterator = $this->getInnerIterator();

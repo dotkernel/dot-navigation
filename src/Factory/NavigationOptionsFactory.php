@@ -7,6 +7,8 @@
  * Time: 5:20 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation\Factory;
 
 use Dot\Navigation\Options\NavigationOptions;
@@ -20,11 +22,12 @@ class NavigationOptionsFactory
 {
     /**
      * @param ContainerInterface $container
+     * @param $requestedName
      * @return NavigationOptions
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container, $requestedName): NavigationOptions
     {
         $config = $container->get('config')['dot_navigation'];
-        return new NavigationOptions($config);
+        return new $requestedName($config);
     }
 }

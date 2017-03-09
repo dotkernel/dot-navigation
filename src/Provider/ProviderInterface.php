@@ -7,6 +7,8 @@
  * Time: 5:20 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation\Provider;
 
 use Dot\Navigation\NavigationContainer;
@@ -20,5 +22,5 @@ interface ProviderInterface
     /**
      * @return NavigationContainer
      */
-    public function getContainer();
+    public function getContainer(): NavigationContainer;
 }

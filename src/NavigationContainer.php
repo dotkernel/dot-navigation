@@ -7,6 +7,8 @@
  * Time: 5:20 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation;
 
 /**
@@ -48,18 +50,16 @@ class NavigationContainer implements \RecursiveIterator
 
     /**
      * @param Page $page
-     * @return $this
      */
     public function addPage(Page $page)
     {
         $this->children[] = $page;
-        return $this;
     }
 
     /**
-     * @return mixed
+     * @return NavigationContainer
      */
-    public function current()
+    public function current(): NavigationContainer
     {
         return $this->children[$this->index];
     }
@@ -75,7 +75,7 @@ class NavigationContainer implements \RecursiveIterator
     /**
      * @return int
      */
-    public function key()
+    public function key(): int
     {
         return $this->index;
     }
@@ -83,7 +83,7 @@ class NavigationContainer implements \RecursiveIterator
     /**
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->children[$this->index]);
     }
@@ -99,15 +99,15 @@ class NavigationContainer implements \RecursiveIterator
     /**
      * @return bool
      */
-    public function hasChildren()
+    public function hasChildren(): bool
     {
         return count($this->children) > 0;
     }
 
     /**
-     * @return mixed
+     * @return NavigationContainer
      */
-    public function getChildren()
+    public function getChildren(): NavigationContainer
     {
         return $this->children[$this->index];
     }
@@ -119,16 +119,15 @@ class NavigationContainer implements \RecursiveIterator
      * @param mixed $value
      * @return Page|null
      */
-    public function findOneByAttribute($attribute, $value)
+    public function findOneByAttribute(string $attribute, $value): ?Page
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         /** @var Page $page */
         foreach ($iterator as $page) {
-            if ($page->getAttribute($attribute) == $value) {
+            if ($page->getAttribute($attribute) === $value) {
                 return $page;
             }
         }
-
         return null;
     }
 
@@ -139,7 +138,7 @@ class NavigationContainer implements \RecursiveIterator
      * @param mixed $value
      * @return array
      */
-    public function findByAttribute($attribute, $value)
+    public function findByAttribute(string $attribute, $value): array
     {
         $result = [];
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
@@ -160,7 +159,7 @@ class NavigationContainer implements \RecursiveIterator
      * @param mixed $value
      * @return Page|null
      */
-    public function findOneByOption($option, $value)
+    public function findOneByOption(string $option, $value): ?Page
     {
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
         /** @var Page $page */
@@ -179,7 +178,7 @@ class NavigationContainer implements \RecursiveIterator
      * @param mixed $value
      * @return array
      */
-    public function findByOption($option, $value)
+    public function findByOption(string $option, $value): array
     {
         $result = [];
         $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);

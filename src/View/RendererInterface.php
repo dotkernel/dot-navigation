@@ -1,14 +1,17 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: n3vrax
+ * @copyright: DotKernel
+ * @library: dotkernel/dot-navigation
+ * @author: n3vrax
  * Date: 12/20/2016
  * Time: 1:24 AM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation\View;
 
-use Dot\Navigation\Page;
+use Dot\Navigation\NavigationContainer;
 
 /**
  * Interface RendererInterface
@@ -17,34 +20,22 @@ use Dot\Navigation\Page;
 interface RendererInterface
 {
     /**
-     * @param null $container
-     * @return mixed
+     * @param string|NavigationContainer $container
+     * @return string
      */
-    public function renderMenu($container = null);
+    public function render($container): string;
 
     /**
-     * @param null $container
-     * @param null $partial
-     * @param array $extra
-     * @return mixed
+     * @param $partial
+     * @param array $params
+     * @param string|NavigationContainer $container
+     * @return string
      */
-    public function renderPartial($container = null, $partial = null, array $extra = []);
-
-    /**
-     * @param null $container
-     * @return mixed
-     */
-    public function render($container = null);
-
-    /**
-     * @param Page $page
-     * @return mixed
-     */
-    public function htmlify(Page $page);
+    public function renderPartial($container, string $partial, array $params = []): string;
 
     /**
      * @param array $attributes
-     * @return mixed
+     * @return string
      */
-    public function htmlAttributes(array $attributes);
+    public function htmlAttributes(array $attributes): string;
 }

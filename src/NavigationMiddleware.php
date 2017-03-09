@@ -7,6 +7,8 @@
  * Time: 5:20 PM
  */
 
+declare(strict_types = 1);
+
 namespace Dot\Navigation;
 
 use Dot\Navigation\Service\NavigationInterface;
@@ -38,12 +40,17 @@ class NavigationMiddleware
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @param callable|null $next
+     * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
-    {
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        callable $next = null
+    ): ResponseInterface {
         $routeResult = $request->getAttribute(RouteResult::class, null);
-
-        $this->navigation->setRouteResult($routeResult);
+        if ($routeResult) {
+            $this->navigation->setRouteResult($routeResult);
+        }
 
         return $next($request, $response);
     }
