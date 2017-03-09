@@ -21,43 +21,40 @@ In your `config/autoload` directory, create a config file
 ```php
 return [
     'dot_navigation' => [
-
         //enable menu item active if any child is active
         'active_recursion' => true,
-
-        //map a provider name to a provider type
-        'providers_map' => [
-            'default' => \Dot\Navigation\Provider\ArrayProvider::class,
-        ],
-
+        
         //map a provider name to its config
         'containers' => [
             'default' => [
-                [
-                    'options' => [
-                        'label' => 'Menu #1',
-                        'route' => 'home',
+                'type' => 'ArrayProvider'
+                'options' => [
+                    'items' => [
+                        [
+                            'options' => [
+                                'label' => 'Menu #1',
+                                'route' => 'home',
+                            ],
+                            'attributes' => [
+                                'name' => 'Menu #1',
+                            ]
+                        ],
+                        [
+                            'options' => [
+                                'label' => 'Menu #2',
+                                'route' => 'home',
+                            ],
+                            'attributes' => [
+                                'name' => 'Menu #1',
+                            ]
+                        ]
                     ],
-                    'attributes' => [
-                        'name' => 'Menu #1',
-                    ]
                 ],
-                [
-                    'options' => [
-                        'label' => 'Menu #2',
-                        'route' => 'home',
-                    ],
-                    'attributes' => [
-                        'name' => 'Menu #1',
-                    ]
-                ]
-            ]
+            ],
         ],
-
+        
         //register custom providers here
-        'provider_manager' => [
-
-        ]
+        'provider_manager' => [],
     ],
 ];
 ```
@@ -85,7 +82,6 @@ Each provider must implement the interface `ProviderInterface` and be registered
 
 We offer just one provider for now, `ArrayProvider`, that is able to fetch and create a menu container from a php array that is defined in the configuration file.
 
-When configuring the module, you'll have to associate each defined navigation container to its provider, in the `provider_map` key.
 
 ## NavigationRenderer
 

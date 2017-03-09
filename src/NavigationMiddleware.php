@@ -51,7 +51,7 @@ class NavigationMiddleware
         if ($routeResult) {
             $this->navigation->setRouteResult($routeResult);
         }
-        
+
         return $next($request, $response);
     }
 }

@@ -1,7 +1,7 @@
 {
   "name": "dotkernel/dot-navigation",
   "type": "library",
-  "description": "Navigation library for easy menu parsing",
+  "description": "DotKernel navigation component",
   "license": "MIT",
   "authors": [
     {
@@ -23,7 +23,7 @@
     "squizlabs/php_codesniffer": "^2.3",
 
     "zendframework/zend-stdlib": "^3.1",
-    "dotkernel/dot-authorization": "dev-develop as 0.6.x-dev"
+    "dotkernel/dot-authorization": "~0.1"
   },
   "autoload": {
     "psr-4": {
@@ -37,7 +37,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "0.6-dev"
+      "dev-master": "0.2-dev"
     }
   }
 }
