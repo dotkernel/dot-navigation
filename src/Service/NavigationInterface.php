@@ -1,10 +1,8 @@
 <?php
 /**
- * @copyright: DotKernel
- * @library: dotkernel/dot-navigation
- * @author: n3vrax
- * Date: 10/5/2016
- * Time: 8:17 PM
+ * @see https://github.com/dotkernel/dot-navigation/ for the canonical source repository
+ * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
+ * @license https://github.com/dotkernel/dot-navigation/blob/master/LICENSE.md MIT License
  */
 
 declare(strict_types = 1);
