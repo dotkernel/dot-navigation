@@ -10,6 +10,8 @@ declare(strict_types = 1);
 namespace Dot\Navigation;
 
 use Dot\Navigation\Service\NavigationInterface;
+use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Router\RouteResult;
@@ -18,7 +20,7 @@ use Zend\Expressive\Router\RouteResult;
  * Class NavigationMiddleware
  * @package Dot\Navigation
  */
-class NavigationMiddleware
+class NavigationMiddleware implements MiddlewareInterface
 {
     /**
      * @var NavigationInterface
@@ -36,20 +38,16 @@ class NavigationMiddleware
 
     /**
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param callable|null $next
+     * @param DelegateInterface $delegate
      * @return ResponseInterface
      */
-    public function __invoke(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        callable $next = null
-    ): ResponseInterface {
+    public function process(ServerRequestInterface $request, DelegateInterface $delegate): ResponseInterface
+    {
         $routeResult = $request->getAttribute(RouteResult::class, null);
         if ($routeResult) {
             $this->navigation->setRouteResult($routeResult);
         }
 
-        return $next($request, $response);
+        return $delegate->process($request);
     }
 }

@@ -10,12 +10,12 @@ declare(strict_types = 1);
 namespace Dot\Navigation\Factory;
 
 use Dot\Authorization\AuthorizationInterface;
+use Dot\Helpers\Route\RouteHelper;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Provider\Factory;
 use Dot\Navigation\Provider\ProviderPluginManager;
 use Dot\Navigation\Service\Navigation;
-use Interop\Container\ContainerInterface;
-use Zend\Expressive\Helper\UrlHelper;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class NavigationServiceFactory
@@ -30,7 +30,7 @@ class NavigationServiceFactory
      */
     public function __invoke(ContainerInterface $container, $requestedName): Navigation
     {
-        $urlHelper = $container->get(UrlHelper::class);
+        $routeHelper = $container->get(RouteHelper::class);
         $authorization = $container->has(AuthorizationInterface::class)
             ? $container->get(AuthorizationInterface::class)
             : null;
@@ -41,7 +41,7 @@ class NavigationServiceFactory
         $options = $container->get(NavigationOptions::class);
 
         /** @var Navigation $service */
-        $service = new $requestedName($providerFactory, $urlHelper, $options, $authorization);
+        $service = new $requestedName($providerFactory, $routeHelper, $options, $authorization);
         $service->setIsActiveRecursion($options->getActiveRecursion());
 
         return $service;

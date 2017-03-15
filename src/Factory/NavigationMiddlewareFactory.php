@@ -11,7 +11,7 @@ namespace Dot\Navigation\Factory;
 
 use Dot\Navigation\NavigationMiddleware;
 use Dot\Navigation\Service\NavigationInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class NavigationMiddlewareFactory
