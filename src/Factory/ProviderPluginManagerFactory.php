@@ -10,7 +10,7 @@ declare(strict_types = 1);
 namespace Dot\Navigation\Factory;
 
 use Dot\Navigation\Provider\ProviderPluginManager;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ProviderPluginManagerFactory

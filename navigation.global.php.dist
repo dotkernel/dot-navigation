@@ -8,13 +8,20 @@ return [
         //map a provider name to its config
         'containers' => [
             'default' => [
-                'type' => 'ArrayProvider'
+                'type' => 'ArrayProvider',
                 'options' => [
                     'items' => [
                         [
                             'options' => [
                                 'label' => 'Menu #1',
-                                'route' => 'home',
+                                'route' => [
+                                    'route_name' => 'home',
+                                    'route_params' => [],
+                                    'query_params' => [],
+                                    'fragment_id' => null,
+                                    'options' => [],
+                                    'ignore_params' => []
+                                ],
                             ],
                             'attributes' => [
                                 'name' => 'Menu #1',
@@ -23,7 +30,7 @@ return [
                         [
                             'options' => [
                                 'label' => 'Menu #2',
-                                'route' => 'home',
+                                'route' => ['route_name' => 'home'/*,...*/],
                             ],
                             'attributes' => [
                                 'name' => 'Menu #1',

@@ -10,13 +10,13 @@ declare(strict_types = 1);
 namespace Dot\Navigation\Service;
 
 use Dot\Authorization\AuthorizationInterface;
+use Dot\Helpers\Route\RouteHelper;
 use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Page;
 use Dot\Navigation\Provider\Factory;
 use Dot\Navigation\Provider\ProviderInterface;
-use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Router\RouteResult;
 
 /**
@@ -35,10 +35,8 @@ class Navigation implements NavigationInterface
      */
     protected $providerFactory;
 
-    /**
-     * @var UrlHelper
-     */
-    protected $urlHelper;
+    /** @var  RouteHelper */
+    protected $routeHelper;
 
     /**
      * @var NavigationOptions
@@ -74,16 +72,16 @@ class Navigation implements NavigationInterface
      * NavigationService constructor.
      * @param Factory $providerFactory
      * @param AuthorizationInterface $authorization
-     * @param UrlHelper $urlHelper
+     * @param RouteHelper $routeHelper
      * @param NavigationOptions $moduleOptions
      */
     public function __construct(
         Factory $providerFactory,
-        UrlHelper $urlHelper,
+        RouteHelper $routeHelper,
         NavigationOptions $moduleOptions,
         AuthorizationInterface $authorization = null
     ) {
-        $this->urlHelper = $urlHelper;
+        $this->routeHelper = $routeHelper;
         $this->authorization = $authorization;
         $this->providerFactory = $providerFactory;
         $this->moduleOptions = $moduleOptions;
@@ -194,24 +192,28 @@ class Navigation implements NavigationInterface
         $active = false;
         if ($this->routeResult && $this->routeResult->isSuccess()) {
             $routeName = $this->routeResult->getMatchedRouteName();
-            if ($page->getOption('route') === $routeName) {
-                $reqParams = array_merge($this->routeResult->getMatchedParams(), $_GET);
-                $pageParams = array_merge(
-                    $page->getOption('params') ? $page->getOption('params') : [],
-                    $page->getOption('query_params') ? $page->getOption('query_params') : []
-                );
-                $ignoreParams = $page->getOption('ignore_params') ? $page->getOption('ignore_params') : [];
-                $active = $this->areParamsEqual($pageParams, $reqParams, $ignoreParams);
-            } elseif ($this->isActiveRecursion) {
-                $iterator = new \RecursiveIteratorIterator($page, \RecursiveIteratorIterator::CHILD_FIRST);
-                /** @var Page $page */
-                foreach ($iterator as $leaf) {
-                    if (!$leaf instanceof Page) {
-                        continue;
-                    }
-                    if ($this->isActive($leaf)) {
-                        $active = true;
-                        break;
+            $pageRoute = $page->getOption('route');
+            if ($pageRoute) {
+                if ($pageRoute['route_name'] === $routeName) {
+                    $reqParams = array_merge($this->routeResult->getMatchedParams(), $_GET);
+                    $pageParams = array_merge(
+                        $pageRoute['route_params'] ?? [],
+                        $pageRoute['query_params'] ?? []
+                    );
+
+                    $ignoreParams = $pageRoute['ignore_params'] ?? [];
+                    $active = $this->areParamsEqual($pageParams, $reqParams, $ignoreParams);
+                } elseif ($this->isActiveRecursion) {
+                    $iterator = new \RecursiveIteratorIterator($page, \RecursiveIteratorIterator::CHILD_FIRST);
+                    /** @var Page $page */
+                    foreach ($iterator as $leaf) {
+                        if (!$leaf instanceof Page) {
+                            continue;
+                        }
+                        if ($this->isActive($leaf)) {
+                            $active = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -245,26 +247,23 @@ class Navigation implements NavigationInterface
     {
         $hash = spl_object_hash($page);
         if (isset($this->hrefCache[$hash])) {
-            return $this->hrefCache[$hash];
+            return (string) $this->hrefCache[$hash];
         }
+
         $href = null;
         if ($page->getOption('uri')) {
             $href = $page->getOption('uri');
         } elseif ($page->getOption('route')) {
-            $params = $page->getOption('params') ? $page->getOption('params') : [];
-            $href = $this->urlHelper->generate($page->getOption('route'), $params);
+            $pageRoute = $page->getOption('route');
+            $href = $this->routeHelper->generateUri($pageRoute);
         }
+
         if ($href) {
-            if ($page->getOption('query_params')) {
-                $href .= '?' . http_build_query($page->getOption('query_params'));
-            }
-            if ($page->getOption('fragment')) {
-                $href .= '#' . trim($page->getOption('fragment'), '#');
-            }
-            $this->hrefCache[$hash] = $href;
+            $this->hrefCache[$hash] = $href->__toString();
         } else {
             throw new RuntimeException('Unable to assemble href for navigation page ' . $page->getName());
         }
-        return $href;
+
+        return $href->__toString();
     }
 }

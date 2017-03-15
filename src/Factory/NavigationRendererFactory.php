@@ -12,7 +12,7 @@ namespace Dot\Navigation\Factory;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Service\NavigationInterface;
 use Dot\Navigation\View\NavigationRenderer;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
