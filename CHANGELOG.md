@@ -6,6 +6,7 @@ Migration to ZE2
 * updated dependencies
 * updated to PSR11 container
 * updated middleware to PSR15
+* changed the way menu item route is configured, to support new UrlHelper options
 
 ### Added
 * Nothing

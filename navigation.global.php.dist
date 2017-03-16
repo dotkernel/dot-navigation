@@ -20,6 +20,9 @@ return [
                                     'query_params' => [],
                                     'fragment_id' => null,
                                     'options' => [],
+
+                                    //the below parameters are not used in route generation
+                                    //they are used in finding if a page is active by omitting some parameters from the check
                                     'ignore_params' => []
                                 ],
                             ],
