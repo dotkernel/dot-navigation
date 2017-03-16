@@ -27,13 +27,23 @@ return [
         //map a provider name to its config
         'containers' => [
             'default' => [
-                'type' => 'ArrayProvider'
+                'type' => 'ArrayProvider',
                 'options' => [
                     'items' => [
                         [
                             'options' => [
                                 'label' => 'Menu #1',
-                                'route' => 'home',
+                                'route' => [
+                                    'route_name' => 'home',
+                                    'route_params' => [],
+                                    'query_params' => [],
+                                    'fragment_id' => null,
+                                    'options' => [],
+                                    
+                                    //the below parameters are not used in route generation
+                                    //they are used in finding if a page is active by omitting some parameters from the check
+                                    'ignore_params' => []
+                                ],
                             ],
                             'attributes' => [
                                 'name' => 'Menu #1',
@@ -42,7 +52,7 @@ return [
                         [
                             'options' => [
                                 'label' => 'Menu #2',
-                                'route' => 'home',
+                                'route' => ['route_name' => 'home'/*,...*/],
                             ],
                             'attributes' => [
                                 'name' => 'Menu #1',
@@ -101,5 +111,4 @@ Navigation containers are referred, when parsed, by their name, as defined in th
 The following are options that each page should define in the configuration
 * `label` - the text of the menu item
 * `route` or `uri` - defines the route or link the menu item will have
-* `params`, `query_params`, `fragment` - are all options to use with the route option, to generate the complete route, if required. These are optional.
 * `permission` - can be used optionally, if authorization service is present, in order to omit menu items that are not authorized to visit.
