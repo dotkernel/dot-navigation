@@ -259,11 +259,11 @@ class Navigation implements NavigationInterface
         }
 
         if ($href) {
-            $this->hrefCache[$hash] = $href->__toString();
+            $this->hrefCache[$hash] = (string) $href;
         } else {
             throw new RuntimeException('Unable to assemble href for navigation page ' . $page->getName());
         }
 
-        return $href->__toString();
+        return (string) $href;
     }
 }
