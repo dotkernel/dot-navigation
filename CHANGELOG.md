@@ -1,3 +1,21 @@
+## 0.2.1 - 2017-03-22
+
+### Changed
+* Nothing
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* navigation service getHref error when using page option `uri`
+
+
 ## 0.2.0 - 2017-03-17
 
 Migration to ZE2
