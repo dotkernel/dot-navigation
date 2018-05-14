@@ -1,3 +1,24 @@
+## 1.0.0 - 2018-05-14
+
+Migration to Zend Expressive 3
+
+### Changed
+* Middleware changed from `http-interop/http-middleware` to `psr/http-server-middleware`
+
+### Added
+* Nothing
+
+### Deprecated
+* Nothing
+
+### Removed
+* Nothing
+
+### Fixed
+* navigation service getHref error when using page option `uri`
+
+
+
 ## 0.2.1 - 2017-03-22
 
 ### Changed
