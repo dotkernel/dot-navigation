@@ -15,8 +15,7 @@ Migration to Zend Expressive 3
 * Nothing
 
 ### Fixed
-* navigation service getHref error when using page option `uri`
-
+* nothing
 
 
 ## 0.2.1 - 2017-03-22
