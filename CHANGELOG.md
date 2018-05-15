@@ -1,4 +1,4 @@
-## 1.0.0 - 2018-05-14
+## 1.0.0 - 2018-05-15
 
 Migration to Zend Expressive 3
 
