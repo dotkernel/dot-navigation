@@ -12,7 +12,7 @@ namespace Dot\Navigation\View;
 use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Service\Navigation;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Mezzio\Template\TemplateRendererInterface;
 
 /**
  * Class NavigationRenderer

@@ -13,7 +13,7 @@ use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Service\NavigationInterface;
 use Dot\Navigation\View\NavigationRenderer;
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Mezzio\Template\TemplateRendererInterface;
 
 /**
  * Class NavigationRendererFactory

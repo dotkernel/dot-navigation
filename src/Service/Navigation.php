@@ -17,7 +17,7 @@ use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Page;
 use Dot\Navigation\Provider\Factory;
 use Dot\Navigation\Provider\ProviderInterface;
-use Zend\Expressive\Router\RouteResult;
+use Mezzio\Router\RouteResult;
 
 /**
  * Class Navigation

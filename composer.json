@@ -1,45 +1,44 @@
 {
-  "name": "dotkernel/dot-navigation",
-  "type": "library",
-  "description": "DotKernel navigation component",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "DotKernel Team",
-      "email": "team@dotkernel.com"
+    "name": "dotkernel/dot-navigation",
+    "type": "library",
+    "description": "DotKernel navigation component",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "DotKernel Team",
+            "email": "team@dotkernel.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "psr/http-message": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "laminas/laminas-servicemanager": "^3.3.0",
+        "laminas/laminas-escaper": "^2.6",
+        "mezzio/mezzio-template": "^2.0",
+        "dotkernel/dot-helpers": "^2.0",
+        "laminas/laminas-dependency-plugin": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8",
+        "squizlabs/php_codesniffer": "^2.3",
+        "laminas/laminas-stdlib": "^3.2",
+        "dotkernel/dot-authorization": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dot\\Navigation\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DotTest\\Navigation\\": "test/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev",
+            "dev-develop": "1.1-dev"
+        }
     }
-  ],
-  "require": {
-    "php": "^7.1",
-    "psr/http-message": "^1.0",
-    "psr/http-server-middleware": "^1.0",
-    "zendframework/zend-servicemanager": "^3.3.0",
-    "zendframework/zend-escaper": "^2.6",
-    "zendframework/zend-expressive-template": "^2.0",
-
-    "dotkernel/dot-helpers": "^1.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^4.8",
-    "squizlabs/php_codesniffer": "^2.3",
-
-    "zendframework/zend-stdlib": "^3.2",
-    "dotkernel/dot-authorization": "^1.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Dot\\Navigation\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "DotTest\\Navigation\\": "test/"
-    }
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0-dev",
-      "dev-develop": "1.1-dev"
-    }
-  }
 }

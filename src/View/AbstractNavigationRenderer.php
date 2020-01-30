@@ -12,8 +12,8 @@ namespace Dot\Navigation\View;
 use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Service\NavigationInterface;
-use Zend\Escaper\Escaper;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Laminas\Escaper\Escaper;
+use Mezzio\Template\TemplateRendererInterface;
 
 /**
  * Class AbstractNavigationHelper
