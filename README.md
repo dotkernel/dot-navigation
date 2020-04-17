@@ -11,6 +11,9 @@ $ composer require dotkernel/dot-navigation
 
 Merge `ConfigProvider` to your application's configuration.
 
+The package uses dot-helpers package, please merge dot-helpers `ConfigProvider` to your application's configuration
+also, if it's not merged already!
+
 Register `NavigationMiddleware` in your middleware pipe between the routing and the dispatching middleware.
 
 ## Configuration
