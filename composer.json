@@ -13,17 +13,17 @@
         "php": "^7.4",
         "psr/http-message": "^1.0",
         "psr/http-server-middleware": "^1.0",
-        "laminas/laminas-servicemanager": "^3.3.0",
+        "laminas/laminas-servicemanager": "^3.4",
         "laminas/laminas-escaper": "^2.6",
         "mezzio/mezzio-template": "^2.0",
         "dotkernel/dot-helpers": "^3.0",
         "laminas/laminas-dependency-plugin": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8",
-        "squizlabs/php_codesniffer": "^2.3",
-        "laminas/laminas-stdlib": "^3.2",
-        "dotkernel/dot-authorization": "^2.0"
+        "phpunit/phpunit": "^9.1.3",
+        "squizlabs/php_codesniffer": "^3.5.5",
+        "laminas/laminas-stdlib": "^3.2.1",
+        "dotkernel/dot-authorization": "^3.0.2"
     },
     "autoload": {
         "psr-4": {
