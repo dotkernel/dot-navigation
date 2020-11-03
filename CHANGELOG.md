@@ -15,6 +15,7 @@
 
 ### Fixed
 * bump min version of laminas/laminas-dependency-plugin
+* bump min version of dotkernel/dot-helpers
 
 ## 2.0.0 - 2020-01-30
 
