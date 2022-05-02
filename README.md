@@ -1,5 +1,13 @@
 # dot-navigation
 
+![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-navigation)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-navigation/3.2.0)
+
+[![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/issues)
+[![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/network)
+[![GitHub stars](https://img.shields.io/github/stars/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/stargazers)
+[![GitHub license](https://img.shields.io/github/license/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/blob/3.2.0/LICENSE.md)
+
 Allows you to easily define and parse menus inside templates, configuration based approach.
 
 ## Installation
