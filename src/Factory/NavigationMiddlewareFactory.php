@@ -1,32 +1,33 @@
 <?php
-/**
- * @see https://github.com/dotkernel/dot-navigation/ for the canonical source repository
- * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
- * @license https://github.com/dotkernel/dot-navigation/blob/master/LICENSE.md MIT License
- */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dot\Navigation\Factory;
 
 use Dot\Navigation\NavigationMiddleware;
 use Dot\Navigation\Service\NavigationInterface;
+use Exception;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-/**
- * Class NavigationMiddlewareFactory
- * @package Dot\Navigation\Factory
- */
 class NavigationMiddlewareFactory
 {
+    public const MESSAGE_MISSING_NAVIGATION = 'Unable to find NavigationInterface in the container';
+
     /**
-     * @param ContainerInterface $container
-     * @param $requestedName
-     * @return NavigationMiddleware
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Exception
      */
-    public function __invoke(ContainerInterface $container, $requestedName): NavigationMiddleware
+    public function __invoke(ContainerInterface $container): NavigationMiddleware
     {
-        $navigation = $container->get(NavigationInterface::class);
-        return new $requestedName($navigation);
+        if (! $container->has(NavigationInterface::class)) {
+            throw new Exception(self::MESSAGE_MISSING_NAVIGATION);
+        }
+
+        return new NavigationMiddleware(
+            $container->get(NavigationInterface::class)
+        );
     }
 }

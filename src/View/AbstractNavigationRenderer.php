@@ -1,11 +1,6 @@
 <?php
-/**
- * @see https://github.com/dotkernel/dot-navigation/ for the canonical source repository
- * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
- * @license https://github.com/dotkernel/dot-navigation/blob/master/LICENSE.md MIT License
- */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dot\Navigation\View;
 
@@ -15,47 +10,44 @@ use Dot\Navigation\Service\NavigationInterface;
 use Laminas\Escaper\Escaper;
 use Mezzio\Template\TemplateRendererInterface;
 
-/**
- * Class AbstractNavigationHelper
- * @package Dot\Navigation\Helper
- */
+use function implode;
+use function in_array;
+use function is_array;
+use function is_scalar;
+use function is_string;
+use function json_encode;
+use function preg_match;
+use function str_contains;
+use function str_ends_with;
+use function str_replace;
+use function str_starts_with;
+use function strlen;
+use function substr;
+use function trim;
+
 abstract class AbstractNavigationRenderer implements RendererInterface
 {
-    /** @var NavigationInterface */
-    protected $navigation;
+    protected NavigationInterface $navigation;
+    protected TemplateRendererInterface $template;
+    protected string $partial;
 
-    /** @var  string */
-    protected $partial;
-
-    /** @var TemplateRendererInterface */
-    protected $template;
-
-    /**
-     * AbstractNavigationHelper constructor.
-     * @param NavigationInterface $navigation
-     * @param TemplateRendererInterface $template
-     */
     public function __construct(NavigationInterface $navigation, TemplateRendererInterface $template)
     {
         $this->navigation = $navigation;
-        $this->template = $template;
+        $this->template   = $template;
     }
 
-    /**
-     * @param array $attributes
-     * @return string
-     */
     public function htmlAttributes(array $attributes): string
     {
-        $xhtml = '';
+        $xhtml   = '';
         $escaper = new Escaper();
 
         foreach ($attributes as $key => $val) {
             $key = $escaper->escapeHtml($key);
 
-            if (('on' == substr($key, 0, 2)) || ('constraints' == $key)) {
+            if ((str_starts_with($key, 'on')) || ('constraints' === $key)) {
                 // Don't escape event attributes; _do_ substitute double quotes with singles
-                if (!is_scalar($val)) {
+                if (! is_scalar($val)) {
                     // non-scalar data should be cast to JSON first
                     $val = json_encode($val);
                 }
@@ -67,10 +59,10 @@ abstract class AbstractNavigationRenderer implements RendererInterface
 
             $val = $escaper->escapeHtmlAttr($val);
 
-            if ('id' == $key) {
+            if ('id' === $key) {
                 $val = $this->normalizeId($val);
             }
-            if (strpos($val, '"') !== false) {
+            if (str_contains($val, '"')) {
                 $xhtml .= " $key='$val'";
             } else {
                 $xhtml .= " $key=\"$val\"";
@@ -79,16 +71,10 @@ abstract class AbstractNavigationRenderer implements RendererInterface
         return $xhtml;
     }
 
-    /**
-     * Normalize an ID
-     *
-     * @param  string $value
-     * @return string
-     */
     protected function normalizeId(string $value): string
     {
-        if (strstr($value, '[')) {
-            if ('[]' == substr($value, -2)) {
+        if (str_contains($value, '[')) {
+            if (str_ends_with($value, '[]')) {
                 $value = substr($value, 0, strlen($value) - 2);
             }
             $value = trim($value, ']');
@@ -98,44 +84,27 @@ abstract class AbstractNavigationRenderer implements RendererInterface
         return $value;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPartial(): ?string
     {
         return $this->partial;
     }
 
-    /**
-     * @param string $partial
-     */
-    public function setPartial(string $partial)
+    public function setPartial(string $partial): void
     {
         $this->partial = $partial;
     }
 
-    /**
-     * @param string|NavigationContainer $container
-     * @return NavigationContainer
-     */
-    protected function getContainer($container): NavigationContainer
+    protected function getContainer(string|NavigationContainer $container): NavigationContainer
     {
         if (is_string($container)) {
             return $this->navigation->getContainer($container);
-        } elseif (!$container instanceof NavigationContainer) {
+        } elseif (! $container instanceof NavigationContainer) {
             throw new RuntimeException('Container must be a string or an instance of ' . NavigationContainer::class);
         }
 
         return $container;
     }
 
-    /**
-     * Cleans array of attributes based on valid input.
-     *
-     * @param array $input
-     * @param array $valid
-     * @return array
-     */
     protected function cleanAttributes(array $input, array $valid): array
     {
         foreach ($input as $key => $value) {

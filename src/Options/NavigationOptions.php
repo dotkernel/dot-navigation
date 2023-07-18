@@ -1,66 +1,38 @@
 <?php
-/**
- * @see https://github.com/dotkernel/dot-navigation/ for the canonical source repository
- * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
- * @license https://github.com/dotkernel/dot-navigation/blob/master/LICENSE.md MIT License
- */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dot\Navigation\Options;
 
 use Laminas\Stdlib\AbstractOptions;
 
-/**
- * Class NavigationOptions
- * @package Dot\Navigation\Options
- */
 class NavigationOptions extends AbstractOptions
 {
-    /** @var  array */
-    protected $containers;
+    protected array $containers     = [];
+    protected bool $activeRecursion = true;
 
-    /** @var bool */
-    protected $activeRecursion = true;
-
-    /**
-     * NavigationOptions constructor.
-     * @param array $options
-     */
-    public function __construct($options = null)
+    public function __construct(?array $options = null)
     {
         $this->__strictMode__ = false;
         parent::__construct($options);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getContainers()
+    public function getContainers(): array
     {
         return $this->containers;
     }
 
-    /**
-     * @param mixed $containers
-     */
-    public function setContainers($containers)
+    public function setContainers(array $containers): void
     {
         $this->containers = $containers;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getActiveRecursion()
+    public function getActiveRecursion(): bool
     {
         return $this->activeRecursion;
     }
 
-    /**
-     * @param boolean $activeRecursion
-     */
-    public function setActiveRecursion($activeRecursion)
+    public function setActiveRecursion(bool $activeRecursion): void
     {
         $this->activeRecursion = $activeRecursion;
     }

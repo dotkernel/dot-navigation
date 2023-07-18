@@ -1,21 +1,23 @@
 # dot-navigation
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-navigation)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-navigation/3.2.0)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-navigation/3.4.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/network)
 [![GitHub stars](https://img.shields.io/github/stars/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/stargazers)
-[![GitHub license](https://img.shields.io/github/license/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/blob/3.2.0/LICENSE.md)
+[![GitHub license](https://img.shields.io/github/license/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/blob/3.0/LICENSE.md)
+
+[![SymfonyInsight](https://insight.symfony.com/projects/68b7c728-4cc9-40ac-a3be-cf17f9b2eaf1/big.svg)](https://insight.symfony.com/projects/68b7c728-4cc9-40ac-a3be-cf17f9b2eaf1)
+
 
 Allows you to easily define and parse menus inside templates, configuration based approach.
 
 ## Installation
 
 Run
-```bash
-$ composer require dotkernel/dot-navigation
-```
+
+    composer require dotkernel/dot-navigation
 
 Merge `ConfigProvider` to your application's configuration.
 
@@ -26,59 +28,8 @@ Register `NavigationMiddleware` in your middleware pipe between the routing and 
 
 ## Configuration
 
-In your `config/autoload` directory, create a config file
+Locate dot-navigation's distributable config file `vendor/dotkernel/dot-navigation/config/autoload/navigation.global.php.dist` and duplicate it in your project as `config/autoload/navigation.global.php`
 
-##### navigation.global.php
-```php
-return [
-    'dot_navigation' => [
-        //enable menu item active if any child is active
-        'active_recursion' => true,
-        
-        //map a provider name to its config
-        'containers' => [
-            'default' => [
-                'type' => 'ArrayProvider',
-                'options' => [
-                    'items' => [
-                        [
-                            'options' => [
-                                'label' => 'Menu #1',
-                                'route' => [
-                                    'route_name' => 'home',
-                                    'route_params' => [],
-                                    'query_params' => [],
-                                    'fragment_id' => null,
-                                    'options' => [],
-                                    
-                                    //the below parameters are not used in route generation
-                                    //they are used in finding if a page is active by omitting some parameters from the check
-                                    'ignore_params' => []
-                                ],
-                            ],
-                            'attributes' => [
-                                'name' => 'Menu #1',
-                            ]
-                        ],
-                        [
-                            'options' => [
-                                'label' => 'Menu #2',
-                                'route' => ['route_name' => 'home'/*,...*/],
-                            ],
-                            'attributes' => [
-                                'name' => 'Menu #1',
-                            ]
-                        ]
-                    ],
-                ],
-            ],
-        ],
-        
-        //register custom providers here
-        'provider_manager' => [],
-    ],
-];
-```
 
 ## Components
 
