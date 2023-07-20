@@ -1,44 +1,23 @@
 <?php
-/**
- * @see https://github.com/dotkernel/dot-navigation/ for the canonical source repository
- * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
- * @license https://github.com/dotkernel/dot-navigation/blob/master/LICENSE.md MIT License
- */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dot\Navigation\Provider;
 
 use Dot\Navigation\Exception\RuntimeException;
 use Psr\Container\ContainerInterface;
 
-/**
- * Class Factory
- * @package Dot\Navigation\Provider
- */
-class Factory
+class Factory implements FactoryInterface
 {
-    /** @var  ContainerInterface */
-    protected $container;
+    protected ContainerInterface $container;
+    protected ?ProviderPluginManager $providerPluginManager;
 
-    /** @var  ProviderPluginManager */
-    protected $providerPluginManager;
-
-    /**
-     * Factory constructor.
-     * @param ContainerInterface $container
-     * @param ProviderPluginManager|null $providerPluginManager
-     */
-    public function __construct(ContainerInterface $container, ProviderPluginManager $providerPluginManager = null)
+    public function __construct(ContainerInterface $container, ?ProviderPluginManager $providerPluginManager = null)
     {
-        $this->container = $container;
+        $this->container             = $container;
         $this->providerPluginManager = $providerPluginManager;
     }
 
-    /**
-     * @param array $specs
-     * @return ProviderInterface
-     */
     public function create(array $specs): ProviderInterface
     {
         $type = $specs['type'] ?? '';
@@ -46,16 +25,12 @@ class Factory
             throw new RuntimeException('Undefined navigation provider type');
         }
 
-        $options = $specs['options'] ?? null;
-        return $this->getProviderPluginManager()->get($type, $options);
+        return $this->getProviderPluginManager()->get($type, $specs['options'] ?? null);
     }
 
-    /**
-     * @return ProviderPluginManager
-     */
     public function getProviderPluginManager(): ProviderPluginManager
     {
-        if (!$this->providerPluginManager) {
+        if (! $this->providerPluginManager instanceof ProviderPluginManager) {
             $this->providerPluginManager = new ProviderPluginManager($this->container, []);
         }
 

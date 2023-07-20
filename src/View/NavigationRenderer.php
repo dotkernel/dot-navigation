@@ -1,38 +1,22 @@
 <?php
-/**
- * @see https://github.com/dotkernel/dot-navigation/ for the canonical source repository
- * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
- * @license https://github.com/dotkernel/dot-navigation/blob/master/LICENSE.md MIT License
- */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dot\Navigation\View;
 
 use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Options\NavigationOptions;
-use Dot\Navigation\Service\Navigation;
+use Dot\Navigation\Service\NavigationInterface;
 use Mezzio\Template\TemplateRendererInterface;
 
-/**
- * Class NavigationRenderer
- * @package Dot\Navigation\View
- */
+use function array_merge;
+
 class NavigationRenderer extends AbstractNavigationRenderer
 {
-    /**
-     * @var NavigationOptions
-     */
-    protected $options;
+    protected NavigationOptions $options;
 
-    /**
-     * NavigationMenu constructor.
-     * @param Navigation $navigation
-     * @param TemplateRendererInterface $template
-     * @param NavigationOptions $options
-     */
     public function __construct(
-        Navigation $navigation,
+        NavigationInterface $navigation,
         TemplateRendererInterface $template,
         NavigationOptions $options
     ) {
@@ -40,13 +24,7 @@ class NavigationRenderer extends AbstractNavigationRenderer
         parent::__construct($navigation, $template);
     }
 
-    /**
-     * @param string $partial
-     * @param string|NavigationContainer $container
-     * @param array $params
-     * @return string
-     */
-    public function renderPartial($container, string $partial, array $params = []): string
+    public function renderPartial(string|NavigationContainer $container, string $partial, array $params = []): string
     {
         $container = $this->getContainer($container);
 
@@ -59,13 +37,16 @@ class NavigationRenderer extends AbstractNavigationRenderer
         );
     }
 
-    /**
-     * @param string|NavigationContainer $container
-     * @return string
-     */
-    public function render($container): string
+    public function render(string|NavigationContainer $container, string $template, array $params = []): string
     {
-        // TODO: render a default HTML menu structure
-        return '';
+        $container = $this->getContainer($container);
+
+        return $this->template->render(
+            $template,
+            array_merge(
+                ['container' => $container, 'navigation' => $this->navigation],
+                $params
+            )
+        );
     }
 }

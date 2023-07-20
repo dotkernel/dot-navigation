@@ -1,48 +1,27 @@
 <?php
-/**
- * @see https://github.com/dotkernel/dot-navigation/ for the canonical source repository
- * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
- * @license https://github.com/dotkernel/dot-navigation/blob/master/LICENSE.md MIT License
- */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dot\Navigation\Provider;
 
 use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Page;
 
-/**
- * Class ArrayProvider
- * @package Dot\Navigation\Provider
- */
+use function count;
+use function is_array;
+
 class ArrayProvider implements ProviderInterface
 {
-    /**
-     * @var NavigationContainer
-     */
-    protected $container;
+    protected ?NavigationContainer $container = null;
+    protected array $items                    = [];
 
-    /**
-     * @var array
-     */
-    protected $items = [];
-
-    /**
-     * ArrayProvider constructor.
-     * @param array $options
-     */
-    public function __construct(array $options = null)
+    public function __construct(?array $options = [])
     {
-        $options = $options ?? [];
         if (isset($options['items']) && is_array($options['items'])) {
             $this->setItems($options['items']);
         }
     }
 
-    /**
-     * @return NavigationContainer
-     */
     public function getContainer(): NavigationContainer
     {
         if ($this->container instanceof NavigationContainer) {
@@ -58,10 +37,6 @@ class ArrayProvider implements ProviderInterface
         return $this->container;
     }
 
-    /**
-     * @param array $spec
-     * @return Page
-     */
     protected function getPage(array $spec): Page
     {
         $page = new Page();
@@ -83,18 +58,17 @@ class ArrayProvider implements ProviderInterface
         return $page;
     }
 
-    /**
-     * @return array
-     */
     public function getItems(): array
     {
         return $this->items;
     }
 
-    /**
-     * @param array $items
-     */
-    public function setItems(array $items)
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
+    }
+
+    public function setItems(array $items): void
     {
         $this->items = $items;
     }

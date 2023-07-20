@@ -1,191 +1,129 @@
 <?php
-/**
- * @see https://github.com/dotkernel/dot-navigation/ for the canonical source repository
- * @copyright Copyright (c) 2017 Apidemia (https://www.apidemia.com)
- * @license https://github.com/dotkernel/dot-navigation/blob/master/LICENSE.md MIT License
- */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dot\Navigation;
 
-/**
- * Class Container
- * @package Dot\Navigation
- */
-class NavigationContainer implements \RecursiveIterator
+use RecursiveIterator;
+use RecursiveIteratorIterator;
+
+use function count;
+
+class NavigationContainer implements RecursiveIterator
 {
-    /**
-     * Index of current active child
-     * @var int
-     */
-    protected $index = 0;
+    protected int $index      = 0;
+    protected array $children = [];
 
-    /**
-     * Child nodes
-     * @var array
-     */
-    protected $children = [];
-
-    /**
-     * NavigationContainer constructor.
-     * @param array $pages
-     */
     public function __construct(array $pages = [])
     {
         $this->addPages($pages);
     }
 
     /**
-     * @param array $pages
+     * @param Page[] $pages
      */
-    public function addPages(array $pages)
+    public function addPages(array $pages): void
     {
         foreach ($pages as $page) {
             $this->addPage($page);
         }
     }
 
-    /**
-     * @param Page $page
-     */
-    public function addPage(Page $page)
+    public function addPage(Page $page): void
     {
         $this->children[] = $page;
     }
 
-    /**
-     * @return NavigationContainer
-     */
     public function current(): NavigationContainer
     {
         return $this->children[$this->index];
     }
 
-    /**
-     * Increment current position to the next element
-     */
-    public function next()
+    public function next(): void
     {
         $this->index++;
     }
 
-    /**
-     * @return int
-     */
     public function key(): int
     {
         return $this->index;
     }
 
-    /**
-     * @return bool
-     */
     public function valid(): bool
     {
         return isset($this->children[$this->index]);
     }
 
-    /**
-     * Reset position to the first element
-     */
-    public function rewind()
+    public function rewind(): void
     {
         $this->index = 0;
     }
 
-    /**
-     * @return bool
-     */
     public function hasChildren(): bool
     {
         return count($this->children) > 0;
     }
 
-    /**
-     * @return NavigationContainer
-     */
     public function getChildren(): NavigationContainer
     {
         return $this->children[$this->index];
     }
 
-    /**
-     * Find a single child by attribute
-     *
-     * @param string $attribute
-     * @param mixed $value
-     * @return Page|null
-     */
-    public function findOneByAttribute(string $attribute, $value): ?Page
+    public function findOneByAttribute(string $attribute, mixed $value): ?Page
     {
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
+        $iterator = new RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
+
         /** @var Page $page */
         foreach ($iterator as $page) {
             if ($page->getAttribute($attribute) === $value) {
                 return $page;
             }
         }
+
         return null;
     }
 
-    /**
-     * Find all children by attribute
-     *
-     * @param string $attribute
-     * @param mixed $value
-     * @return array
-     */
-    public function findByAttribute(string $attribute, $value): array
+    public function findByAttribute(string $attribute, mixed $value): array
     {
-        $result = [];
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
+        $result   = [];
+        $iterator = new RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
 
         /** @var Page $page */
         foreach ($iterator as $page) {
-            if ($page->getAttribute($attribute) == $value) {
+            if ($page->getAttribute($attribute) === $value) {
                 $result[] = $page;
             }
         }
+
         return $result;
     }
 
-    /**
-     * Finds a single child by option.
-     *
-     * @param string $option
-     * @param mixed $value
-     * @return Page|null
-     */
-    public function findOneByOption(string $option, $value): ?Page
+    public function findOneByOption(string $option, mixed $value): ?Page
     {
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
+        $iterator = new RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
+
         /** @var Page $page */
         foreach ($iterator as $page) {
-            if ($page->getOption($option) == $value) {
+            if ($page->getOption($option) === $value) {
                 return $page;
             }
         }
+
         return null;
     }
 
-    /**
-     * Finds all children by option.
-     *
-     * @param string $option
-     * @param mixed $value
-     * @return array
-     */
-    public function findByOption(string $option, $value): array
+    public function findByOption(string $option, mixed $value): array
     {
-        $result = [];
-        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
+        $result   = [];
+        $iterator = new RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
+
         /** @var Page $page */
         foreach ($iterator as $page) {
-            if ($page->getOption($option) == $value) {
+            if ($page->getOption($option) === $value) {
                 $result[] = $page;
             }
         }
+
         return $result;
     }
 }
