@@ -8,6 +8,8 @@
 [![GitHub stars](https://img.shields.io/github/stars/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/stargazers)
 [![GitHub license](https://img.shields.io/github/license/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/blob/3.0/LICENSE.md)
 
+[![Build Static](https://github.com/dotkernel/dot-navigation/actions/workflows/static-analysis.yml/badge.svg?branch=3.0)](https://github.com/dotkernel/dot-navigation/actions/workflows/static-analysis.yml)
+
 [![SymfonyInsight](https://insight.symfony.com/projects/68b7c728-4cc9-40ac-a3be-cf17f9b2eaf1/big.svg)](https://insight.symfony.com/projects/68b7c728-4cc9-40ac-a3be-cf17f9b2eaf1)
 
 
