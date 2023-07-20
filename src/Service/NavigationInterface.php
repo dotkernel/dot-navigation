@@ -12,11 +12,11 @@ interface NavigationInterface
 {
     public function getRouteResult(): ?RouteResult;
 
-    public function setRouteResult(RouteResult $routeResult);
+    public function setRouteResult(RouteResult $routeResult): void;
 
     public function getIsActiveRecursion(): bool;
 
-    public function setIsActiveRecursion(bool $isActiveRecursion);
+    public function setIsActiveRecursion(bool $isActiveRecursion): void;
 
     public function getIsActiveCache(): array;
 
