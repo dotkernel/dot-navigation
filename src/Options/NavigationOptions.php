@@ -6,6 +6,10 @@ namespace Dot\Navigation\Options;
 
 use Laminas\Stdlib\AbstractOptions;
 
+/**
+ * @template TValue
+ * @template-extends AbstractOptions<TValue>
+ */
 class NavigationOptions extends AbstractOptions
 {
     protected array $containers     = [];
