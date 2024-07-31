@@ -2,47 +2,47 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.dotkernel.org/dot-navigation/</loc>
-         <lastmod>2024-05-03</lastmod>
+         <lastmod>2024-07-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/dot-navigation/v3/components/</loc>
-         <lastmod>2024-05-03</lastmod>
+         <lastmod>2024-07-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/dot-navigation/v3/configuration/</loc>
-         <lastmod>2024-05-03</lastmod>
+         <lastmod>2024-07-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/dot-navigation/v3/container-providers/</loc>
-         <lastmod>2024-05-03</lastmod>
+         <lastmod>2024-07-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/dot-navigation/v3/installation/</loc>
-         <lastmod>2024-05-03</lastmod>
+         <lastmod>2024-07-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/dot-navigation/v3/navigation-renderer/</loc>
-         <lastmod>2024-05-03</lastmod>
+         <lastmod>2024-07-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/dot-navigation/v3/overview/</loc>
-         <lastmod>2024-05-03</lastmod>
+         <lastmod>2024-07-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/dot-navigation/v3/required-page-options/</loc>
-         <lastmod>2024-05-03</lastmod>
+         <lastmod>2024-07-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/dot-navigation/v3/usage/</loc>
-         <lastmod>2024-05-03</lastmod>
+         <lastmod>2024-07-31</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
