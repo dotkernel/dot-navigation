@@ -18,11 +18,11 @@
         <meta name="docsearch:component" content="dot-navigation">
 
         
-        <link rel="canonical" href="https://docs.dotkernel.org/dot-navigation/">
+        <link rel="canonical" href="https://docs.dotkernel.org/dot-navigation/v4/components/">
         
         <link rel="shortcut icon" href="https://docs.dotkernel.org/img/dk_docs_favicon_white.svg">
 
-        <title>dot-navigation - DotKernel Documentation</title>
+        <title>Components - dot-navigation - DotKernel Documentation</title>
 
         <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap.css">
         <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap-icons.min.css">
@@ -142,7 +142,7 @@
         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left" aria-labelledby="version-selector-dropdown">
             
                 
-                    <a href="v4/overview/" class="dropdown-item">
+                    <a href="../overview/" class="dropdown-item active">
                         
                             v4 (latest)
                         
@@ -150,7 +150,7 @@
                 
             
                 
-                    <a href="v3/overview/" class="dropdown-item">
+                    <a href="../../v3/overview/" class="dropdown-item">
                         
                             v3
                         
@@ -176,7 +176,16 @@
                 
 
                 
-                    <li class="breadcrumb-item">dot-navigation</li>
+                    <li class="breadcrumb-item"><a href="../..">dot-navigation</a></li>
+
+                    
+                        
+                            
+                            
+                        
+                    
+
+                    <li class="breadcrumb-item active" aria-current="page">Components</li>
                 
             
         </ol>
@@ -191,7 +200,7 @@
                     
     <div class="subnavigation hidden-print">
 <!--        <h4 class="subnavigation__title">-->
-<!--            <a href=".">dot-navigation</a>-->
+<!--            <a href="../..">dot-navigation</a>-->
 <!--        </h4>-->
 
         <h5 class="subnavigation__title">Table of Contents</h5>
@@ -204,49 +213,49 @@
                     
                         
 <li class="subnavigation__list-item ">
-    <a href="v4/overview/" class="subnavigation__link">Overview</a>
+    <a href="../overview/" class="subnavigation__link">Overview</a>
 </li>
 
                     
                         
 <li class="subnavigation__list-item ">
-    <a href="v4/configuration/" class="subnavigation__link">Configuration</a>
+    <a href="../configuration/" class="subnavigation__link">Configuration</a>
 </li>
 
                     
                         
 <li class="subnavigation__list-item ">
-    <a href="v4/installation/" class="subnavigation__link">Installation</a>
+    <a href="../installation/" class="subnavigation__link">Installation</a>
+</li>
+
+                    
+                        
+<li class="subnavigation__list-item subnavigation__list-item--active">
+    <a href="./" class="subnavigation__link">Components</a>
 </li>
 
                     
                         
 <li class="subnavigation__list-item ">
-    <a href="v4/components/" class="subnavigation__link">Components</a>
+    <a href="../container-providers/" class="subnavigation__link">Container Providers</a>
 </li>
 
                     
                         
 <li class="subnavigation__list-item ">
-    <a href="v4/container-providers/" class="subnavigation__link">Container Providers</a>
+    <a href="../navigation-renderer/" class="subnavigation__link">Navigation Renderer</a>
 </li>
 
                     
                         
 <li class="subnavigation__list-item ">
-    <a href="v4/navigation-renderer/" class="subnavigation__link">Navigation Renderer</a>
+    <a href="../required-page-options/" class="subnavigation__link">Required Page Options</a>
 </li>
 
                     
                         
 <li class="subnavigation__list-item ">
-    <a href="v4/required-page-options/" class="subnavigation__link">Required Page Options</a>
-</li>
-
-                    
-                        
-<li class="subnavigation__list-item ">
-    <a href="v4/usage/" class="subnavigation__link">Usage</a>
+    <a href="../usage/" class="subnavigation__link">Usage</a>
 </li>
 
                     
@@ -267,6 +276,13 @@
 
                     
                     
+                    
+    
+
+    
+    
+
+                    
                 </div>
                 <div class="col-lg-9 main_docs">
                     
@@ -274,22 +290,17 @@
 
 
 
+
     
-    <h1>dot-navigation</h1>
-    <p>Dotkernel's component that allows you to easily define and parse menus inside templates, using a configuration based approach.</p>
-    <h2>Installation</h2>
-    <h3>Using Composer</h3>
-    <pre class="highlight line-numbers">
-        <i class="bi bi-copy copy_btn" onclick="copy(this)"></i>
-        <code class="language-bash">composer require dotkernel/dot-navigation</code>
-    </pre>
+    
 
-
-<h2>Support</h2>
-<ul>
-    <li>Issues: <a href="https://github.com/dotkernel/dot-navigation/issues">github.com/dotkernel/dot-navigation/issues</a></li>
-    <li>Source: <a href="https://github.com/dotkernel/dot-navigation">github.com/dotkernel/dot-navigation</a></li>
-</ul>
+    <h1 id="components">Components</h1>
+<p>A menu, or navigation container, is a class implementing the \RecursiveIterator interface. It has a hierarchical structure, with nodes called pages(see the <code>Page</code> class) that may have children. It is basically a tree</p>
+<p>A Page extends the NavigationContainer class. The NavigationContainer is the top most node which represents the entire menu. The children of this node are Page instances that defines each navigation item.</p>
+<p>A page has a reference to its parent, and can have options and attributes. There are no limitation on what is accepted as options or attributes.</p>
+<p>Options can be any piece of information that describes a page. Some predefined options exists, in order for the navigation module to work seamlessly with other dot modules.</p>
+<p>Attributes are key value pairs that defines the menu item. They are usually inserted as html attributes when parsing the menu, but of course, this is implementation specific.</p>
+<p>A <code>NavigationService</code> class, is the service that handles all defined menu container. It can fetch the container from its provider, check if a page is active or not and get the page's generated URI.</p>
 
 
 
@@ -299,13 +310,18 @@
         
         <li class="col text-nowrap text-md-start">
             
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../installation/">
+                    <i class="bi bi-chevron-left"></i>
+                    Installation
+                </a>
+            
         </li>
 
         
         <li class="col text-nowrap text-md-end pe-0">
             
-                <a rel="next" class="page-nav__link page-nav__link--next" href="v4/overview/">
-                    Overview
+                <a rel="next" class="page-nav__link page-nav__link--next" href="../container-providers/">
+                    Container Providers
                     <i class="bi bi-chevron-right"></i>
                 </a>
             
@@ -428,7 +444,7 @@
 </footer>
 
         <script>
-            let base_url = '.',
+            let base_url = '../..',
                 project  = "packages",
                 siteName = 'dot-navigation';
 
@@ -461,8 +477,3 @@
 </div>-->
     </body>
 </html>
-
-<!--
-MkDocs version : 1.6.1
-Build Date UTC : 2025-01-20 13:20:15.296103+00:00
--->
