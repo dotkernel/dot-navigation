@@ -8,7 +8,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/stargazers)
 [![GitHub license](https://img.shields.io/github/license/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/blob/4.0/LICENSE.md)
 
-[![Build Static](https://github.com/dotkernel/dot-navigation/actions/workflows/static-analysis.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/dot-navigation/actions/workflows/static-analysis.yml)
+[![Build Static](https://github.com/dotkernel/dot-navigation/actions/workflows/continuous-integration.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/dot-navigation/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/dotkernel/dot-navigation/graph/badge.svg?token=AI9WFYDDX9)](https://codecov.io/gh/dotkernel/dot-navigation)
 
 Allows you to easily define and parse menus inside templates, configuration based approach.
