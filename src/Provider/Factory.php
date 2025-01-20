@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dot\Navigation\Provider;
 
 use Dot\Navigation\Exception\RuntimeException;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 class Factory implements FactoryInterface
@@ -18,6 +19,9 @@ class Factory implements FactoryInterface
         $this->providerPluginManager = $providerPluginManager;
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     */
     public function create(array $specs): ProviderInterface
     {
         $type = $specs['type'] ?? '';
@@ -25,7 +29,7 @@ class Factory implements FactoryInterface
             throw new RuntimeException('Undefined navigation provider type');
         }
 
-        return $this->getProviderPluginManager()->get($type, $specs['options'] ?? null);
+        return $this->getProviderPluginManager()->build($type, $specs['options'] ?? null);
     }
 
     public function getProviderPluginManager(): ProviderPluginManager

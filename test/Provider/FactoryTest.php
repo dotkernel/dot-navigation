@@ -12,9 +12,8 @@ use Dot\Navigation\Provider\ProviderPluginManager;
 use Laminas\ServiceManager\Exception\ServiceNotFoundException;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-
-use function sprintf;
 
 class FactoryTest extends TestCase
 {
@@ -42,6 +41,7 @@ class FactoryTest extends TestCase
     }
 
     /**
+     * @throws ContainerExceptionInterface
      * @throws Exception
      */
     public function testFactoryWillNotCreateProviderWithoutProviderType(): void
@@ -55,6 +55,7 @@ class FactoryTest extends TestCase
     }
 
     /**
+     * @throws ContainerExceptionInterface
      * @throws Exception
      */
     public function testFactoryWillNotCreateProviderWithInvalidProviderType(): void
@@ -63,10 +64,7 @@ class FactoryTest extends TestCase
 
         $this->expectException(ServiceNotFoundException::class);
         $this->expectExceptionMessage(
-            sprintf(
-                'A plugin by the name "test" was not found in the plugin manager %s',
-                ProviderPluginManager::class
-            )
+            'Unable to resolve service "test" to a factory; are you certain you provided it during configuration?'
         );
         $factory = new Factory($container);
         $factory->create([
@@ -75,6 +73,7 @@ class FactoryTest extends TestCase
     }
 
     /**
+     * @throws ContainerExceptionInterface
      * @throws Exception
      */
     public function testFactoryWillCreateProviderWithValidProviderTypeAndNoOptions(): void
@@ -89,6 +88,7 @@ class FactoryTest extends TestCase
     }
 
     /**
+     * @throws ContainerExceptionInterface
      * @throws Exception
      */
     public function testFactoryWillCreateProviderWithValidProviderTypeAndOptions(): void
