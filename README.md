@@ -11,15 +11,15 @@
 [![Build Static](https://github.com/dotkernel/dot-navigation/actions/workflows/static-analysis.yml/badge.svg?branch=3.0)](https://github.com/dotkernel/dot-navigation/actions/workflows/static-analysis.yml)
 [![codecov](https://codecov.io/gh/dotkernel/dot-navigation/graph/badge.svg?token=AI9WFYDDX9)](https://codecov.io/gh/dotkernel/dot-navigation)
 
-[![SymfonyInsight](https://insight.symfony.com/projects/68b7c728-4cc9-40ac-a3be-cf17f9b2eaf1/big.svg)](https://insight.symfony.com/projects/68b7c728-4cc9-40ac-a3be-cf17f9b2eaf1)
-
 Allows you to easily define and parse menus inside templates, configuration based approach.
 
 ## Installation
 
 Run
 
-    composer require dotkernel/dot-navigation
+```shell
+composer require dotkernel/dot-navigation
+```
 
 Merge `ConfigProvider` to your application's configuration.
 

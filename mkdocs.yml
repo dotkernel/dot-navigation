@@ -17,7 +17,7 @@ nav:
       - "Required Page Options": v3/required-page-options.md
       - Usage: v3/usage.md
 site_name: dot-navigation
-site_description: "DotKernel's component that allows you to easily define and parse menus inside templates, using a configuration based approach."
+site_description: "Dotkernel's component that allows you to easily define and parse menus inside templates, using a configuration based approach."
 repo_url: "https://github.com/dotkernel/dot-navigation"
 plugins:
   - search

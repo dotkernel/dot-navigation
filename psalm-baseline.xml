@@ -10,9 +10,4 @@
             <code>RecursiveIterator</code>
         </MissingTemplateParam>
     </file>
-    <file src="src/Provider/ProviderPluginManager.php">
-        <MissingTemplateParam>
-            <code>ProviderPluginManager</code>
-        </MissingTemplateParam>
-    </file>
 </files>
