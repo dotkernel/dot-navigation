@@ -2,11 +2,21 @@ docs_dir: docs/book
 site_dir: docs/html
 extra:
   project: Packages
-  current_version: v3
+  current_version: v4
   versions:
+    - v4
     - v3
 nav:
   - Home: index.md
+  - v4:
+      - Overview: v4/overview.md
+      - Configuration: v4/configuration.md
+      - Installation: v4/installation.md
+      - Components: v4/components.md
+      - "Container Providers": v4/container-providers.md
+      - "Navigation Renderer": v4/navigation-renderer.md
+      - "Required Page Options": v4/required-page-options.md
+      - Usage: v4/usage.md
   - v3:
       - Overview: v3/overview.md
       - Configuration: v3/configuration.md
