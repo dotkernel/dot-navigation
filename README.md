@@ -1,7 +1,7 @@
 # dot-navigation
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-navigation)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-navigation/4.0.0)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-navigation/4.0.2)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/network)
@@ -60,7 +60,7 @@ Used to render the navigation container in a displayable format. It can render a
 
 The partial method is usually the more flexible one, custom rules can be defined and checked in the template.
 
-If you are using twig, there is already a twig extension provided in package dot-twigrenderer, that you can use to easily parse the menus inside your templates
+If you are using Twig, there is already a Twig extension provided in package dot-twigrenderer, that you can use to easily parse the menus inside your templates
 
 When using the partial method, the template will receive as parameters the container, the navigation service and any extra parameters set by the developer.
 
