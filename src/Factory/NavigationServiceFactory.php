@@ -17,8 +17,8 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class NavigationServiceFactory
 {
-    public const MESSAGE_MISSING_PLUGIN_MANAGER     = 'Unable to find RouteHelper in the container';
-    public const MESSAGE_MISSING_ROUTE_HELPER       = 'Unable to find ProviderPluginManager in the container';
+    public const MESSAGE_MISSING_PLUGIN_MANAGER     = 'Unable to find ProviderPluginManager in the container';
+    public const MESSAGE_MISSING_ROUTE_HELPER       = 'Unable to find RouteHelper in the container';
     public const MESSAGE_MISSING_NAVIGATION_OPTIONS = 'Unable to find NavigationOptions in the container';
 
     /**
