@@ -4,7 +4,7 @@
 
 ## Documentation
 
-Documentation is available at: https://docs.dotkernel.org/dot-auth-social/.
+Documentation is available at: https://docs.dotkernel.org/dot-navigation/.
 
 ## Badges
 
