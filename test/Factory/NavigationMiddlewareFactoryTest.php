@@ -54,6 +54,6 @@ class NavigationMiddlewareFactoryTest extends TestCase
             ->willReturn($navigation);
 
         $middleware = (new NavigationMiddlewareFactory())($container);
-        $this->assertInstanceOf(NavigationMiddleware::class, $middleware);
+        $this->assertSame(NavigationMiddleware::class, $middleware::class);
     }
 }

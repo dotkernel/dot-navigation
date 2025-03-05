@@ -97,6 +97,6 @@ class NavigationRendererFactoryTest extends TestCase
         ]);
 
         $renderer = (new NavigationRendererFactory())($container);
-        $this->assertInstanceOf(NavigationRenderer::class, $renderer);
+        $this->assertSame(NavigationRenderer::class, $renderer::class);
     }
 }
