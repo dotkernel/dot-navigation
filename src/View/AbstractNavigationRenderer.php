@@ -98,11 +98,11 @@ abstract class AbstractNavigationRenderer implements RendererInterface
     {
         if (is_string($container)) {
             return $this->navigation->getContainer($container);
-        } elseif (! $container instanceof NavigationContainer) {
+        } elseif ($container instanceof NavigationContainer) {
+            return $container;
+        } else {
             throw new RuntimeException('Container must be a string or an instance of ' . NavigationContainer::class);
         }
-
-        return $container;
     }
 
     protected function cleanAttributes(array $input, array $valid): array

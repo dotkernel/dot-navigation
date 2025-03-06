@@ -30,7 +30,7 @@ class NavigationTest extends TestCase
         $options = $this->createMock(NavigationOptions::class);
 
         $navigation = new Navigation($factory, $route, $options);
-        $this->assertInstanceOf(NavigationInterface::class, $navigation);
+        $this->assertContainsOnlyInstancesOf(NavigationInterface::class, [$navigation]);
     }
 
     /**
@@ -84,7 +84,7 @@ class NavigationTest extends TestCase
         ]);
 
         $navigation = new Navigation($factory, $route, $options);
-        $this->assertInstanceOf(NavigationContainer::class, $navigation->getContainer('default'));
+        $this->assertContainsOnlyInstancesOf(NavigationContainer::class, [$navigation->getContainer('default')]);
     }
 
     /**

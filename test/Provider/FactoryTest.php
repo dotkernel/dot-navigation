@@ -25,7 +25,7 @@ class FactoryTest extends TestCase
         $container = $this->createMock(ContainerInterface::class);
 
         $factory = new Factory($container);
-        $this->assertInstanceOf(Factory::class, $factory);
+        $this->assertSame(Factory::class, $factory::class);
     }
 
     /**
@@ -37,7 +37,7 @@ class FactoryTest extends TestCase
         $manager   = $this->createMock(ProviderPluginManager::class);
 
         $factory = new Factory($container, $manager);
-        $this->assertInstanceOf(Factory::class, $factory);
+        $this->assertSame(Factory::class, $factory::class);
     }
 
     /**
@@ -84,7 +84,7 @@ class FactoryTest extends TestCase
         $provider = $factory->create([
             'type' => ArrayProvider::class,
         ]);
-        $this->assertInstanceOf(ProviderInterface::class, $provider);
+        $this->assertContainsOnlyInstancesOf(ProviderInterface::class, [$provider]);
     }
 
     /**
@@ -100,7 +100,7 @@ class FactoryTest extends TestCase
             'type'    => ArrayProvider::class,
             'options' => [],
         ]);
-        $this->assertInstanceOf(ProviderInterface::class, $provider);
+        $this->assertContainsOnlyInstancesOf(ProviderInterface::class, [$provider]);
     }
 
     /**
@@ -111,7 +111,7 @@ class FactoryTest extends TestCase
         $container = $this->createMock(ContainerInterface::class);
 
         $factory = new Factory($container);
-        $this->assertInstanceOf(ProviderPluginManager::class, $factory->getProviderPluginManager());
+        $this->assertSame(ProviderPluginManager::class, $factory->getProviderPluginManager()::class);
     }
 
     /**
@@ -123,6 +123,6 @@ class FactoryTest extends TestCase
         $manager   = $this->createMock(ProviderPluginManager::class);
 
         $factory = new Factory($container, $manager);
-        $this->assertInstanceOf(ProviderPluginManager::class, $factory->getProviderPluginManager());
+        $this->assertContainsOnlyInstancesOf(ProviderPluginManager::class, [$factory->getProviderPluginManager()]);
     }
 }

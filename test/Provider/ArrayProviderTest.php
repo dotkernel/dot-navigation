@@ -13,7 +13,7 @@ class ArrayProviderTest extends TestCase
     public function testWillCreateArrayProvider(): void
     {
         $provider = new ArrayProvider();
-        $this->assertInstanceOf(ArrayProvider::class, $provider);
+        $this->assertSame(ArrayProvider::class, $provider::class);
     }
 
     public function testAccessors(): void
@@ -40,7 +40,7 @@ class ArrayProviderTest extends TestCase
             'items' => $pageSpecs,
         ]);
         $container = $provider->getContainer();
-        $this->assertInstanceOf(NavigationContainer::class, $container);
+        $this->assertSame(NavigationContainer::class, $container::class);
         $this->assertCount(2, $container->getChildren());
     }
 }

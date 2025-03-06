@@ -1,7 +1,15 @@
 # dot-navigation
 
+`dot-navigation` is Dotkernel's component that allows you to easily define and parse menus inside templates, using a configuration based approach.
+
+## Documentation
+
+Documentation is available at: https://docs.dotkernel.org/dot-navigation/.
+
+## Badges
+
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-navigation)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-navigation/4.0.2)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-navigation/4.1.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/network)
@@ -10,8 +18,7 @@
 
 [![Build Static](https://github.com/dotkernel/dot-navigation/actions/workflows/continuous-integration.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/dot-navigation/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/dotkernel/dot-navigation/graph/badge.svg?token=AI9WFYDDX9)](https://codecov.io/gh/dotkernel/dot-navigation)
-
-Allows you to easily define and parse menus inside templates, configuration based approach.
+[![PHPStan](https://github.com/dotkernel/dot-navigation/actions/workflows/static-analysis.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/dot-navigation/actions/workflows/static-analysis.yml)
 
 ## Installation
 

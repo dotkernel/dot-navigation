@@ -12,7 +12,7 @@ class PageTest extends TestCase
     public function testWillCreatePage(): void
     {
         $page = new Page();
-        $this->assertInstanceOf(Page::class, $page);
+        $this->assertSame(Page::class, $page::class);
     }
 
     public function testParentAccessors(): void

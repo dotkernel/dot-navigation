@@ -18,7 +18,7 @@ class RuntimeExceptionTest extends TestCase
     public function testWillReturnCorrectInstances(): void
     {
         $exception = new RuntimeException('test');
-        $this->assertInstanceOf(RuntimeException::class, $exception);
-        $this->assertInstanceOf(ExceptionInterface::class, $exception);
+        $this->assertSame(RuntimeException::class, $exception::class);
+        $this->assertContainsOnlyInstancesOf(ExceptionInterface::class, [$exception]);
     }
 }
