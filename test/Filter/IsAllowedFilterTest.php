@@ -74,7 +74,7 @@ class IsAllowedFilterTest extends TestCase
         $navigation = $this->createMock(NavigationInterface::class);
 
         $filter = new IsAllowedFilter(new NavigationContainer([new Page()]), $navigation);
-        $this->assertInstanceOf(IsAllowedFilter::class, $filter->getChildren());
+        $this->assertContainsOnlyInstancesOf(IsAllowedFilter::class, [$filter->getChildren()]);
     }
 
     /**
@@ -86,6 +86,6 @@ class IsAllowedFilterTest extends TestCase
         $navigation = $this->createMock(NavigationInterface::class);
 
         $filter = new IsAllowedFilter($iterator, $navigation);
-        $this->assertInstanceOf(IsAllowedFilter::class, $filter);
+        $this->assertContainsOnlyInstancesOf(IsAllowedFilter::class, [$filter]);
     }
 }

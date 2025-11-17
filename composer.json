@@ -1,7 +1,7 @@
 {
     "name": "dotkernel/dot-navigation",
     "type": "library",
-    "description": "DotKernel navigation component",
+    "description": "Dotkernel navigation component",
     "license": "MIT",
     "homepage": "https://github.com/dotkernel/dot-navigation",
     "keywords": [
@@ -13,7 +13,7 @@
     ],
     "authors": [
         {
-            "name": "DotKernel Team",
+            "name": "Dotkernel Team",
             "email": "team@dotkernel.com"
         }
     ],
@@ -24,7 +24,7 @@
         }
     },
     "require": {
-        "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+        "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
         "dotkernel/dot-authorization": "^3.4.1",
         "dotkernel/dot-helpers": "^3.5.1",
         "laminas/laminas-escaper": "^2.13.0",
@@ -34,9 +34,10 @@
         "psr/http-server-middleware": "^1.0.2"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "^2.5.0",
-        "phpunit/phpunit": "^10.4.2",
-        "vimeo/psalm": "^5.16.0"
+        "laminas/laminas-coding-standard": "^3.0.0",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpunit/phpunit": "^10.4.2"
     },
     "autoload": {
         "psr-4": {
@@ -51,12 +52,12 @@
     "scripts": {
         "check": [
             "@cs-check",
-            "@test"
+            "@test",
+            "@static-analysis"
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
-        "test": "phpunit --colors=always",
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
-        "static-analysis": "psalm --shepherd --stats"
+        "static-analysis": "phpstan analyse --memory-limit 1G",
+        "test": "phpunit --colors=always"
     }
 }

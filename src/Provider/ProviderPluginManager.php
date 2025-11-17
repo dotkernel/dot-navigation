@@ -9,7 +9,7 @@ use Laminas\ServiceManager\Factory\InvokableFactory;
 
 class ProviderPluginManager extends AbstractPluginManager
 {
-    /** @var string $instanceOf */
+    /** @inheritDoc */
     protected $instanceOf = ProviderInterface::class;
 
     /** @var array */
