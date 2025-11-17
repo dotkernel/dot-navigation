@@ -79,6 +79,6 @@ class NavigationOptionsFactoryTest extends TestCase
             ]);
 
         $options = (new NavigationOptionsFactory())($container);
-        $this->assertInstanceOf(NavigationOptions::class, $options);
+        $this->assertContainsOnlyInstancesOf(NavigationOptions::class, [$options]);
     }
 }

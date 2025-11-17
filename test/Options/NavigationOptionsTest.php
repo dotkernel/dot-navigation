@@ -12,7 +12,7 @@ class NavigationOptionsTest extends TestCase
     public function testWillCreateNavigationOptions(): void
     {
         $options = new NavigationOptions();
-        $this->assertInstanceOf(NavigationOptions::class, $options);
+        $this->assertContainsOnlyInstancesOf(NavigationOptions::class, [$options]);
     }
 
     public function testAccessors(): void

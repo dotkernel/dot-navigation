@@ -24,7 +24,7 @@ class NavigationRendererTest extends TestCase
         $options    = $this->createMock(NavigationOptions::class);
 
         $renderer = new NavigationRenderer($navigation, $template, $options);
-        $this->assertInstanceOf(NavigationRenderer::class, $renderer);
+        $this->assertContainsOnlyInstancesOf(NavigationRenderer::class, [$renderer]);
     }
 
     /**

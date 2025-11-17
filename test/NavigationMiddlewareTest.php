@@ -22,7 +22,7 @@ class NavigationMiddlewareTest extends TestCase
         $navigation = $this->createMock(NavigationInterface::class);
 
         $middleware = new NavigationMiddleware($navigation);
-        $this->assertInstanceOf(NavigationMiddleware::class, $middleware);
+        $this->assertContainsOnlyInstancesOf(NavigationMiddleware::class, [$middleware]);
     }
 
     /**
@@ -36,6 +36,6 @@ class NavigationMiddlewareTest extends TestCase
 
         $middleware = new NavigationMiddleware($navigation);
         $response   = $middleware->process($request, $handler);
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertContainsOnlyInstancesOf(ResponseInterface::class, [$response]);
     }
 }

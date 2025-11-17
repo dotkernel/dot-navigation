@@ -13,7 +13,6 @@ class InvalidArgumentExceptionTest extends TestCase
     public function testWillReturnCorrectInstances(): void
     {
         $exception = new InvalidArgumentException('test');
-        $this->assertInstanceOf(InvalidArgumentException::class, $exception);
-        $this->assertInstanceOf(ExceptionInterface::class, $exception);
+        $this->assertContainsOnlyInstancesOf(ExceptionInterface::class, [$exception]);
     }
 }

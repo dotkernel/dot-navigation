@@ -101,7 +101,7 @@ class NavigationServiceFactoryTest extends TestCase
         ]);
 
         $service = (new NavigationServiceFactory())($container);
-        $this->assertInstanceOf(Navigation::class, $service);
+        $this->assertContainsOnlyInstancesOf(Navigation::class, [$service]);
     }
 
     /**
@@ -132,6 +132,6 @@ class NavigationServiceFactoryTest extends TestCase
         ]);
 
         $service = (new NavigationServiceFactory())($container);
-        $this->assertInstanceOf(Navigation::class, $service);
+        $this->assertContainsOnlyInstancesOf(Navigation::class, [$service]);
     }
 }

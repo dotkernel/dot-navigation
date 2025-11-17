@@ -106,6 +106,6 @@ class ProviderPluginManagerFactoryTest extends TestCase
             ]);
 
         $manager = (new ProviderPluginManagerFactory())($container);
-        $this->assertInstanceOf(ProviderPluginManager::class, $manager);
+        $this->assertContainsOnlyInstancesOf(ProviderPluginManager::class, [$manager]);
     }
 }

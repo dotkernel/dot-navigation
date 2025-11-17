@@ -11,8 +11,7 @@ class PageTest extends TestCase
 {
     public function testWillCreatePage(): void
     {
-        $page = new Page();
-        $this->assertInstanceOf(Page::class, $page);
+        $this->assertContainsOnlyInstancesOf(Page::class, [new Page()]);
     }
 
     public function testParentAccessors(): void
