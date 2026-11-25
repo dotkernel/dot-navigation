@@ -4,7 +4,7 @@ on:
 name: Run PHPStan checks
 
 jobs:
-  mutation:
+  phpstan:
     name: PHPStan ${{ matrix.php }}-${{ matrix.os }}
 
     runs-on: ${{ matrix.os }}
@@ -15,20 +15,20 @@ jobs:
           - ubuntu-latest
 
         php:
-          - "8.2"
           - "8.3"
           - "8.4"
           - "8.5"
+          - "8.6"
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: "${{ matrix.php }}"
-          coverage: pcov
+          coverage: none
           ini-values: assert.exception=1, zend.assertions=1, error_reporting=-1, log_errors_max_len=0, display_errors=On
           tools: composer:v2, cs2pr
 
@@ -36,7 +36,7 @@ jobs:
         run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
 
       - name: Cache dependencies installed with composer
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ env.COMPOSER_CACHE_DIR }}
           key: php${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
@@ -47,4 +47,4 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Run static analysis with PHPStan
-        run:  vendor/bin/phpstan analyse
+        run: vendor/bin/phpstan analyse --memory-limit 1G

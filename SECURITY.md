@@ -4,6 +4,7 @@
 
 | Version | Supported          | PHP Version                                                                                                    |
 |---------|--------------------|----------------------------------------------------------------------------------------------------------------|
+| 5.x     | :white_check_mark: | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-navigation/5.0.0) |
 | 4.x     | :white_check_mark: | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-navigation/4.2.0) |
 | 3.x     | :white_check_mark: | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-navigation/3.6.0) |
 | <= 2.x  | :x:                |                                                                                                                |

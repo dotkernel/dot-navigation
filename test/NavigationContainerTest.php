@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace DotTest\Navigation;
 
+use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Page;
 use PHPUnit\Framework\TestCase;
+use RecursiveIteratorIterator;
+
+use function array_map;
+use function iterator_to_array;
 
 class NavigationContainerTest extends TestCase
 {
@@ -38,7 +43,6 @@ class NavigationContainerTest extends TestCase
         $navigationContainer->addPages($pages);
 
         $currentPage = $navigationContainer->current();
-        $this->assertInstanceOf(Page::class, $currentPage);
         $this->assertSame($pages[0]->getOption('opt'), $currentPage->getOption('opt'));
     }
 
@@ -51,7 +55,6 @@ class NavigationContainerTest extends TestCase
         $navigationContainer->next();
 
         $currentPage = $navigationContainer->current();
-        $this->assertInstanceOf(Page::class, $currentPage);
         $this->assertSame($pages[1]->getOption('opt'), $currentPage->getOption('opt'));
     }
 
@@ -194,8 +197,61 @@ class NavigationContainerTest extends TestCase
         $this->assertSame($pages[0]->getAttribute('opt'), $results[0]->getAttribute('opt'));
     }
 
+    public function testCurrentWillThrowOnEmptyContainer(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('The navigation container has no page at the current position');
+        (new NavigationContainer())->current();
+    }
+
+    public function testHasPagesTellsIfPageHasSubPages(): void
+    {
+        $parent = new Page();
+        $leaf   = new Page();
+        $parent->addPage(new Page());
+
+        $this->assertTrue($parent->hasPages());
+        $this->assertFalse($leaf->hasPages());
+        $this->assertTrue($parent->hasChildren());
+        $this->assertFalse($leaf->hasChildren());
+    }
+
+    public function testSelfFirstIterationGivesAllPages(): void
+    {
+        $parent = new Page();
+        $parent->setOption('label', 'parent');
+        $child = new Page();
+        $child->setOption('label', 'child');
+        $parent->addPage($child);
+        $leaf = new Page();
+        $leaf->setOption('label', 'leaf');
+
+        $iterator = new RecursiveIteratorIterator(
+            new NavigationContainer([$parent, $leaf]),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+        $labels   = array_map(
+            static fn (Page $page): string => $page->getLabel(),
+            iterator_to_array($iterator, false)
+        );
+
+        $this->assertSame(['parent', 'child', 'leaf'], $labels);
+    }
+
+    public function testFindIncludesSubPages(): void
+    {
+        $parent = new Page();
+        $child  = new Page();
+        $child->setOption('name', 'child');
+        $parent->addPage($child);
+
+        $container = new NavigationContainer([$parent]);
+        $this->assertSame($child, $container->findOneByOption('name', 'child'));
+        $this->assertSame([$child], $container->findByOption('name', 'child'));
+    }
+
     /**
-     * @return Page[]
+     * @return list<Page>
      */
     protected function getTestPages(): array
     {

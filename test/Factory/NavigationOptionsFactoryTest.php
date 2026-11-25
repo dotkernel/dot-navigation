@@ -4,81 +4,45 @@ declare(strict_types=1);
 
 namespace DotTest\Navigation\Factory;
 
+use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\Factory\NavigationOptionsFactory;
-use Dot\Navigation\Options\NavigationOptions;
-use PHPUnit\Framework\MockObject\Exception;
+use DotTest\Navigation\TestData\Container;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 class NavigationOptionsFactoryTest extends TestCase
 {
-    /**
-     * @throws Exception
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function testWillNotCreateNavigationOptionsWithoutConfig(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-
-        $container->expects($this->once())
-            ->method('has')
-            ->with('config')
-            ->willReturn(false);
-
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(NavigationOptionsFactory::MESSAGE_MISSING_CONFIG);
-        (new NavigationOptionsFactory())($container);
+        (new NavigationOptionsFactory())(new Container());
     }
 
-    /**
-     * @throws Exception
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
+    public function testWillNotCreateNavigationOptionsWhenConfigIsNotAnArray(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(NavigationOptionsFactory::MESSAGE_MISSING_CONFIG);
+        (new NavigationOptionsFactory())(new Container(['config' => 'invalid']));
+    }
+
     public function testWillNotCreateNavigationOptionsWithoutPackageConfig(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-
-        $container->expects($this->once())
-            ->method('has')
-            ->with('config')
-            ->willReturn(true);
-
-        $container->expects($this->once())
-            ->method('get')
-            ->with('config')
-            ->willReturn([]);
-
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(NavigationOptionsFactory::MESSAGE_MISSING_PACKAGE_CONFIG);
-        (new NavigationOptionsFactory())($container);
+        (new NavigationOptionsFactory())(new Container(['config' => []]));
     }
 
-    /**
-     * @throws Exception
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function testWillCreateNavigationOptions(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-
-        $container->expects($this->once())
-            ->method('has')
-            ->with('config')
-            ->willReturn(true);
-
-        $container->expects($this->once())
-            ->method('get')
-            ->with('config')
-            ->willReturn([
+        $container = new Container([
+            'config' => [
                 'dot_navigation' => [
-                    'active_recursion' => true,
+                    'active_recursion' => false,
                 ],
-            ]);
+            ],
+        ]);
 
         $options = (new NavigationOptionsFactory())($container);
-        $this->assertSame(NavigationOptions::class, $options::class);
+                $this->assertFalse($options->getActiveRecursion());
     }
 }

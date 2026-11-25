@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace Dot\Navigation;
 
 use function count;
+use function is_scalar;
 use function is_string;
 
 class Page extends NavigationContainer
 {
-    protected ?Page $parent     = null;
+    protected ?Page $parent = null;
+    /** @var array<string, mixed> */
     protected array $attributes = [];
-    protected array $options    = [];
+    /** @var array<string, mixed> */
+    protected array $options = [];
 
     public function hasParent(): bool
     {
@@ -39,6 +42,9 @@ class Page extends NavigationContainer
         $this->options[$option] = $value;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getOptions(): array
     {
         return $this->options;
@@ -49,6 +55,9 @@ class Page extends NavigationContainer
         return count($this->options) > 0;
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public function setOptions(array $options): void
     {
         $this->options = $options;
@@ -64,6 +73,9 @@ class Page extends NavigationContainer
         return $this->attributes[$attribute] ?? null;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getAttributes(): array
     {
         return $this->attributes;
@@ -74,6 +86,9 @@ class Page extends NavigationContainer
         return count($this->attributes) > 0;
     }
 
+    /**
+     * @param array<string, mixed> $attributes
+     */
     public function setAttributes(array $attributes): void
     {
         $this->attributes = $attributes;
@@ -81,7 +96,9 @@ class Page extends NavigationContainer
 
     public function getName(): ?string
     {
-        return $this->getOption('name');
+        $name = $this->getOption('name');
+
+        return is_scalar($name) ? (string) $name : null;
     }
 
     public function getOption(string $option): mixed

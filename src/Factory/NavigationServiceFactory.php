@@ -6,11 +6,11 @@ namespace Dot\Navigation\Factory;
 
 use Dot\Authorization\AuthorizationInterface;
 use Dot\Helpers\Route\RouteHelper;
+use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Provider\Factory;
 use Dot\Navigation\Provider\ProviderPluginManager;
 use Dot\Navigation\Service\Navigation;
-use Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -24,20 +24,20 @@ class NavigationServiceFactory
     /**
      * @throws NotFoundExceptionInterface
      * @throws ContainerExceptionInterface
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function __invoke(ContainerInterface $container): Navigation
     {
         if (! $container->has(RouteHelper::class)) {
-            throw new Exception(self::MESSAGE_MISSING_ROUTE_HELPER);
+            throw new RuntimeException(self::MESSAGE_MISSING_ROUTE_HELPER);
         }
 
         if (! $container->has(ProviderPluginManager::class)) {
-            throw new Exception(self::MESSAGE_MISSING_PLUGIN_MANAGER);
+            throw new RuntimeException(self::MESSAGE_MISSING_PLUGIN_MANAGER);
         }
 
         if (! $container->has(NavigationOptions::class)) {
-            throw new Exception(self::MESSAGE_MISSING_NAVIGATION_OPTIONS);
+            throw new RuntimeException(self::MESSAGE_MISSING_NAVIGATION_OPTIONS);
         }
 
         /** @var NavigationOptions $options */
