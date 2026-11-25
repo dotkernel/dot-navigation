@@ -44,7 +44,7 @@ class NavigationServiceFactoryTest extends TestCase
      */
     public function testWillNotCreateNavigationServiceWithoutProviderPluginManager(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createStub(ContainerInterface::class);
 
         $container->method('has')->willReturnMap([
             [RouteHelper::class, true],
@@ -62,7 +62,7 @@ class NavigationServiceFactoryTest extends TestCase
      */
     public function testWillNotCreateNavigationServiceWithoutNavigationOptions(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createStub(ContainerInterface::class);
 
         $container->method('has')->willReturnMap([
             [RouteHelper::class, true],
@@ -81,10 +81,10 @@ class NavigationServiceFactoryTest extends TestCase
      */
     public function testWillCreateNavigationServiceWithoutAuthorizationInterface(): void
     {
-        $container  = $this->createMock(ContainerInterface::class);
-        $navigation = $this->createMock(RouteHelper::class);
-        $renderer   = $this->createMock(TemplateRendererInterface::class);
-        $options    = $this->createMock(NavigationOptions::class);
+        $container  = $this->createStub(ContainerInterface::class);
+        $navigation = $this->createStub(RouteHelper::class);
+        $renderer   = $this->createStub(TemplateRendererInterface::class);
+        $options    = $this->createStub(NavigationOptions::class);
 
         $container->method('has')->willReturnMap([
             [RouteHelper::class, true],
@@ -111,11 +111,11 @@ class NavigationServiceFactoryTest extends TestCase
      */
     public function testWillCreateNavigationServiceWithAuthorizationInterface(): void
     {
-        $container     = $this->createMock(ContainerInterface::class);
-        $navigation    = $this->createMock(RouteHelper::class);
-        $renderer      = $this->createMock(TemplateRendererInterface::class);
-        $options       = $this->createMock(NavigationOptions::class);
-        $authorization = $this->createMock(AuthorizationInterface::class);
+        $container     = $this->createStub(ContainerInterface::class);
+        $navigation    = $this->createStub(RouteHelper::class);
+        $renderer      = $this->createStub(TemplateRendererInterface::class);
+        $options       = $this->createStub(NavigationOptions::class);
+        $authorization = $this->createStub(AuthorizationInterface::class);
 
         $container->method('has')->willReturnMap([
             [RouteHelper::class, true],

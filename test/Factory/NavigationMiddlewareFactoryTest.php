@@ -41,7 +41,7 @@ class NavigationMiddlewareFactoryTest extends TestCase
     public function testWillCreateMiddleware(): void
     {
         $container  = $this->createMock(ContainerInterface::class);
-        $navigation = $this->createMock(NavigationInterface::class);
+        $navigation = $this->createStub(NavigationInterface::class);
 
         $container->expects($this->once())
             ->method('has')

@@ -42,7 +42,7 @@ class NavigationRendererFactoryTest extends TestCase
      */
     public function testWillNotCreateNavigationRendererWithoutTemplateRendererInterface(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createStub(ContainerInterface::class);
 
         $container->method('has')->willReturnMap([
             [NavigationInterface::class, true],
@@ -60,7 +60,7 @@ class NavigationRendererFactoryTest extends TestCase
      */
     public function testWillNotCreateNavigationRendererWithoutNavigationOptions(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createStub(ContainerInterface::class);
 
         $container->method('has')->willReturnMap([
             [NavigationInterface::class, true],
@@ -79,10 +79,10 @@ class NavigationRendererFactoryTest extends TestCase
      */
     public function testWillNotCreateNavigationRenderer(): void
     {
-        $container  = $this->createMock(ContainerInterface::class);
-        $navigation = $this->createMock(NavigationInterface::class);
-        $renderer   = $this->createMock(TemplateRendererInterface::class);
-        $options    = $this->createMock(NavigationOptions::class);
+        $container  = $this->createStub(ContainerInterface::class);
+        $navigation = $this->createStub(NavigationInterface::class);
+        $renderer   = $this->createStub(TemplateRendererInterface::class);
+        $options    = $this->createStub(NavigationOptions::class);
 
         $container->method('has')->willReturnMap([
             [NavigationInterface::class, true],

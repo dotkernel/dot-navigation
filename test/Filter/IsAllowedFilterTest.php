@@ -13,6 +13,7 @@ use Dot\Navigation\Page;
 use Dot\Navigation\Provider\FactoryInterface;
 use Dot\Navigation\Service\Navigation;
 use Dot\Navigation\Service\NavigationInterface;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use RecursiveIterator;
@@ -22,12 +23,13 @@ class IsAllowedFilterTest extends TestCase
     /**
      * @throws Exception
      */
+    #[AllowMockObjectsWithoutExpectations]
     public function testWillAcceptWithoutAuthorization(): void
     {
-        $iterator = $this->createMock(RecursiveIterator::class);
-        $factory  = $this->createMock(FactoryInterface::class);
-        $route    = $this->createMock(RouteHelper::class);
-        $options  = $this->createMock(NavigationOptions::class);
+        $iterator = $this->createStub(RecursiveIterator::class);
+        $factory  = $this->createStub(FactoryInterface::class);
+        $route    = $this->createStub(RouteHelper::class);
+        $options  = $this->createStub(NavigationOptions::class);
 
         $navigation = new Navigation($factory, $route, $options, null);
         $filter     = $this->getMockBuilder(IsAllowedFilter::class)
@@ -42,12 +44,13 @@ class IsAllowedFilterTest extends TestCase
     /**
      * @throws Exception
      */
+    #[AllowMockObjectsWithoutExpectations]
     public function testWillAcceptWithAuthorization(): void
     {
-        $iterator      = $this->createMock(RecursiveIterator::class);
-        $factory       = $this->createMock(FactoryInterface::class);
-        $route         = $this->createMock(RouteHelper::class);
-        $options       = $this->createMock(NavigationOptions::class);
+        $iterator      = $this->createStub(RecursiveIterator::class);
+        $factory       = $this->createStub(FactoryInterface::class);
+        $route         = $this->createStub(RouteHelper::class);
+        $options       = $this->createStub(NavigationOptions::class);
         $authorization = $this->createMock(AuthorizationInterface::class);
 
         $authorization->expects($this->once())->method('isGranted')->willReturn(true);
@@ -71,7 +74,7 @@ class IsAllowedFilterTest extends TestCase
      */
     public function testGetChildren(): void
     {
-        $navigation = $this->createMock(NavigationInterface::class);
+        $navigation = $this->createStub(NavigationInterface::class);
 
         $filter = new IsAllowedFilter(new NavigationContainer([new Page()]), $navigation);
         $this->assertSame(IsAllowedFilter::class, $filter->getChildren()::class);
@@ -82,8 +85,8 @@ class IsAllowedFilterTest extends TestCase
      */
     public function testWillCreateFilter(): void
     {
-        $iterator   = $this->createMock(RecursiveIterator::class);
-        $navigation = $this->createMock(NavigationInterface::class);
+        $iterator   = $this->createStub(RecursiveIterator::class);
+        $navigation = $this->createStub(NavigationInterface::class);
 
         $filter = new IsAllowedFilter($iterator, $navigation);
         $this->assertSame(IsAllowedFilter::class, $filter::class);

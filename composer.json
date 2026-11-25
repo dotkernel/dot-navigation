@@ -24,7 +24,7 @@
         }
     },
     "require": {
-        "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+        "php": "~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0",
         "dotkernel/dot-authorization": "^3.4.1",
         "dotkernel/dot-helpers": "^3.7.0",
         "laminas/laminas-escaper": "^2.13.0",
@@ -37,7 +37,7 @@
         "laminas/laminas-coding-standard": "^3.0.0",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-phpunit": "^2.0",
-        "phpunit/phpunit": "^10.4.2"
+        "phpunit/phpunit": "^12.5.22"
     },
     "autoload": {
         "psr-4": {

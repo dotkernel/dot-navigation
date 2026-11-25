@@ -22,7 +22,7 @@ class FactoryTest extends TestCase
      */
     public function testWillCreateFactoryWithoutProviderPluginManager(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createStub(ContainerInterface::class);
 
         $factory = new Factory($container);
         $this->assertSame(Factory::class, $factory::class);
@@ -33,8 +33,8 @@ class FactoryTest extends TestCase
      */
     public function testWillCreateFactoryWithProviderPluginManager(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-        $manager   = $this->createMock(ProviderPluginManager::class);
+        $container = $this->createStub(ContainerInterface::class);
+        $manager   = $this->createStub(ProviderPluginManager::class);
 
         $factory = new Factory($container, $manager);
         $this->assertSame(Factory::class, $factory::class);
@@ -46,7 +46,7 @@ class FactoryTest extends TestCase
      */
     public function testFactoryWillNotCreateProviderWithoutProviderType(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createStub(ContainerInterface::class);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Undefined navigation provider type');
@@ -60,7 +60,7 @@ class FactoryTest extends TestCase
      */
     public function testFactoryWillNotCreateProviderWithInvalidProviderType(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createStub(ContainerInterface::class);
 
         $this->expectException(ServiceNotFoundException::class);
         $this->expectExceptionMessage(
@@ -78,7 +78,7 @@ class FactoryTest extends TestCase
      */
     public function testFactoryWillCreateProviderWithValidProviderTypeAndNoOptions(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createStub(ContainerInterface::class);
 
         $factory  = new Factory($container);
         $provider = $factory->create([
@@ -93,7 +93,7 @@ class FactoryTest extends TestCase
      */
     public function testFactoryWillCreateProviderWithValidProviderTypeAndOptions(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createStub(ContainerInterface::class);
 
         $factory  = new Factory($container);
         $provider = $factory->create([
@@ -108,7 +108,7 @@ class FactoryTest extends TestCase
      */
     public function testFactoryWillGetProviderPluginManagerWithoutInitialProviderPluginManager(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createStub(ContainerInterface::class);
 
         $factory = new Factory($container);
         $this->assertSame(ProviderPluginManager::class, $factory->getProviderPluginManager()::class);
@@ -119,8 +119,8 @@ class FactoryTest extends TestCase
      */
     public function testFactoryWillGetProviderPluginManagerWithInitialProviderPluginManager(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-        $manager   = $this->createMock(ProviderPluginManager::class);
+        $container = $this->createStub(ContainerInterface::class);
+        $manager   = $this->createStub(ProviderPluginManager::class);
 
         $factory = new Factory($container, $manager);
         $this->assertContainsOnlyInstancesOf(ProviderPluginManager::class, [$factory->getProviderPluginManager()]);
