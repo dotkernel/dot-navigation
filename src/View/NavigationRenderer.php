@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dot\Navigation\View;
 
+use Dot\Navigation\Exception\InvalidArgumentException;
 use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Service\NavigationInterface;
@@ -24,8 +25,16 @@ class NavigationRenderer extends AbstractNavigationRenderer
         parent::__construct($navigation, $template);
     }
 
+    /**
+     * @param array<non-empty-string, mixed> $params
+     * @throws InvalidArgumentException
+     */
     public function renderPartial(string|NavigationContainer $container, string $partial, array $params = []): string
     {
+        if ($partial === '') {
+            throw new InvalidArgumentException('The partial name must not be empty');
+        }
+
         $container = $this->getContainer($container);
 
         return $this->template->render(
@@ -37,8 +46,16 @@ class NavigationRenderer extends AbstractNavigationRenderer
         );
     }
 
+    /**
+     * @param array<non-empty-string, mixed> $params
+     * @throws InvalidArgumentException
+     */
     public function render(string|NavigationContainer $container, string $template, array $params = []): string
     {
+        if ($template === '') {
+            throw new InvalidArgumentException('The template name must not be empty');
+        }
+
         $container = $this->getContainer($container);
 
         return $this->template->render(

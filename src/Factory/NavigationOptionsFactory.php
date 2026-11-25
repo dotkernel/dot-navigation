@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Dot\Navigation\Factory;
 
+use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\Options\NavigationOptions;
-use Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -21,21 +21,24 @@ class NavigationOptionsFactory
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function __invoke(ContainerInterface $container): NavigationOptions
     {
         if (! $container->has('config')) {
-            throw new Exception(self::MESSAGE_MISSING_CONFIG);
+            throw new RuntimeException(self::MESSAGE_MISSING_CONFIG);
         }
         $config = $container->get('config');
+        if (! is_array($config)) {
+            throw new RuntimeException(self::MESSAGE_MISSING_CONFIG);
+        }
 
         if (
             ! array_key_exists('dot_navigation', $config)
             || ! is_array($config['dot_navigation'])
             || empty($config['dot_navigation'])
         ) {
-            throw new Exception(self::MESSAGE_MISSING_PACKAGE_CONFIG);
+            throw new RuntimeException(self::MESSAGE_MISSING_PACKAGE_CONFIG);
         }
 
         return new NavigationOptions(

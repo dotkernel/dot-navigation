@@ -20,7 +20,7 @@ class NavigationOptionsTest extends TestCase
         $options = new NavigationOptions();
         $this->assertIsArray($options->getContainers());
         $this->assertEmpty($options->getContainers());
-        $options->setContainers(['test']);
+        $options->setContainers(['default' => ['type' => 'array']]);
         $this->assertIsArray($options->getContainers());
         $this->assertCount(1, $options->getContainers());
         $this->assertTrue($options->getActiveRecursion());

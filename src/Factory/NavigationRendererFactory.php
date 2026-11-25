@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Dot\Navigation\Factory;
 
+use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Service\NavigationInterface;
 use Dot\Navigation\View\NavigationRenderer;
-use Exception;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -22,20 +22,20 @@ class NavigationRendererFactory
     /**
      * @throws NotFoundExceptionInterface
      * @throws ContainerExceptionInterface
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function __invoke(ContainerInterface $container): NavigationRenderer
     {
         if (! $container->has(NavigationInterface::class)) {
-            throw new Exception(self::MESSAGE_MISSING_NAVIGATION_INTERFACE);
+            throw new RuntimeException(self::MESSAGE_MISSING_NAVIGATION_INTERFACE);
         }
 
         if (! $container->has(TemplateRendererInterface::class)) {
-            throw new Exception(self::MESSAGE_MISSING_TEMPLATE_RENDERER);
+            throw new RuntimeException(self::MESSAGE_MISSING_TEMPLATE_RENDERER);
         }
 
         if (! $container->has(NavigationOptions::class)) {
-            throw new Exception(self::MESSAGE_MISSING_NAVIGATION_OPTIONS);
+            throw new RuntimeException(self::MESSAGE_MISSING_NAVIGATION_OPTIONS);
         }
 
         return new NavigationRenderer(

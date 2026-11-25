@@ -6,341 +6,353 @@ namespace DotTest\Navigation\Service;
 
 use Dot\Authorization\AuthorizationInterface;
 use Dot\Helpers\Route\RouteHelper;
+use Dot\Navigation\Exception\InvalidArgumentException;
 use Dot\Navigation\Exception\RuntimeException;
-use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Page;
-use Dot\Navigation\Provider\ArrayProvider;
+use Dot\Navigation\Provider\Factory;
 use Dot\Navigation\Provider\FactoryInterface;
 use Dot\Navigation\Service\Navigation;
-use Dot\Navigation\Service\NavigationInterface;
+use DotTest\Navigation\TestData\Container;
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteResult;
-use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\MiddlewareInterface;
 
 class NavigationTest extends TestCase
 {
-    /**
-     * @throws Exception
-     */
-    public function testNavigationWillInitialize(): void
-    {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
-
-        $navigation = new Navigation($factory, $routeHelper, $options);
-        $this->assertContainsOnlyInstancesOf(NavigationInterface::class, [$navigation]);
-    }
-
-    /**
-     * @throws Exception
-     */
     public function testAccessors(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $navigation  = $this->getNavigation();
         $routeResult = RouteResult::fromRouteFailure([]);
 
-        $navigation = new Navigation($factory, $routeHelper, $options);
         $this->assertNull($navigation->getRouteResult());
         $navigation->setRouteResult($routeResult);
-        $this->assertInstanceOf(RouteResult::class, $navigation->getRouteResult());
+        $this->assertSame($routeResult, $navigation->getRouteResult());
         $this->assertTrue($navigation->getIsActiveRecursion());
         $navigation->setIsActiveRecursion(false);
         $this->assertFalse($navigation->getIsActiveRecursion());
     }
 
-    /**
-     * @throws Exception
-     */
     public function testNavigationWillNotGetInvalidContainer(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
-
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Container `test` is not defined');
-        $navigation = new Navigation($factory, $routeHelper, $options);
-        $navigation->getContainer('test');
+        $this->getNavigation()->getContainer('test');
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testNavigationWillGetValidContainer(): void
+    public function testNavigationWillGetValidContainerOnce(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-
-        $options = new NavigationOptions([
-            'containers' => [
-                'default' => [
-                    'type' => ArrayProvider::class,
+        $navigation = new Navigation(
+            new Factory(new Container()),
+            $this->createStub(RouteHelper::class),
+            new NavigationOptions([
+                'containers' => [
+                    'default' => [
+                        'type'    => 'array',
+                        'options' => ['items' => [['options' => ['label' => 'Home']]]],
+                    ],
                 ],
-            ],
-        ]);
+            ])
+        );
 
-        $navigation = new Navigation($factory, $routeHelper, $options);
-        $this->assertContainsOnlyInstancesOf(NavigationContainer::class, [$navigation->getContainer('default')]);
+        $container = $navigation->getContainer('default');
+        $this->assertSame('Home', $container->current()->getLabel());
+        $this->assertSame($container, $navigation->getContainer('default'));
     }
 
-    /**
-     * @throws Exception
-     */
     public function testIsAllowedWillReturnTrueWithoutAuthorization(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $page = new Page();
+        $page->setOption('permission', 'test');
 
-        $navigation = new Navigation($factory, $routeHelper, $options);
-        $this->assertTrue($navigation->isAllowed(new Page()));
+        $this->assertTrue($this->getNavigation()->isAllowed($page));
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testIsAllowedWillReturnTrueWithAuthorizationWhenPageHasNoPermission(): void
+    public function testIsAllowedWillReturnTrueWhenPageHasNoPermission(): void
     {
-        $factory       = $this->createMock(FactoryInterface::class);
-        $routeHelper   = $this->createMock(RouteHelper::class);
-        $options       = $this->createMock(NavigationOptions::class);
         $authorization = $this->createMock(AuthorizationInterface::class);
+        $authorization->expects($this->never())->method('isGranted');
 
-        $navigation = new Navigation($factory, $routeHelper, $options, $authorization);
-        $this->assertTrue($navigation->isAllowed(new Page()));
+        $this->assertTrue($this->getNavigation($authorization)->isAllowed(new Page()));
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testIsAllowedWillReturnTrueWithAuthorizationWhenPageHasNoRoles(): void
+    public function testIsAllowedWillCheckPermissionWithoutRoles(): void
     {
-        $factory       = $this->createMock(FactoryInterface::class);
-        $routeHelper   = $this->createMock(RouteHelper::class);
-        $options       = $this->createMock(NavigationOptions::class);
         $authorization = $this->createMock(AuthorizationInterface::class);
-
-        $authorization->expects($this->once())->method('isGranted')->willReturn(true);
+        $authorization->expects($this->once())->method('isGranted')->with('view')->willReturn(false);
 
         $page = new Page();
-        $page->setOption('permission', '');
-        $navigation = new Navigation($factory, $routeHelper, $options, $authorization);
-        $this->assertTrue($navigation->isAllowed($page));
+        $page->setOption('permission', 'view');
+        $this->assertFalse($this->getNavigation($authorization)->isAllowed($page));
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testIsAllowedWillReturnTrueWithAuthorizationWhenPageHasPermissionsAndRoles(): void
+    public function testIsAllowedWillCheckPermissionWithRoles(): void
     {
-        $factory       = $this->createMock(FactoryInterface::class);
-        $routeHelper   = $this->createMock(RouteHelper::class);
-        $options       = $this->createMock(NavigationOptions::class);
         $authorization = $this->createMock(AuthorizationInterface::class);
-
-        $authorization->expects($this->once())->method('isGranted')->willReturn(true);
+        $authorization->expects($this->once())->method('isGranted')->with('view', ['admin'])->willReturn(true);
 
         $page = new Page();
-        $page->setOption('permission', '');
-        $page->setOption('roles', []);
-        $navigation = new Navigation($factory, $routeHelper, $options, $authorization);
-        $this->assertTrue($navigation->isAllowed($page));
+        $page->setOptions(['permission' => 'view', 'roles' => ['admin']]);
+        $this->assertTrue($this->getNavigation($authorization)->isAllowed($page));
     }
 
-    /**
-     * @throws Exception
-     */
+    public function testIsAllowedWillAcceptRolesAsString(): void
+    {
+        $authorization = $this->createMock(AuthorizationInterface::class);
+        $authorization->expects($this->once())->method('isGranted')->with('view', ['admin'])->willReturn(true);
+
+        $page = new Page();
+        $page->setOptions(['permission' => 'view', 'roles' => 'admin']);
+        $this->assertTrue($this->getNavigation($authorization)->isAllowed($page));
+    }
+
+    public function testIsAllowedWillNotAcceptInvalidRoles(): void
+    {
+        $page = new Page();
+        $page->setOptions(['permission' => 'view', 'roles' => 1]);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The navigation page option "roles" must be a string or an array');
+        $this->getNavigation($this->createStub(AuthorizationInterface::class))->isAllowed($page);
+    }
+
     public function testIsActiveWillCacheResults(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
-
-        $navigation = new Navigation($factory, $routeHelper, $options);
-        $this->assertIsArray($navigation->getIsActiveCache());
-        $this->assertEmpty($navigation->getIsActiveCache());
+        $navigation = $this->getNavigation();
+        $this->assertSame([], $navigation->getIsActiveCache());
         $navigation->isActive(new Page());
-        $this->assertIsArray($navigation->getIsActiveCache());
         $this->assertCount(1, $navigation->getIsActiveCache());
     }
 
-    /**
-     * @throws Exception
-     */
     public function testIsActiveWillReturnFalseWithoutRouteResult(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
-
-        $navigation = new Navigation($factory, $routeHelper, $options);
-        $this->assertFalse($navigation->isActive(new Page()));
+        $this->assertFalse($this->getNavigation()->isActive($this->getRoutePage('test')));
     }
 
-    /**
-     * @throws Exception
-     */
     public function testIsActiveWillReturnFalseWithoutSuccessfulRouteResult(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
-        $routeResult = RouteResult::fromRouteFailure([]);
+        $navigation = $this->getNavigation();
+        $navigation->setRouteResult(RouteResult::fromRouteFailure([]));
 
-        $navigation = new Navigation($factory, $routeHelper, $options);
-        $navigation->setRouteResult($routeResult);
-        $this->assertFalse($navigation->isActive(new Page()));
+        $this->assertFalse($navigation->isActive($this->getRoutePage('test')));
     }
 
-    /**
-     * @throws Exception
-     */
     public function testIsActiveWillReturnFalseWhenPageHasNoRoute(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
-        $routeResult = RouteResult::fromRoute(
-            new Route(
-                'path',
-                $this->createMock(MiddlewareInterface::class),
-            )
-        );
+        $navigation = $this->getNavigation();
+        $navigation->setRouteResult($this->getRouteResult('test'));
 
-        $navigation = new Navigation($factory, $routeHelper, $options);
-        $navigation->setRouteResult($routeResult);
         $this->assertFalse($navigation->isActive(new Page()));
     }
 
-    /**
-     * @throws Exception
-     */
     public function testIsActiveWillReturnTrueWhenRequestedRouteMatchesPageRoute(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
-        $routeResult = RouteResult::fromRoute(
-            new Route(
-                'path',
-                $this->createMock(MiddlewareInterface::class),
-                Route::HTTP_METHOD_ANY,
-                'test'
-            )
-        );
-
-        $page = new Page();
-        $page->setOption('route', [
-            'route_name' => 'test',
-        ]);
-        $navigation = new Navigation($factory, $routeHelper, $options);
-        $navigation->setRouteResult($routeResult);
+        $navigation = $this->getNavigation();
+        $navigation->setRouteResult($this->getRouteResult('test'));
         $navigation->setIsActiveRecursion(false);
-        $this->assertTrue($navigation->isActive($page));
+
+        $this->assertTrue($navigation->isActive($this->getRoutePage('test')));
     }
 
-    /**
-     * @throws Exception
-     */
     public function testIsActiveWillReturnTrueWhenRequestedRouteMatchesChildPageRoute(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
-        $routeResult = RouteResult::fromRoute(
-            new Route(
-                'path',
-                $this->createMock(MiddlewareInterface::class),
-                Route::HTTP_METHOD_ANY,
-                'child'
-            )
-        );
+        $parentPage = $this->getRoutePage('parent');
+        $parentPage->addPage($this->getRoutePage('child'));
 
-        $childPage = new Page();
-        $childPage->setOption('route', [
-            'route_name' => 'child',
-        ]);
-        $parentPage = new Page();
-        $parentPage->setOption('route', [
-            'route_name' => 'parent',
-        ]);
-        $parentPage->addPage($childPage);
-        $navigation = new Navigation($factory, $routeHelper, $options);
-        $navigation->setRouteResult($routeResult);
-        $navigation->setIsActiveRecursion(true);
+        $navigation = $this->getNavigation();
+        $navigation->setRouteResult($this->getRouteResult('child'));
+
         $this->assertTrue($navigation->isActive($parentPage));
     }
 
-    /**
-     * @throws Exception
-     */
+    public function testIsActiveWillNotCheckChildPagesWithoutRecursion(): void
+    {
+        $parentPage = $this->getRoutePage('parent');
+        $parentPage->addPage($this->getRoutePage('child'));
+
+        $navigation = $this->getNavigation();
+        $navigation->setRouteResult($this->getRouteResult('child'));
+        $navigation->setIsActiveRecursion(false);
+
+        $this->assertFalse($navigation->isActive($parentPage));
+    }
+
+    public function testIsActiveComparesParamKeys(): void
+    {
+        $navigation = $this->getNavigation();
+        $navigation->setRouteResult($this->getRouteResult('list', ['page' => '1']));
+
+        // Keep both pages in variables. The active cache uses spl_object_hash(), which PHP reuses for freed objects.
+        $otherKey = $this->getRoutePage('list', ['id' => 1]);
+        $sameKey  = $this->getRoutePage('list', ['page' => 1]);
+        $this->assertFalse($navigation->isActive($otherKey));
+        $this->assertTrue($navigation->isActive($sameKey));
+    }
+
+    public function testIsActiveRequiresEachRequestParamOnThePage(): void
+    {
+        $navigation = $this->getNavigation();
+        $navigation->setRouteResult($this->getRouteResult('list', ['id' => '1']));
+
+        $this->assertFalse($navigation->isActive($this->getRoutePage('list')));
+    }
+
+    public function testIsActiveSkipsIgnoredParams(): void
+    {
+        $page = new Page();
+        $page->setOption('route', ['route_name' => 'list', 'ignore_params' => ['id']]);
+
+        $navigation = $this->getNavigation();
+        $navigation->setRouteResult($this->getRouteResult('list', ['id' => '1']));
+
+        $this->assertTrue($navigation->isActive($page));
+    }
+
+    public function testIsActiveUsesQueryParamsAndNotGlobalGet(): void
+    {
+        $_GET['tab'] = 'other';
+
+        $page = new Page();
+        $page->setOption('route', ['route_name' => 'list', 'query_params' => ['tab' => 'main']]);
+
+        $navigation = $this->getNavigation();
+        $navigation->setRouteResult($this->getRouteResult('list'));
+        $navigation->setQueryParams(['tab' => 'main']);
+        $this->assertTrue($navigation->isActive($page));
+
+        $navigation->setQueryParams(['tab' => 'other']);
+        $this->assertFalse($navigation->isActive($page));
+
+        unset($_GET['tab']);
+    }
+
+    public function testIsActiveAcceptsArrayQueryValue(): void
+    {
+        $page = new Page();
+        $page->setOption('route', ['route_name' => 'list', 'query_params' => ['tags' => ['a', 'b']]]);
+
+        $navigation = $this->getNavigation();
+        $navigation->setRouteResult($this->getRouteResult('list'));
+        $navigation->setQueryParams(['tags' => ['a', 'b']]);
+
+        $this->assertTrue($navigation->isActive($page));
+    }
+
+    public function testIsActiveCacheIsClearedByNewRouteResult(): void
+    {
+        $page       = $this->getRoutePage('first');
+        $navigation = $this->getNavigation();
+
+        $navigation->setRouteResult($this->getRouteResult('first'));
+        $this->assertTrue($navigation->isActive($page));
+
+        $navigation->setRouteResult($this->getRouteResult('second'));
+        $this->assertFalse($navigation->isActive($page));
+    }
+
+    public function testParentWithoutRouteIsActiveWhenChildIsActive(): void
+    {
+        $parentPage = new Page();
+        $parentPage->setOption('uri', '#');
+        $parentPage->addPage($this->getRoutePage('child'));
+
+        $navigation = $this->getNavigation();
+        $navigation->setRouteResult($this->getRouteResult('child'));
+
+        $this->assertTrue($navigation->isActive($parentPage));
+    }
+
+    public function testRouteOptionWithoutRouteNameIsNotActive(): void
+    {
+        $page = new Page();
+        $page->setOption('route', ['route_params' => []]);
+
+        $navigation = $this->getNavigation();
+        $navigation->setRouteResult($this->getRouteResult('test'));
+
+        $this->assertFalse($navigation->isActive($page));
+    }
+
     public function testGetHrefWillCacheResults(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
-
-        $navigation = new Navigation($factory, $routeHelper, $options);
-        $this->assertIsArray($navigation->getHrefCache());
-        $this->assertEmpty($navigation->getHrefCache());
+        $navigation = $this->getNavigation();
+        $this->assertSame([], $navigation->getHrefCache());
 
         $page = new Page();
         $page->setOption('uri', 'page1');
         $navigation->getHref($page);
-        $this->assertIsArray($navigation->getHrefCache());
         $this->assertCount(1, $navigation->getHrefCache());
 
-        $page = new Page();
-        $page->setOption('route', [
-            'route_name' => 'page2',
-        ]);
-        $navigation->getHref($page);
-        $this->assertIsArray($navigation->getHrefCache());
+        $navigation->getHref($this->getRoutePage('page2'));
         $this->assertCount(2, $navigation->getHrefCache());
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testWillNotGetHrefForInvalidPage(): void
-    {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
-
-        $navigation = new Navigation($factory, $routeHelper, $options);
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessageMatches('/^Unable to assemble href for navigation page.*/');
-        $page = new Page();
-        $navigation->getHref($page);
-    }
-
-    /**
-     * @throws Exception
-     */
     public function testWillGetHrefForValidPage(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
-
-        $navigation = new Navigation($factory, $routeHelper, $options);
+        $navigation = $this->getNavigation();
 
         $page = new Page();
         $page->setOption('uri', 'page1');
         $this->assertSame('page1', $navigation->getHref($page));
 
+        $this->assertSame('/generated', $navigation->getHref($this->getRoutePage('page2')));
+    }
+
+    public function testWillGetHrefForUriZero(): void
+    {
         $page = new Page();
-        $page->setOption('route', [
-            'route_name' => 'page2',
-        ]);
-        $this->assertIsString($navigation->getHref($page));
+        $page->setOption('uri', '0');
+
+        $this->assertSame('0', $this->getNavigation()->getHref($page));
+    }
+
+    public function testWillNotGetHrefForInvalidPage(): void
+    {
+        $page = new Page();
+        $page->setOption('name', 7);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unable to assemble href for navigation page "7"');
+        $this->getNavigation()->getHref($page);
+    }
+
+    private function getNavigation(?AuthorizationInterface $authorization = null): Navigation
+    {
+        $uri = $this->createStub(UriInterface::class);
+        $uri->method('__toString')->willReturn('/generated');
+
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $routeHelper->method('generateUri')->willReturn($uri);
+
+        return new Navigation(
+            $this->createStub(FactoryInterface::class),
+            $routeHelper,
+            new NavigationOptions(),
+            $authorization
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $routeParams
+     */
+    private function getRoutePage(string $routeName, array $routeParams = []): Page
+    {
+        $page = new Page();
+        $page->setOption('route', ['route_name' => $routeName, 'route_params' => $routeParams]);
+
+        return $page;
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    private function getRouteResult(string $routeName, array $params = []): RouteResult
+    {
+        return RouteResult::fromRoute(
+            new Route('/path', $this->createStub(MiddlewareInterface::class), Route::HTTP_METHOD_ANY, $routeName),
+            $params
+        );
     }
 }

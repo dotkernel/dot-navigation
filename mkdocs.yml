@@ -2,12 +2,23 @@ docs_dir: docs/book
 site_dir: docs/html
 extra:
   project: Packages
-  current_version: v4
+  current_version: v5
   versions:
+    - v5
     - v4
     - v3
 nav:
   - Home: index.md
+  - v5:
+      - Overview: v5/overview.md
+      - Configuration: v5/configuration.md
+      - Installation: v5/installation.md
+      - Components: v5/components.md
+      - "Container Providers": v5/container-providers.md
+      - "Navigation Renderer": v5/navigation-renderer.md
+      - "Page Options": v5/required-page-options.md
+      - Usage: v5/usage.md
+      - Upgrading: v5/upgrading.md
   - v4:
       - Overview: v4/overview.md
       - Configuration: v4/configuration.md

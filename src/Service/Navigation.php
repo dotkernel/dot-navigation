@@ -6,16 +6,19 @@ namespace Dot\Navigation\Service;
 
 use Dot\Authorization\AuthorizationInterface;
 use Dot\Helpers\Route\RouteHelper;
+use Dot\Navigation\Exception\InvalidArgumentException;
 use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\NavigationContainer;
 use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Page;
 use Dot\Navigation\Provider\FactoryInterface;
 use Mezzio\Router\RouteResult;
-use RecursiveIteratorIterator;
 
-use function array_diff;
+use function array_key_exists;
 use function array_merge;
+use function is_array;
+use function is_scalar;
+use function is_string;
 use function spl_object_hash;
 use function sprintf;
 
@@ -26,10 +29,15 @@ class Navigation implements NavigationInterface
     protected NavigationOptions $moduleOptions;
     protected ?AuthorizationInterface $authorization;
     protected ?RouteResult $routeResult = null;
-    protected array $containers         = [];
-    protected array $isActiveCache      = [];
-    protected array $hrefCache          = [];
-    protected bool $isActiveRecursion   = true;
+    /** @var array<string, NavigationContainer> */
+    protected array $containers = [];
+    /** @var array<string, bool> */
+    protected array $isActiveCache = [];
+    /** @var array<string, string> */
+    protected array $hrefCache = [];
+    /** @var array<string, mixed> */
+    protected array $queryParams      = [];
+    protected bool $isActiveRecursion = true;
 
     public function __construct(
         FactoryInterface $providerFactory,
@@ -50,7 +58,18 @@ class Navigation implements NavigationInterface
 
     public function setRouteResult(RouteResult $routeResult): void
     {
-        $this->routeResult = $routeResult;
+        $this->routeResult   = $routeResult;
+        $this->isActiveCache = [];
+        $this->hrefCache     = [];
+    }
+
+    /**
+     * @param array<string, mixed> $queryParams
+     */
+    public function setQueryParams(array $queryParams): void
+    {
+        $this->queryParams   = $queryParams;
+        $this->isActiveCache = [];
     }
 
     public function getIsActiveRecursion(): bool
@@ -66,11 +85,17 @@ class Navigation implements NavigationInterface
         }
     }
 
+    /**
+     * @return array<string, bool>
+     */
     public function getIsActiveCache(): array
     {
         return $this->isActiveCache;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getHrefCache(): array
     {
         return $this->hrefCache;
@@ -94,6 +119,9 @@ class Navigation implements NavigationInterface
         return $this->containers[$name];
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function isAllowed(Page $page): bool
     {
         //authorization module is optional, this function will always return true if missing
@@ -105,7 +133,17 @@ class Navigation implements NavigationInterface
 
         if (isset($options['permission'])) {
             if (isset($options['roles'])) {
-                return $this->authorization->isGranted($options['permission'], $options['roles']);
+                $roles = $options['roles'];
+                if (is_string($roles)) {
+                    $roles = [$roles];
+                }
+                if (! is_array($roles)) {
+                    throw new InvalidArgumentException(
+                        'The navigation page option "roles" must be a string or an array'
+                    );
+                }
+
+                return $this->authorization->isGranted($options['permission'], $roles);
             }
             return $this->authorization->isGranted($options['permission']);
         }
@@ -122,64 +160,90 @@ class Navigation implements NavigationInterface
 
         $active = false;
         if ($this->routeResult instanceof RouteResult && $this->routeResult->isSuccess()) {
-            $routeName = $this->routeResult->getMatchedRouteName();
             $pageRoute = $page->getOption('route');
-            if ($pageRoute) {
-                if ($pageRoute['route_name'] === $routeName) {
-                    $reqParams  = array_merge($this->routeResult->getMatchedParams(), $_GET);
-                    $pageParams = array_merge($pageRoute['route_params'] ?? [], $pageRoute['query_params'] ?? []);
-
-                    $active = $this->areParamsEqual($pageParams, $reqParams, $pageRoute['ignore_params'] ?? []);
-                } elseif ($this->isActiveRecursion) {
-                    $iterator = new RecursiveIteratorIterator($page, RecursiveIteratorIterator::CHILD_FIRST);
-                    foreach ($iterator as $leaf) {
-                        if (! $leaf instanceof Page) {
-                            continue;
-                        }
-                        if ($this->isActive($leaf)) {
-                            $active = true;
-                            break;
-                        }
+            if (
+                is_array($pageRoute)
+                && ($pageRoute['route_name'] ?? null) === $this->routeResult->getMatchedRouteName()
+            ) {
+                $active = $this->areParamsEqual(
+                    array_merge($pageRoute['route_params'] ?? [], $pageRoute['query_params'] ?? []),
+                    array_merge($this->routeResult->getMatchedParams(), $this->queryParams),
+                    $pageRoute['ignore_params'] ?? []
+                );
+            } elseif ($this->isActiveRecursion) {
+                foreach ($page as $child) {
+                    if ($this->isActive($child)) {
+                        $active = true;
+                        break;
                     }
                 }
             }
         }
+
         $this->isActiveCache[$hash] = $active;
+
         return $active;
     }
 
+    /**
+     * Tells if each request parameter, except the ignored ones, is also a page parameter with the same value.
+     *
+     * @param array<string, mixed> $pageParams
+     * @param array<string, mixed> $requestParams
+     * @param list<string> $ignoreParams
+     */
     protected function areParamsEqual(array $pageParams, array $requestParams, array $ignoreParams): bool
     {
-        foreach ($ignoreParams as $unsetKey) {
-            if (isset($requestParams[$unsetKey])) {
-                unset($requestParams[$unsetKey]);
+        foreach ($ignoreParams as $key) {
+            unset($requestParams[$key]);
+        }
+
+        foreach ($requestParams as $key => $value) {
+            if (! array_key_exists($key, $pageParams) || ! $this->isSameParam($pageParams[$key], $value)) {
+                return false;
             }
         }
-        $diff = array_diff($requestParams, $pageParams);
-        return empty($diff);
+
+        return true;
     }
 
+    private function isSameParam(mixed $pageValue, mixed $requestValue): bool
+    {
+        if (is_scalar($pageValue) && is_scalar($requestValue)) {
+            return (string) $pageValue === (string) $requestValue;
+        }
+
+        return $pageValue === $requestValue;
+    }
+
+    /**
+     * @throws RuntimeException
+     */
     public function getHref(Page $page): string
     {
         $hash = spl_object_hash($page);
         if (isset($this->hrefCache[$hash])) {
-            return (string) $this->hrefCache[$hash];
+            return $this->hrefCache[$hash];
         }
 
-        $href = null;
-        if ($page->getOption('uri')) {
-            $href = $page->getOption('uri');
-        } elseif ($page->getOption('route')) {
-            $pageRoute = $page->getOption('route');
-            $href      = $this->routeHelper->generateUri($pageRoute);
+        $href  = null;
+        $uri   = $page->getOption('uri');
+        $route = $page->getOption('route');
+        if (is_string($uri) && $uri !== '') {
+            $href = $uri;
+        } elseif (is_array($route)) {
+            $href = (string) $this->routeHelper->generateUri($route);
         }
 
-        if ($href) {
-            $this->hrefCache[$hash] = (string) $href;
-        } else {
-            throw new RuntimeException('Unable to assemble href for navigation page ' . $page->getName());
+        if ($href === null || $href === '') {
+            throw new RuntimeException(sprintf(
+                'Unable to assemble href for navigation page "%s"',
+                $page->getName() ?? $page->getLabel()
+            ));
         }
 
-        return (string) $href;
+        $this->hrefCache[$hash] = $href;
+
+        return $href;
     }
 }

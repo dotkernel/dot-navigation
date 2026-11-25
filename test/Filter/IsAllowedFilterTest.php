@@ -12,80 +12,91 @@ use Dot\Navigation\Options\NavigationOptions;
 use Dot\Navigation\Page;
 use Dot\Navigation\Provider\FactoryInterface;
 use Dot\Navigation\Service\Navigation;
-use Dot\Navigation\Service\NavigationInterface;
-use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
-use RecursiveIterator;
+use RecursiveIteratorIterator;
+
+use function array_map;
+use function iterator_to_array;
 
 class IsAllowedFilterTest extends TestCase
 {
-    /**
-     * @throws Exception
-     */
-    public function testWillAcceptWithoutAuthorization(): void
+    public function testWillAcceptAllPagesWithoutAuthorization(): void
     {
-        $iterator = $this->createMock(RecursiveIterator::class);
-        $factory  = $this->createMock(FactoryInterface::class);
-        $route    = $this->createMock(RouteHelper::class);
-        $options  = $this->createMock(NavigationOptions::class);
+        $filter = new IsAllowedFilter($this->getContainer(), $this->getNavigation(null));
 
-        $navigation = new Navigation($factory, $route, $options, null);
-        $filter     = $this->getMockBuilder(IsAllowedFilter::class)
-            ->setConstructorArgs([$iterator, $navigation])
-            ->onlyMethods(['current'])
-            ->getMock();
-        $filter->method('current')->willReturn(new Page());
+        $this->assertSame(['public', 'private', 'private child', 'other'], $this->getLabels($filter));
+    }
 
-        $this->assertTrue($filter->accept());
+    public function testWillSkipPageThatIsNotAllowedAndItsSubPages(): void
+    {
+        $authorization = $this->createStub(AuthorizationInterface::class);
+        $authorization->method('isGranted')->willReturnCallback(
+            static fn (string $permission): bool => $permission !== 'private'
+        );
+
+        $filter = new IsAllowedFilter($this->getContainer(), $this->getNavigation($authorization));
+
+        $this->assertSame(['public', 'other'], $this->getLabels($filter));
+    }
+
+    public function testGetChildrenFiltersTheSubPagesOfTheCurrentPage(): void
+    {
+        $authorization = $this->createStub(AuthorizationInterface::class);
+        $authorization->method('isGranted')->willReturnCallback(
+            static fn (string $permission): bool => $permission !== 'hidden'
+        );
+
+        $visible = new Page();
+        $visible->setOptions(['label' => 'visible', 'permission' => 'public']);
+        $hidden = new Page();
+        $hidden->setOptions(['label' => 'hidden', 'permission' => 'hidden']);
+        $parent = new Page();
+        $parent->addPages([$visible, $hidden]);
+
+        $filter = new IsAllowedFilter(new NavigationContainer([$parent]), $this->getNavigation($authorization));
+        $filter->rewind();
+
+        $this->assertSame(['visible'], $this->getLabels($filter->getChildren()));
+    }
+
+    private function getNavigation(?AuthorizationInterface $authorization): Navigation
+    {
+        return new Navigation(
+            $this->createStub(FactoryInterface::class),
+            $this->createStub(RouteHelper::class),
+            new NavigationOptions(),
+            $authorization
+        );
+    }
+
+    private function getContainer(): NavigationContainer
+    {
+        $public = new Page();
+        $public->setOptions(['label' => 'public', 'permission' => 'public']);
+
+        $child = new Page();
+        $child->setOptions(['label' => 'private child', 'permission' => 'public']);
+
+        $private = new Page();
+        $private->setOptions(['label' => 'private', 'permission' => 'private']);
+        $private->addPage($child);
+
+        $other = new Page();
+        $other->setOptions(['label' => 'other']);
+
+        return new NavigationContainer([$public, $private, $other]);
     }
 
     /**
-     * @throws Exception
+     * @return list<string>
      */
-    public function testWillAcceptWithAuthorization(): void
+    private function getLabels(IsAllowedFilter $filter): array
     {
-        $iterator      = $this->createMock(RecursiveIterator::class);
-        $factory       = $this->createMock(FactoryInterface::class);
-        $route         = $this->createMock(RouteHelper::class);
-        $options       = $this->createMock(NavigationOptions::class);
-        $authorization = $this->createMock(AuthorizationInterface::class);
+        $iterator = new RecursiveIteratorIterator($filter, RecursiveIteratorIterator::SELF_FIRST);
 
-        $authorization->expects($this->once())->method('isGranted')->willReturn(true);
-
-        $page = new Page();
-        $page->setOption('permission', 'test');
-        $page->setOption('roles', []);
-
-        $navigation = new Navigation($factory, $route, $options, $authorization);
-        $filter     = $this->getMockBuilder(IsAllowedFilter::class)
-            ->setConstructorArgs([$iterator, $navigation])
-            ->onlyMethods(['current'])
-            ->getMock();
-        $filter->method('current')->willReturn($page);
-
-        $this->assertTrue($filter->accept());
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testGetChildren(): void
-    {
-        $navigation = $this->createMock(NavigationInterface::class);
-
-        $filter = new IsAllowedFilter(new NavigationContainer([new Page()]), $navigation);
-        $this->assertSame(IsAllowedFilter::class, $filter->getChildren()::class);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testWillCreateFilter(): void
-    {
-        $iterator   = $this->createMock(RecursiveIterator::class);
-        $navigation = $this->createMock(NavigationInterface::class);
-
-        $filter = new IsAllowedFilter($iterator, $navigation);
-        $this->assertSame(IsAllowedFilter::class, $filter::class);
+        return array_map(
+            static fn (Page $page): string => $page->getLabel(),
+            iterator_to_array($iterator, false)
+        );
     }
 }

@@ -23,6 +23,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConfigProviderTest extends TestCase
 {
+    /** @var array<string, mixed> */
     protected array $config;
 
     protected function setup(): void

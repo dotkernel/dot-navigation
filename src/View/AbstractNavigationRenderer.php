@@ -29,7 +29,7 @@ abstract class AbstractNavigationRenderer implements RendererInterface
 {
     protected NavigationInterface $navigation;
     protected TemplateRendererInterface $template;
-    protected string $partial;
+    protected ?string $partial = null;
 
     public function __construct(NavigationInterface $navigation, TemplateRendererInterface $template)
     {
@@ -37,6 +37,13 @@ abstract class AbstractNavigationRenderer implements RendererInterface
         $this->template   = $template;
     }
 
+    /**
+     * Each value must be a string or a list of strings. A list is joined with spaces.
+     * For a key that starts with "on" and for "constraints", an array is encoded as JSON.
+     * Any other value type throws a TypeError.
+     *
+     * @param array<string, mixed> $attributes
+     */
     public function htmlAttributes(array $attributes): string
     {
         $xhtml   = '';
@@ -105,6 +112,11 @@ abstract class AbstractNavigationRenderer implements RendererInterface
         }
     }
 
+    /**
+     * @param array<string, mixed> $input
+     * @param list<string> $valid
+     * @return array<string, mixed>
+     */
     protected function cleanAttributes(array $input, array $valid): array
     {
         foreach ($input as $key => $value) {

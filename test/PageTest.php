@@ -75,6 +75,18 @@ class PageTest extends TestCase
         $this->assertTrue($page->hasAttributes());
     }
 
+    public function testGetName(): void
+    {
+        $page = new Page();
+        $this->assertNull($page->getName());
+        $page->setOption('name', 'home');
+        $this->assertSame('home', $page->getName());
+        $page->setOption('name', 1);
+        $this->assertSame('1', $page->getName());
+        $page->setOption('name', ['invalid']);
+        $this->assertNull($page->getName());
+    }
+
     public function testGetLabel(): void
     {
         $page = new Page();

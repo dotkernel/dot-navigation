@@ -4,17 +4,25 @@ declare(strict_types=1);
 
 namespace Dot\Navigation\Filter;
 
+use Dot\Navigation\Page;
 use Dot\Navigation\Service\NavigationInterface;
 use RecursiveFilterIterator;
 use RecursiveIterator;
 
-class IsAllowedFilter extends RecursiveFilterIterator
+/**
+ * Skips the pages that the current user is not allowed to see, and their sub-pages.
+ *
+ * @extends RecursiveFilterIterator<int, Page, RecursiveIterator<int, Page>>
+ */
+final class IsAllowedFilter extends RecursiveFilterIterator
 {
-    protected NavigationInterface $navigation;
-
-    public function __construct(RecursiveIterator $iterator, NavigationInterface $navigation)
-    {
-        $this->navigation = $navigation;
+    /**
+     * @param RecursiveIterator<int, Page> $iterator
+     */
+    public function __construct(
+        private readonly RecursiveIterator $iterator,
+        private readonly NavigationInterface $navigation,
+    ) {
         parent::__construct($iterator);
     }
 
@@ -23,10 +31,8 @@ class IsAllowedFilter extends RecursiveFilterIterator
         return $this->navigation->isAllowed($this->current());
     }
 
-    public function getChildren(): IsAllowedFilter
+    public function getChildren(): self
     {
-        /** @var RecursiveIterator $innerIterator */
-        $innerIterator = $this->getInnerIterator();
-        return new self($innerIterator->getChildren(), $this->navigation);
+        return new self($this->iterator->getChildren(), $this->navigation);
     }
 }

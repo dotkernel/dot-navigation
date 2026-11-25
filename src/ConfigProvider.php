@@ -20,6 +20,9 @@ use Dot\Navigation\View\RendererInterface;
 
 class ConfigProvider
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function __invoke(): array
     {
         return [
@@ -32,6 +35,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return array<string, array<string, string>>
+     */
     public function getDependencyConfig(): array
     {
         return [

@@ -7,122 +7,71 @@ namespace DotTest\Navigation\Provider;
 use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\Provider\ArrayProvider;
 use Dot\Navigation\Provider\Factory;
-use Dot\Navigation\Provider\ProviderInterface;
 use Dot\Navigation\Provider\ProviderPluginManager;
-use Laminas\ServiceManager\Exception\ServiceNotFoundException;
-use PHPUnit\Framework\MockObject\Exception;
+use DotTest\Navigation\TestData\Container;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
 
 class FactoryTest extends TestCase
 {
-    /**
-     * @throws Exception
-     */
-    public function testWillCreateFactoryWithoutProviderPluginManager(): void
-    {
-        $container = $this->createMock(ContainerInterface::class);
-
-        $factory = new Factory($container);
-        $this->assertSame(Factory::class, $factory::class);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testWillCreateFactoryWithProviderPluginManager(): void
-    {
-        $container = $this->createMock(ContainerInterface::class);
-        $manager   = $this->createMock(ProviderPluginManager::class);
-
-        $factory = new Factory($container, $manager);
-        $this->assertSame(Factory::class, $factory::class);
-    }
-
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws Exception
-     */
     public function testFactoryWillNotCreateProviderWithoutProviderType(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Undefined navigation provider type');
-        $factory = new Factory($container);
-        $factory->create([]);
+        (new Factory(new Container()))->create([]);
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws Exception
-     */
     public function testFactoryWillNotCreateProviderWithInvalidProviderType(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-
-        $this->expectException(ServiceNotFoundException::class);
-        $this->expectExceptionMessage(
-            'Unable to resolve service "test" to a factory; are you certain you provided it during configuration?'
-        );
-        $factory = new Factory($container);
-        $factory->create([
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Navigation provider "test" is not registered');
+        (new Factory(new Container()))->create([
             'type' => 'test',
         ]);
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws Exception
-     */
+    public function testFactoryWillNotCreateProviderWithInvalidOptions(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('The navigation provider options must be an array');
+        (new Factory(new Container()))->create([
+            'type'    => ArrayProvider::class,
+            'options' => 'invalid',
+        ]);
+    }
+
     public function testFactoryWillCreateProviderWithValidProviderTypeAndNoOptions(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-
-        $factory  = new Factory($container);
-        $provider = $factory->create([
+        $provider = (new Factory(new Container()))->create([
             'type' => ArrayProvider::class,
         ]);
-        $this->assertContainsOnlyInstancesOf(ProviderInterface::class, [$provider]);
+        $this->assertInstanceOf(ArrayProvider::class, $provider);
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws Exception
-     */
     public function testFactoryWillCreateProviderWithValidProviderTypeAndOptions(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-
-        $factory  = new Factory($container);
-        $provider = $factory->create([
-            'type'    => ArrayProvider::class,
-            'options' => [],
+        $provider = (new Factory(new Container()))->create([
+            'type'    => 'Array',
+            'options' => [
+                'items' => [
+                    ['options' => ['label' => 'Home']],
+                ],
+            ],
         ]);
-        $this->assertContainsOnlyInstancesOf(ProviderInterface::class, [$provider]);
+        $this->assertInstanceOf(ArrayProvider::class, $provider);
+        $this->assertTrue($provider->getContainer()->hasPages());
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testFactoryWillGetProviderPluginManagerWithoutInitialProviderPluginManager(): void
+    public function testFactoryWillCreateProviderPluginManagerWhenNoneIsGiven(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-
-        $factory = new Factory($container);
+        $factory = new Factory(new Container());
         $this->assertSame(ProviderPluginManager::class, $factory->getProviderPluginManager()::class);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testFactoryWillGetProviderPluginManagerWithInitialProviderPluginManager(): void
+    public function testFactoryWillUseTheGivenProviderPluginManager(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-        $manager   = $this->createMock(ProviderPluginManager::class);
+        $manager = new ProviderPluginManager(new Container());
 
-        $factory = new Factory($container, $manager);
-        $this->assertContainsOnlyInstancesOf(ProviderPluginManager::class, [$factory->getProviderPluginManager()]);
+        $factory = new Factory(new Container(), $manager);
+        $this->assertSame($manager, $factory->getProviderPluginManager());
     }
 }

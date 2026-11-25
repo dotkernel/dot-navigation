@@ -9,79 +9,78 @@ Documentation is available at: https://docs.dotkernel.org/dot-navigation/.
 ## Badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-navigation)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-navigation/4.2.0)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-navigation/5.0.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/network)
 [![GitHub stars](https://img.shields.io/github/stars/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/stargazers)
-[![GitHub license](https://img.shields.io/github/license/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/blob/4.0/LICENSE.md)
+[![GitHub license](https://img.shields.io/github/license/dotkernel/dot-navigation)](https://github.com/dotkernel/dot-navigation/blob/5.0/LICENSE.md)
 
-[![Build Static](https://github.com/dotkernel/dot-navigation/actions/workflows/continuous-integration.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/dot-navigation/actions/workflows/continuous-integration.yml)
+[![Build Static](https://github.com/dotkernel/dot-navigation/actions/workflows/continuous-integration.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/dot-navigation/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/dotkernel/dot-navigation/graph/badge.svg?token=AI9WFYDDX9)](https://codecov.io/gh/dotkernel/dot-navigation)
-[![PHPStan](https://github.com/dotkernel/dot-navigation/actions/workflows/static-analysis.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/dot-navigation/actions/workflows/static-analysis.yml)
+[![PHPStan](https://github.com/dotkernel/dot-navigation/actions/workflows/static-analysis.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/dot-navigation/actions/workflows/static-analysis.yml)
 
 ## Installation
 
-Install `dotkernel/dot-navigation` by executing the following Composer command:
+Install `dotkernel/dot-navigation` with this Composer command:
 
 ```shell
 composer require dotkernel/dot-navigation
 ```
 
-Merge `ConfigProvider` to your application's configuration.
+Add `Dot\Navigation\ConfigProvider` to the configuration of your application.
 
-> The package uses dot-helpers package, please merge dot-helpers `ConfigProvider` to your application's configuration also, if it's not merged already!
+> The package uses dot-helpers. Also add the `ConfigProvider` of dot-helpers to the configuration of your application, if it is not there.
 
-Register `NavigationMiddleware` in your middleware pipe between the routing and the dispatching middleware.
+Add `NavigationMiddleware` to the middleware pipeline, after the routing middleware and before the dispatch middleware.
+
+The factories use only `Psr\Container\ContainerInterface`, so they work with each PSR-11 container that accepts a factory for each service name.
+The package does not require `laminas/laminas-servicemanager`. If your application uses it, require it in your application.
 
 ## Configuration
 
-Locate dot-navigation's distributable config file `vendor/dotkernel/dot-navigation/config/autoload/navigation.global.php.dist` and duplicate it in your project as `config/autoload/navigation.global.php`
+Copy the configuration file `vendor/dotkernel/dot-navigation/config/autoload/navigation.global.php.dist` to `config/autoload/navigation.global.php` in your project.
 
 ## Components
 
-A menu, or navigation container, is a class implementing the `RecursiveIterator` interface.
-It has a hierarchical structure, with nodes called pages (see the `Page` class) that may have children. It is basically a tree
+A menu, or navigation container, is an instance of `NavigationContainer`. It implements `RecursiveIterator`.
+It is a tree, and its nodes are pages (see the `Page` class). A page can have sub-pages.
 
-A Page extends the NavigationContainer class. The NavigationContainer is the top most node which represents the entire menu.
-The children of this node are Page instances that define each navigation item.
+`Page` extends `NavigationContainer`. The container is the top node, and it represents the full menu.
+`hasPages()` and `hasChildren()` tell if a container or a page has sub-pages.
 
-A page has a reference to its parent and can have options and attributes. There is no limitation on what is accepted as options or attributes.
+A page has a parent, options and attributes.
+Options describe the page, for example its label, link and permission.
+Attributes are key-value pairs. A template usually writes them as HTML attributes.
 
-Options can be any piece of information that describes a page.
-Some predefined options exist in order for the navigation module to work seamlessly with other dot modules.
-
-Attributes are key value pairs that define the menu item.
-They are usually inserted as HTML attributes when parsing the menu, but of course, this is implementation-specific.
-
-A `NavigationService` class, is the service that handles all defined menu containers.
-It can fetch the container from its provider, check if a page is active or not, and get the page's generated URI.
+The `Navigation` service (`Dot\Navigation\Service\Navigation`) handles all menu containers.
+It loads a container from its provider. It tells if a page is allowed or active, and it makes the URI of a page.
 
 ## Container providers
 
-Each menu can be created from different sources. The responsibility of creating a menu container from the source falls on a container provider.
+A container provider makes a menu container from a source. Each provider implements `ProviderInterface`.
 
-Each provider must implement the interface `ProviderInterface` and be registered in the ProviderPluginManager.
+The package has one provider, `ArrayProvider`. It makes a menu container from a PHP array in the configuration file.
 
-We offer just one provider for now, `ArrayProvider`, that is able to fetch and create a menu container from a php array that is defined in the configuration file.
+To add a provider, register its factory in the `provider_manager` configuration key. This key supports `factories` and `aliases`.
+For a provider that needs no services, use `Dot\Navigation\Provider\InvokableProviderFactory`.
 
 ## NavigationRenderer
 
-Used to render the navigation container in a displayable format.
-It can render a simple HTML unordered list or use a partial template to render the menu in a template engine.
+The renderer renders a navigation container with a template.
+`render()` and `renderPartial()` give the template the container, the navigation service and the extra parameters.
 
-The partial method is usually the more flexible one, custom rules can be defined and checked in the template.
+If you use Twig, the package dot-twigrenderer has a Twig extension for menus.
 
-If you are using Twig, there is already a Twig extension provided in package dot-twigrenderer that you can use to easily parse the menus inside your templates
+Templates refer to a navigation container by its name in the configuration file.
 
-When using the partial method, the template will receive as parameters the container, the navigation service, and any extra parameters set by the developer.
+`htmlAttributes()` writes the attributes of a page as HTML attributes. Each value must be a string or a list of strings.
+Other value types throw a `TypeError`. Write a number or a boolean as a string, for example `'tabindex' => '0'`.
 
-Navigation containers are referred to, when parsed, by their name, as defined in the configuration file.
+## Page options
 
-## Required page options and attributes
+Each page can have these options:
 
-The following are options that each page should define in the configuration
-
-* `label` - the text of the menu item
-* `route` or `uri` - defines the route or link the menu item will have
-* `permission` - can be used optionally if authorization service is present, to omit menu items that are not authorized to visit.
+- `label` - the text of the menu item
+- `route` or `uri` - the route or the link of the menu item
+- `permission` - optional. If an authorization service is in the container, the page shows only when the user has this permission

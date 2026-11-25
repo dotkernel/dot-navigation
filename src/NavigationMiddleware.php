@@ -26,6 +26,7 @@ class NavigationMiddleware implements MiddlewareInterface
         if ($routeResult instanceof RouteResult) {
             $this->navigation->setRouteResult($routeResult);
         }
+        $this->navigation->setQueryParams($request->getQueryParams());
 
         return $handler->handle($request);
     }

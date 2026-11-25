@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Dot\Navigation\Provider;
 
 use Dot\Navigation\Exception\RuntimeException;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+
+use function is_array;
+use function is_string;
 
 class Factory implements FactoryInterface
 {
@@ -20,16 +22,22 @@ class Factory implements FactoryInterface
     }
 
     /**
-     * @throws ContainerExceptionInterface
+     * @param array<string, mixed> $specs
+     * @throws RuntimeException
      */
     public function create(array $specs): ProviderInterface
     {
         $type = $specs['type'] ?? '';
-        if (empty($type)) {
+        if (! is_string($type) || $type === '') {
             throw new RuntimeException('Undefined navigation provider type');
         }
 
-        return $this->getProviderPluginManager()->build($type, $specs['options'] ?? null);
+        $options = $specs['options'] ?? null;
+        if ($options !== null && ! is_array($options)) {
+            throw new RuntimeException('The navigation provider options must be an array');
+        }
+
+        return $this->getProviderPluginManager()->build($type, $options);
     }
 
     public function getProviderPluginManager(): ProviderPluginManager

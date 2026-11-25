@@ -4,108 +4,66 @@ declare(strict_types=1);
 
 namespace DotTest\Navigation\Factory;
 
+use Dot\Navigation\Exception\RuntimeException;
 use Dot\Navigation\Factory\ProviderPluginManagerFactory;
-use Dot\Navigation\Provider\ProviderPluginManager;
-use PHPUnit\Framework\MockObject\Exception;
+use Dot\Navigation\Provider\InvokableProviderFactory;
+use DotTest\Navigation\TestData\Container;
+use DotTest\Navigation\TestData\CustomProvider;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 class ProviderPluginManagerFactoryTest extends TestCase
 {
-    /**
-     * @throws Exception
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function testWillNotCreateProviderPluginManagerWithoutConfig(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-
-        $container->expects($this->once())
-            ->method('has')
-            ->with('config')
-            ->willReturn(false);
-
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(ProviderPluginManagerFactory::MESSAGE_MISSING_CONFIG);
-        (new ProviderPluginManagerFactory())($container);
+        (new ProviderPluginManagerFactory())(new Container());
     }
 
-    /**
-     * @throws Exception
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
+    public function testWillNotCreateProviderPluginManagerWhenConfigIsNotAnArray(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(ProviderPluginManagerFactory::MESSAGE_MISSING_CONFIG);
+        (new ProviderPluginManagerFactory())(new Container(['config' => 'invalid']));
+    }
+
     public function testWillNotCreateProviderPluginManagerWithoutPackageConfig(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-
-        $container->expects($this->once())
-            ->method('has')
-            ->with('config')
-            ->willReturn(true);
-
-        $container->expects($this->once())
-            ->method('get')
-            ->with('config')
-            ->willReturn([]);
-
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(ProviderPluginManagerFactory::MESSAGE_MISSING_PACKAGE_CONFIG);
-        (new ProviderPluginManagerFactory())($container);
+        (new ProviderPluginManagerFactory())(new Container(['config' => []]));
     }
 
-    /**
-     * @throws Exception
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function testWillNotCreateProviderPluginManagerWithoutConfigProviderManager(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-
-        $container->expects($this->once())
-            ->method('has')
-            ->with('config')
-            ->willReturn(true);
-
-        $container->expects($this->once())
-            ->method('get')
-            ->with('config')
-            ->willReturn([
+        $container = new Container([
+            'config' => [
                 'dot_navigation' => [
                     'active_recursion' => true,
                 ],
-            ]);
+            ],
+        ]);
 
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(ProviderPluginManagerFactory::MESSAGE_MISSING_CONFIG_PROVIDER_MANAGER);
         (new ProviderPluginManagerFactory())($container);
     }
 
-    /**
-     * @throws Exception
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function testWillCreateProviderPluginManager(): void
+    public function testWillCreateProviderPluginManagerWithConfig(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-
-        $container->expects($this->once())
-            ->method('has')
-            ->with('config')
-            ->willReturn(true);
-
-        $container->expects($this->once())
-            ->method('get')
-            ->with('config')
-            ->willReturn([
+        $container = new Container([
+            'config' => [
                 'dot_navigation' => [
-                    'provider_manager' => [],
+                    'provider_manager' => [
+                        'factories' => [
+                            CustomProvider::class => InvokableProviderFactory::class,
+                        ],
+                    ],
                 ],
-            ]);
+            ],
+        ]);
 
         $manager = (new ProviderPluginManagerFactory())($container);
-        $this->assertSame(ProviderPluginManager::class, $manager::class);
+                $this->assertTrue($manager->has(CustomProvider::class));
     }
 }

@@ -36,7 +36,7 @@ return [
                                 'route' => ['route_name' => 'home'/*,...*/],
                             ],
                             'attributes' => [
-                                'name' => 'Menu #1',
+                                'name' => 'Menu #2',
                             ]
                         ]
                     ],
