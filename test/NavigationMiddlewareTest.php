@@ -19,7 +19,7 @@ class NavigationMiddlewareTest extends TestCase
      */
     public function testWillCreateMiddleware(): void
     {
-        $navigation = $this->createMock(NavigationInterface::class);
+        $navigation = $this->createStub(NavigationInterface::class);
 
         $middleware = new NavigationMiddleware($navigation);
         $this->assertSame(NavigationMiddleware::class, $middleware::class);
@@ -30,9 +30,9 @@ class NavigationMiddlewareTest extends TestCase
      */
     public function testWillProcessRequest(): void
     {
-        $navigation = $this->createMock(NavigationInterface::class);
-        $request    = $this->createMock(ServerRequestInterface::class);
-        $handler    = $this->createMock(RequestHandlerInterface::class);
+        $navigation = $this->createStub(NavigationInterface::class);
+        $request    = $this->createStub(ServerRequestInterface::class);
+        $handler    = $this->createStub(RequestHandlerInterface::class);
 
         $middleware = new NavigationMiddleware($navigation);
         $response   = $middleware->process($request, $handler);

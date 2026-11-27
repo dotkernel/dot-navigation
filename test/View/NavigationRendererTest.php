@@ -19,9 +19,9 @@ class NavigationRendererTest extends TestCase
      */
     public function testWillCreateNavigationRenderer(): void
     {
-        $navigation = $this->createMock(NavigationInterface::class);
-        $template   = $this->createMock(TemplateRendererInterface::class);
-        $options    = $this->createMock(NavigationOptions::class);
+        $navigation = $this->createStub(NavigationInterface::class);
+        $template   = $this->createStub(TemplateRendererInterface::class);
+        $options    = $this->createStub(NavigationOptions::class);
 
         $renderer = new NavigationRenderer($navigation, $template, $options);
         $this->assertSame(NavigationRenderer::class, $renderer::class);
@@ -32,9 +32,9 @@ class NavigationRendererTest extends TestCase
      */
     public function testWillRenderPartial(): void
     {
-        $navigation = $this->createMock(NavigationInterface::class);
-        $template   = $this->createMock(TemplateRendererInterface::class);
-        $options    = $this->createMock(NavigationOptions::class);
+        $navigation = $this->createStub(NavigationInterface::class);
+        $template   = $this->createStub(TemplateRendererInterface::class);
+        $options    = $this->createStub(NavigationOptions::class);
 
         $renderer = new NavigationRenderer($navigation, $template, $options);
         $html     = $renderer->renderPartial(new NavigationContainer(), 'partial');
@@ -46,9 +46,9 @@ class NavigationRendererTest extends TestCase
      */
     public function testWillRenderTemplate(): void
     {
-        $navigation = $this->createMock(NavigationInterface::class);
-        $template   = $this->createMock(TemplateRendererInterface::class);
-        $options    = $this->createMock(NavigationOptions::class);
+        $navigation = $this->createStub(NavigationInterface::class);
+        $template   = $this->createStub(TemplateRendererInterface::class);
+        $options    = $this->createStub(NavigationOptions::class);
 
         $renderer = new NavigationRenderer($navigation, $template, $options);
         $html     = $renderer->render(new NavigationContainer(), 'template');

@@ -27,9 +27,9 @@ class NavigationTest extends TestCase
      */
     public function testNavigationWillInitialize(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $options     = $this->createStub(NavigationOptions::class);
 
         $navigation = new Navigation($factory, $routeHelper, $options);
         $this->assertContainsOnlyInstancesOf(NavigationInterface::class, [$navigation]);
@@ -40,9 +40,9 @@ class NavigationTest extends TestCase
      */
     public function testAccessors(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $options     = $this->createStub(NavigationOptions::class);
         $routeResult = RouteResult::fromRouteFailure([]);
 
         $navigation = new Navigation($factory, $routeHelper, $options);
@@ -59,9 +59,9 @@ class NavigationTest extends TestCase
      */
     public function testNavigationWillNotGetInvalidContainer(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $options     = $this->createStub(NavigationOptions::class);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Container `test` is not defined');
@@ -74,8 +74,8 @@ class NavigationTest extends TestCase
      */
     public function testNavigationWillGetValidContainer(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
 
         $options = new NavigationOptions([
             'containers' => [
@@ -94,9 +94,9 @@ class NavigationTest extends TestCase
      */
     public function testIsAllowedWillReturnTrueWithoutAuthorization(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $options     = $this->createStub(NavigationOptions::class);
 
         $navigation = new Navigation($factory, $routeHelper, $options);
         $this->assertTrue($navigation->isAllowed(new Page()));
@@ -107,10 +107,10 @@ class NavigationTest extends TestCase
      */
     public function testIsAllowedWillReturnTrueWithAuthorizationWhenPageHasNoPermission(): void
     {
-        $factory       = $this->createMock(FactoryInterface::class);
-        $routeHelper   = $this->createMock(RouteHelper::class);
-        $options       = $this->createMock(NavigationOptions::class);
-        $authorization = $this->createMock(AuthorizationInterface::class);
+        $factory       = $this->createStub(FactoryInterface::class);
+        $routeHelper   = $this->createStub(RouteHelper::class);
+        $options       = $this->createStub(NavigationOptions::class);
+        $authorization = $this->createStub(AuthorizationInterface::class);
 
         $navigation = new Navigation($factory, $routeHelper, $options, $authorization);
         $this->assertTrue($navigation->isAllowed(new Page()));
@@ -121,9 +121,9 @@ class NavigationTest extends TestCase
      */
     public function testIsAllowedWillReturnTrueWithAuthorizationWhenPageHasNoRoles(): void
     {
-        $factory       = $this->createMock(FactoryInterface::class);
-        $routeHelper   = $this->createMock(RouteHelper::class);
-        $options       = $this->createMock(NavigationOptions::class);
+        $factory       = $this->createStub(FactoryInterface::class);
+        $routeHelper   = $this->createStub(RouteHelper::class);
+        $options       = $this->createStub(NavigationOptions::class);
         $authorization = $this->createMock(AuthorizationInterface::class);
 
         $authorization->expects($this->once())->method('isGranted')->willReturn(true);
@@ -139,9 +139,9 @@ class NavigationTest extends TestCase
      */
     public function testIsAllowedWillReturnTrueWithAuthorizationWhenPageHasPermissionsAndRoles(): void
     {
-        $factory       = $this->createMock(FactoryInterface::class);
-        $routeHelper   = $this->createMock(RouteHelper::class);
-        $options       = $this->createMock(NavigationOptions::class);
+        $factory       = $this->createStub(FactoryInterface::class);
+        $routeHelper   = $this->createStub(RouteHelper::class);
+        $options       = $this->createStub(NavigationOptions::class);
         $authorization = $this->createMock(AuthorizationInterface::class);
 
         $authorization->expects($this->once())->method('isGranted')->willReturn(true);
@@ -158,9 +158,9 @@ class NavigationTest extends TestCase
      */
     public function testIsActiveWillCacheResults(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $options     = $this->createStub(NavigationOptions::class);
 
         $navigation = new Navigation($factory, $routeHelper, $options);
         $this->assertIsArray($navigation->getIsActiveCache());
@@ -175,9 +175,9 @@ class NavigationTest extends TestCase
      */
     public function testIsActiveWillReturnFalseWithoutRouteResult(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $options     = $this->createStub(NavigationOptions::class);
 
         $navigation = new Navigation($factory, $routeHelper, $options);
         $this->assertFalse($navigation->isActive(new Page()));
@@ -188,9 +188,9 @@ class NavigationTest extends TestCase
      */
     public function testIsActiveWillReturnFalseWithoutSuccessfulRouteResult(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $options     = $this->createStub(NavigationOptions::class);
         $routeResult = RouteResult::fromRouteFailure([]);
 
         $navigation = new Navigation($factory, $routeHelper, $options);
@@ -203,13 +203,13 @@ class NavigationTest extends TestCase
      */
     public function testIsActiveWillReturnFalseWhenPageHasNoRoute(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $options     = $this->createStub(NavigationOptions::class);
         $routeResult = RouteResult::fromRoute(
             new Route(
                 'path',
-                $this->createMock(MiddlewareInterface::class),
+                $this->createStub(MiddlewareInterface::class),
             )
         );
 
@@ -223,13 +223,13 @@ class NavigationTest extends TestCase
      */
     public function testIsActiveWillReturnTrueWhenRequestedRouteMatchesPageRoute(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $options     = $this->createStub(NavigationOptions::class);
         $routeResult = RouteResult::fromRoute(
             new Route(
                 'path',
-                $this->createMock(MiddlewareInterface::class),
+                $this->createStub(MiddlewareInterface::class),
                 Route::HTTP_METHOD_ANY,
                 'test'
             )
@@ -250,13 +250,13 @@ class NavigationTest extends TestCase
      */
     public function testIsActiveWillReturnTrueWhenRequestedRouteMatchesChildPageRoute(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $options     = $this->createStub(NavigationOptions::class);
         $routeResult = RouteResult::fromRoute(
             new Route(
                 'path',
-                $this->createMock(MiddlewareInterface::class),
+                $this->createStub(MiddlewareInterface::class),
                 Route::HTTP_METHOD_ANY,
                 'child'
             )
@@ -282,9 +282,9 @@ class NavigationTest extends TestCase
      */
     public function testGetHrefWillCacheResults(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $options     = $this->createStub(NavigationOptions::class);
 
         $navigation = new Navigation($factory, $routeHelper, $options);
         $this->assertIsArray($navigation->getHrefCache());
@@ -310,9 +310,9 @@ class NavigationTest extends TestCase
      */
     public function testWillNotGetHrefForInvalidPage(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $options     = $this->createStub(NavigationOptions::class);
 
         $navigation = new Navigation($factory, $routeHelper, $options);
 
@@ -327,9 +327,9 @@ class NavigationTest extends TestCase
      */
     public function testWillGetHrefForValidPage(): void
     {
-        $factory     = $this->createMock(FactoryInterface::class);
-        $routeHelper = $this->createMock(RouteHelper::class);
-        $options     = $this->createMock(NavigationOptions::class);
+        $factory     = $this->createStub(FactoryInterface::class);
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $options     = $this->createStub(NavigationOptions::class);
 
         $navigation = new Navigation($factory, $routeHelper, $options);
 
